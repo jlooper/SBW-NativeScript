@@ -1,0 +1,62 @@
+clang version 3.6.0 (tags/RELEASE_360/final)
+Target: aarch64-apple-darwin
+Thread model: posix
+clang Invocation:
+ "clang-tool" "-cc1" "-triple" "arm64-apple-ios8.0.0" "-Wdeprecated-objc-isa-usage" "-Werror=deprecated-objc-isa-usage" "-Werror=implicit-function-declaration" "-fsyntax-only" "-disable-free" "-main-file-name" "umbrella.h" "-mrelocation-model" "pic" "-pic-level" "2" "-mthread-model" "posix" "-mdisable-fp-elim" "-masm-verbose" "-target-cpu" "cyclone" "-target-feature" "+neon" "-target-feature" "+crc" "-target-feature" "+crypto" "-target-feature" "+zcm" "-target-feature" "+zcz" "-target-abi" "darwinpcs" "-target-linker-version" "241.9" "-v" "-dwarf-column-info" "-resource-dir" "../lib/clang/3.6.0" "-isysroot" "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk" "-I" "/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/build/device/include" "-I" "/Applications/Xcode6.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include" "-I" "/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/NativeScript/include" "-F/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/build/device" "-F/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios" "-F/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/../../lib/iOS" "-Wno-unknown-pragmas" "-Wno-ignored-attributes" "-std=gnu99" "-fdebug-compilation-dir" "/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/metadataGenerator/bin" "-ferror-limit" "0" "-fmessage-length" "0" "-stack-protector" "1" "-mstackrealign" "-fallow-half-arguments-and-returns" "-fblocks" "-fmodule-maps" "-fobjc-runtime=ios-8.0.0" "-fencode-extended-block-signature" "-fobjc-exceptions" "-fexceptions" "-fmax-type-align=16" "-fdiagnostics-show-option" "-x" "objective-c" "umbrella.h"
+
+ignoring nonexistent directory "/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/build/device/include"
+ignoring nonexistent directory "/Applications/Xcode6.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
+ignoring nonexistent directory "/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/../../lib/iOS"
+ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/usr/local/include"
+ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/Library/Frameworks"
+#include "..." search starts here:
+#include <...> search starts here:
+ /Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/NativeScript/include
+ /Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/build/device (framework directory)
+ /Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios (framework directory)
+ ../lib/clang/3.6.0/include
+ /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/usr/include
+ /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks (framework directory)
+End of search list.
+clang version 3.6.0 (tags/RELEASE_360/final)
+Target: aarch64-apple-darwin
+Thread model: posix
+clang Invocation:
+ "clang-tool" "-cc1" "-triple" "arm64-apple-ios8.0.0" "-Wdeprecated-objc-isa-usage" "-Werror=deprecated-objc-isa-usage" "-Werror=implicit-function-declaration" "-fsyntax-only" "-disable-free" "-main-file-name" "umbrella.h" "-mrelocation-model" "pic" "-pic-level" "2" "-mthread-model" "posix" "-mdisable-fp-elim" "-masm-verbose" "-target-cpu" "cyclone" "-target-feature" "+neon" "-target-feature" "+crc" "-target-feature" "+crypto" "-target-feature" "+zcm" "-target-feature" "+zcz" "-target-abi" "darwinpcs" "-target-linker-version" "241.9" "-v" "-dwarf-column-info" "-resource-dir" "../lib/clang/3.6.0" "-isysroot" "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk" "-I" "/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/build/device/include" "-I" "/Applications/Xcode6.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include" "-I" "/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/NativeScript/include" "-F/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/build/device" "-F/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios" "-F/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/../../lib/iOS" "-Wno-unknown-pragmas" "-Wno-ignored-attributes" "-std=gnu99" "-fdebug-compilation-dir" "/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/metadataGenerator/bin" "-ferror-limit" "0" "-fmessage-length" "0" "-stack-protector" "1" "-mstackrealign" "-fallow-half-arguments-and-returns" "-fblocks" "-fmodule-maps" "-fobjc-runtime=ios-8.0.0" "-fencode-extended-block-signature" "-fobjc-exceptions" "-fexceptions" "-fmax-type-align=16" "-fdiagnostics-show-option" "-x" "objective-c" "umbrella.h"
+
+clang -cc1 version 3.6.0 based upon LLVM 3.6.0 default target x86_64-apple-darwin14.5.0
+ignoring nonexistent directory "/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/build/device/include"
+ignoring nonexistent directory "/Applications/Xcode6.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
+ignoring nonexistent directory "/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/../../lib/iOS"
+ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/usr/local/include"
+ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/Library/Frameworks"
+#include "..." search starts here:
+#include <...> search starts here:
+ /Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/NativeScript/include
+ /Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/build/device (framework directory)
+ /Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios (framework directory)
+ ../lib/clang/3.6.0/include
+ /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/usr/include
+ /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks (framework directory)
+End of search list.
+clang version 3.6.0 (tags/RELEASE_360/final)
+Target: aarch64-apple-darwin
+Thread model: posix
+clang Invocation:
+ "clang-tool" "-cc1" "-triple" "arm64-apple-ios8.0.0" "-Wdeprecated-objc-isa-usage" "-Werror=deprecated-objc-isa-usage" "-Werror=implicit-function-declaration" "-fsyntax-only" "-disable-free" "-main-file-name" "umbrella.h" "-mrelocation-model" "pic" "-pic-level" "2" "-mthread-model" "posix" "-mdisable-fp-elim" "-masm-verbose" "-target-cpu" "cyclone" "-target-feature" "+neon" "-target-feature" "+crc" "-target-feature" "+crypto" "-target-feature" "+zcm" "-target-feature" "+zcz" "-target-abi" "darwinpcs" "-target-linker-version" "241.9" "-v" "-dwarf-column-info" "-resource-dir" "../lib/clang/3.6.0" "-isysroot" "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk" "-I" "/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/build/device/include" "-I" "/Applications/Xcode6.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include" "-I" "/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/NativeScript/include" "-F/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/build/device" "-F/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios" "-F/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/../../lib/iOS" "-Wno-unknown-pragmas" "-Wno-ignored-attributes" "-std=gnu99" "-fdebug-compilation-dir" "/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/metadataGenerator/bin" "-ferror-limit" "0" "-fmessage-length" "0" "-stack-protector" "1" "-mstackrealign" "-fallow-half-arguments-and-returns" "-fblocks" "-fmodule-maps" "-fobjc-runtime=ios-8.0.0" "-fencode-extended-block-signature" "-fobjc-exceptions" "-fexceptions" "-fmax-type-align=16" "-fdiagnostics-show-option" "-x" "objective-c" "umbrella.h"
+
+clang -cc1 version 3.6.0 based upon LLVM 3.6.0 default target x86_64-apple-darwin14.5.0
+ignoring nonexistent directory "/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/build/device/include"
+ignoring nonexistent directory "/Applications/Xcode6.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
+ignoring nonexistent directory "/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/../../lib/iOS"
+ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/usr/local/include"
+ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/Library/Frameworks"
+#include "..." search starts here:
+#include <...> search starts here:
+ /Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/NativeScript/include
+ /Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios/build/device (framework directory)
+ /Users/Looper/Documents/NativeScript/schoolbellweather/platforms/ios (framework directory)
+ ../lib/clang/3.6.0/include
+ /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/usr/include
+ /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks (framework directory)
+End of search list.
