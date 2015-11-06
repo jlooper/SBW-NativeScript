@@ -14,6 +14,7 @@ var bindingConstants;
 ;
 var hasEqualSignRegex = /=+/;
 var equalSignComparisionOperatorsRegex = /(==|===|>=|<=|!=|!==)/;
+exports.parentsRegex = /\$parents\s*\[\s*(['"]*)\w*\1\s*\]/g;
 function isNamedParam(value) {
     var equalSignIndex = value.search(hasEqualSignRegex);
     if (equalSignIndex > -1) {
@@ -72,16 +73,6 @@ function parseNamedProperties(parameterList, knownOptions, callback) {
     }
     return result;
 }
-function extractPropertyNameFromExpression(expression) {
-    var firstExpressionSymbolIndex = expression.search(expressionSymbolsRegex);
-    if (firstExpressionSymbolIndex > -1) {
-        var sourceProp = expression.substr(0, firstExpressionSymbolIndex).trim();
-        return sourceProp;
-    }
-    else {
-        return expression;
-    }
-}
 function getParamsArray(value) {
     var result = [];
     var i;
@@ -109,16 +100,34 @@ function getParamsArray(value) {
     result.push(value.substr(indexReached));
     return result;
 }
+function isExpression(expression) {
+    if (expression.search(expressionSymbolsRegex) > -1) {
+        var parentsMatches = expression.match(exports.parentsRegex);
+        if (parentsMatches) {
+            var restOfExpression = expression.substr(expression.indexOf(parentsMatches[0]) + parentsMatches[0].length);
+            if (!(restOfExpression.search(expressionSymbolsRegex) > -1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
+}
 function getBindingOptions(name, value) {
     var namedParams = [];
     var params = getParamsArray(value);
     if (!areNamedParams(params)) {
         if (params.length === 1) {
-            namedParams.push(bindingConstants.sourceProperty + " = " + extractPropertyNameFromExpression(params[0].trim()));
-            var expression = params[0].search(expressionSymbolsRegex) > -1 ? params[0].trim() : null;
-            if (expression) {
-                namedParams.push(bindingConstants.expression + " = " + expression);
+            var trimmedValue = params[0].trim();
+            var sourceProp;
+            if (isExpression(trimmedValue)) {
+                sourceProp = bindingConstants.bindingValueKey;
+                namedParams.push(bindingConstants.expression + " = " + trimmedValue);
             }
+            else {
+                sourceProp = trimmedValue;
+            }
+            namedParams.push(bindingConstants.sourceProperty + " = " + sourceProp);
             namedParams.push(bindingConstants.twoWay + " = true");
         }
         else {

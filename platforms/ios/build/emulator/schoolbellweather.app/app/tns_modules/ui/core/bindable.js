@@ -14,7 +14,6 @@ function onBindingContextChanged(data) {
 }
 var contextKey = "context";
 var paramsRegex = /\[\s*(['"])*(\w*)\1\s*\]/;
-var parentsRegex = /\$parents\s*\[\s*(['"]*)\w*\1\s*\]/g;
 var bc = bindingBuilder.bindingConstants;
 var Bindable = (function (_super) {
     __extends(Bindable, _super);
@@ -121,6 +120,15 @@ var Binding = (function () {
         this.target = new WeakRef(target);
         this.options = options;
     }
+    Binding.prototype.loadedHandlerVisualTreeBinding = function (args) {
+        var targetInstance = args.object;
+        targetInstance.off(viewModule.View.loadedEvent, this.loadedHandlerVisualTreeBinding, this);
+        this.unbind();
+        if (!types.isNullOrUndefined(targetInstance.bindingContext)) {
+            this.bind(targetInstance.bindingContext);
+        }
+    };
+    ;
     Binding.prototype.bind = function (obj) {
         if (types.isNullOrUndefined(obj)) {
             throw new Error("Expected valid object reference as a source in the Binding.bind method.");
@@ -171,6 +179,11 @@ var Binding = (function () {
                 var parentView = this.getParentView(this.target.get(), propsArray[i]).view;
                 if (parentView) {
                     currentObject = parentView.bindingContext;
+                }
+                else {
+                    var targetInstance = this.target.get();
+                    targetInstance.off(viewModule.View.loadedEvent, this.loadedHandlerVisualTreeBinding, this);
+                    targetInstance.on(viewModule.View.loadedEvent, this.loadedHandlerVisualTreeBinding, this);
                 }
                 currentObjectChanged = true;
             }
@@ -335,7 +348,7 @@ var Binding = (function () {
                 model[bc.parentValueKey] = parentView.bindingContext;
             }
         }
-        var parentsArray = expression.match(parentsRegex);
+        var parentsArray = expression.match(bindingBuilder.parentsRegex);
         if (parentsArray) {
             var i;
             for (i = 0; i < parentsArray.length; i++) {
@@ -418,7 +431,7 @@ var Binding = (function () {
                     indexAsInt--;
                 }
             }
-            else {
+            else if (types.isString(index)) {
                 while (result && result.typeName !== index) {
                     result = result.parent;
                 }
@@ -450,11 +463,18 @@ var Binding = (function () {
         }
         this.updating = true;
         try {
-            if (optionsInstance instanceof observable.Observable) {
-                optionsInstance.set(options.property, value);
+            if (optionsInstance instanceof viewModule.View &&
+                viewModule.isEventOrGesture(options.property, optionsInstance) &&
+                types.isFunction(value)) {
+                optionsInstance.on(options.property, value, optionsInstance.bindingContext);
             }
             else {
-                optionsInstance[options.property] = value;
+                if (optionsInstance instanceof observable.Observable) {
+                    optionsInstance.set(options.property, value);
+                }
+                else {
+                    optionsInstance[options.property] = value;
+                }
             }
         }
         catch (ex) {

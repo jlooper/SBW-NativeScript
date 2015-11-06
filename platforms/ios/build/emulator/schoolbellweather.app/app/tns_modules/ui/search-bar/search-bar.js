@@ -1,4 +1,4 @@
-var common = require("ui/search-bar/search-bar-common");
+var common = require("./search-bar-common");
 var color = require("color");
 var types = require("utils/types");
 function onTextPropertyChanged(data) {

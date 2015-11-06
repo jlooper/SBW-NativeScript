@@ -1,4 +1,4 @@
-var spanCommon = require("text/span-common");
+var spanCommon = require("./span-common");
 var enums = require("ui/enums");
 global.moduleMerge(spanCommon, exports);
 var Span = (function (_super) {

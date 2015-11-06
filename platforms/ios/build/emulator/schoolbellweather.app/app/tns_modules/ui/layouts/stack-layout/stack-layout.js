@@ -1,7 +1,7 @@
 var utils = require("utils/utils");
 var enums = require("ui/enums");
 var view = require("ui/core/view");
-var common = require("ui/layouts/stack-layout/stack-layout-common");
+var common = require("./stack-layout-common");
 global.moduleMerge(common, exports);
 var StackLayout = (function (_super) {
     __extends(StackLayout, _super);

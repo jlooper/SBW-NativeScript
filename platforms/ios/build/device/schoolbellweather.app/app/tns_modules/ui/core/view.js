@@ -1,4 +1,4 @@
-var viewCommon = require("ui/core/view-common");
+var viewCommon = require("./view-common");
 var trace = require("trace");
 var utils = require("utils/utils");
 var background = require("ui/styling/background");
@@ -158,6 +158,8 @@ var View = (function (_super) {
     };
     View.prototype.onMeasure = function (widthMeasureSpec, heightMeasureSpec) {
         var view = this._nativeView;
+        var nativeWidth = 0;
+        var nativeHeight = 0;
         if (view) {
             var width = utils.layout.getMeasureSpecSize(widthMeasureSpec);
             var widthMode = utils.layout.getMeasureSpecMode(widthMeasureSpec);
@@ -170,12 +172,14 @@ var View = (function (_super) {
                 height = Number.POSITIVE_INFINITY;
             }
             var nativeSize = view.sizeThatFits(CGSizeMake(width, height));
-            var measureWidth = Math.max(nativeSize.width, this.minWidth);
-            var measureHeight = Math.max(nativeSize.height, this.minHeight);
-            var widthAndState = View.resolveSizeAndState(measureWidth, width, widthMode, 0);
-            var heightAndState = View.resolveSizeAndState(measureHeight, height, heightMode, 0);
-            this.setMeasuredDimension(widthAndState, heightAndState);
+            nativeWidth = nativeSize.width;
+            nativeHeight = nativeSize.height;
         }
+        var measureWidth = Math.max(nativeWidth, this.minWidth);
+        var measureHeight = Math.max(nativeHeight, this.minHeight);
+        var widthAndState = View.resolveSizeAndState(measureWidth, width, widthMode, 0);
+        var heightAndState = View.resolveSizeAndState(measureHeight, height, heightMode, 0);
+        this.setMeasuredDimension(widthAndState, heightAndState);
     };
     View.prototype.onLayout = function (left, top, right, bottom) {
     };
@@ -185,7 +189,7 @@ var View = (function (_super) {
         }
         var frame = CGRectMake(left, top, right - left, bottom - top);
         var nativeView;
-        if (!this.parent && this._nativeView.subviews.count > 0 && !this._isModal) {
+        if (!this.parent && this._nativeView.subviews.count > 0 && utils.ios.MajorVersion < 8) {
             trace.write(this + " has no parent. Setting frame to first child instead.", trace.categories.Layout);
             nativeView = this._nativeView.subviews[0];
         }
@@ -195,6 +199,8 @@ var View = (function (_super) {
         if (!CGRectEqualToRect(nativeView.frame, frame)) {
             trace.write(this + ", Native setFrame: = " + NSStringFromCGRect(frame), trace.categories.Layout);
             nativeView.frame = frame;
+            var boundsOrigin = nativeView.bounds.origin;
+            nativeView.bounds = CGRectMake(boundsOrigin.x, boundsOrigin.y, frame.size.width, frame.size.height);
         }
     };
     View.prototype._updateLayout = function () {
@@ -221,7 +227,6 @@ var CustomLayoutView = (function (_super) {
     function CustomLayoutView() {
         _super.call(this);
         this._view = new UIView();
-        this._view.autoresizesSubviews = false;
     }
     Object.defineProperty(CustomLayoutView.prototype, "ios", {
         get: function () {

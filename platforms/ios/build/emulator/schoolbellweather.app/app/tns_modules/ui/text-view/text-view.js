@@ -1,4 +1,4 @@
-var common = require("ui/text-view/text-view-common");
+var common = require("./text-view-common");
 var textBase = require("ui/text-base");
 var enums = require("ui/enums");
 global.moduleMerge(common, exports);

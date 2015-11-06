@@ -1,4 +1,4 @@
-var common = require("utils/utils-common");
+var common = require("./utils-common");
 var colorModule = require("color");
 global.moduleMerge(common, exports);
 function isOrientationLandscape(orientation) {
@@ -55,13 +55,6 @@ var ios;
         return new colorModule.Color(alpha, red, green, blue);
     }
     ios.getColor = getColor;
-    function getActualHeight(uiView) {
-        if (uiView.window && !uiView.hidden) {
-            return uiView.frame.size.height;
-        }
-        return 0;
-    }
-    ios.getActualHeight = getActualHeight;
     function isLandscape() {
         var device = UIDevice.currentDevice();
         var statusBarOrientation = UIApplication.sharedApplication().statusBarOrientation;
@@ -70,46 +63,6 @@ var ios;
     }
     ios.isLandscape = isLandscape;
     ios.MajorVersion = NSString.stringWithString(UIDevice.currentDevice().systemVersion).intValue;
-    function _layoutRootView(rootView, parentBounds) {
-        if (!rootView || !parentBounds) {
-            return;
-        }
-        var landscape = isLandscape();
-        var iOSMajorVersion = ios.MajorVersion;
-        var size = parentBounds.size;
-        var width = size.width;
-        var height = size.height;
-        var superview = rootView._nativeView.superview;
-        var superViewRotationRadians;
-        if (superview) {
-            superViewRotationRadians = atan2f(superview.transform.b, superview.transform.a);
-        }
-        if (iOSMajorVersion < 8 && landscape && !superViewRotationRadians) {
-            width = size.height;
-            height = size.width;
-        }
-        var statusBarHeight;
-        if (UIApplication.sharedApplication().statusBarHidden || (rootView._UIModalPresentationFormSheet && !CGSizeEqualToSize(parentBounds.size, UIScreen.mainScreen().bounds.size))) {
-            statusBarHeight = 0;
-        }
-        else {
-            var statusFrame = UIApplication.sharedApplication().statusBarFrame;
-            try {
-                statusBarHeight = Math.min(statusFrame.size.width, statusFrame.size.height);
-            }
-            catch (ex) {
-                console.log("exception: " + ex);
-            }
-        }
-        var origin = parentBounds.origin;
-        var left = origin.x;
-        var top = origin.y + statusBarHeight;
-        var widthSpec = layout.makeMeasureSpec(width, common.layout.EXACTLY);
-        var heightSpec = layout.makeMeasureSpec(height - statusBarHeight, common.layout.EXACTLY);
-        rootView.measure(widthSpec, heightSpec);
-        rootView.layout(left, top, width, height);
-    }
-    ios._layoutRootView = _layoutRootView;
 })(ios = exports.ios || (exports.ios = {}));
 function GC() {
     __collect();

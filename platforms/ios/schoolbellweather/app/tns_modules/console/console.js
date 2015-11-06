@@ -1,4 +1,5 @@
 var trace = require("trace");
+var platform = require("platform");
 var Console = (function () {
     function Console() {
         this.TAG = "JS";
@@ -340,7 +341,13 @@ var Console = (function () {
         return result.join('');
     };
     Console.prototype.dump = function (obj) {
-        this.log(this.createDump(obj));
+        var dump = this.createDump(obj);
+        if (platform.device.os === platform.platformNames.android) {
+            this.log(dump);
+        }
+        else if (platform.device.os === platform.platformNames.ios) {
+            console.log(dump);
+        }
     };
     return Console;
 })();

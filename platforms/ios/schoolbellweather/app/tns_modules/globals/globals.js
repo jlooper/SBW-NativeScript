@@ -3,10 +3,10 @@ global.moduleMerge = function (sourceExports, destExports) {
         destExports[key] = sourceExports[key];
     }
 };
-var types = require("utils/types");
+var platform = require("platform");
 var timer = require("timer");
 var consoleModule = require("console");
-var xhr = require("xhr/xhr");
+var xhr = require("../xhr/xhr");
 var dialogs = require("ui/dialogs");
 global.setTimeout = timer.setTimeout;
 global.clearTimeout = timer.clearTimeout;
@@ -25,8 +25,12 @@ if (typeof global.__decorate !== "function") {
     };
 }
 ;
-if (types.isUndefined(global.NSObject)) {
-    global.console = new consoleModule.Console();
+var c = new consoleModule.Console();
+if (platform.device.os === platform.platformNames.android) {
+    global.console = c;
+}
+else if (platform.device.os === platform.platformNames.ios) {
+    global.console.dump = function (args) { c.dump(args); };
 }
 global.XMLHttpRequest = xhr.XMLHttpRequest;
 global.FormData = xhr.FormData;

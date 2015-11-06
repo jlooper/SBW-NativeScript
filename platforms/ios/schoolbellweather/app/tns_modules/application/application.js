@@ -1,9 +1,9 @@
-var appModule = require("application/application-common");
+var appModule = require("./application-common");
 var frame = require("ui/frame");
-var utils = require("utils/utils");
 var types = require("utils/types");
 var definition = require("application");
 var enums = require("ui/enums");
+var uiUtils = require("ui/utils");
 global.moduleMerge(appModule, exports);
 var Responder = (function (_super) {
     __extends(Responder, _super);
@@ -35,7 +35,7 @@ var Window = (function (_super) {
         configurable: true
     });
     Window.prototype.layoutSubviews = function () {
-        utils.ios._layoutRootView(this._content, UIScreen.mainScreen().bounds);
+        uiUtils.ios._layoutRootView(this._content, UIScreen.mainScreen().bounds);
     };
     return Window;
 })(UIWindow);

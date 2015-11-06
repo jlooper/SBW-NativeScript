@@ -78,9 +78,11 @@ exports.takePicture = function (options) {
             listener = UIImagePickerControllerDelegateImpl.new().initWithCallback(resolve);
         }
         imagePickerController.delegate = listener;
-        if (UIDevice.currentDevice().model !== "iPhone Simulator") {
-            imagePickerController.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(UIImagePickerControllerSourceType.UIImagePickerControllerSourceTypeCamera);
-            imagePickerController.sourceType = UIImagePickerControllerSourceType.UIImagePickerControllerSourceTypeCamera;
+        var sourceType = UIImagePickerControllerSourceType.UIImagePickerControllerSourceTypeCamera;
+        var mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(sourceType);
+        if (mediaTypes) {
+            imagePickerController.mediaTypes = mediaTypes;
+            imagePickerController.sourceType = sourceType;
         }
         imagePickerController.modalPresentationStyle = UIModalPresentationStyle.UIModalPresentationCurrentContext;
         var topMostFrame = frame.topmost();

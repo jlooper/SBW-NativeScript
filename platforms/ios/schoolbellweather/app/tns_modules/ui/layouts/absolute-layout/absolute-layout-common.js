@@ -2,12 +2,19 @@ var layouts = require("ui/layouts/layout-base");
 var dependencyObservable = require("ui/core/dependency-observable");
 var view = require("ui/core/view");
 var proxy = require("ui/core/proxy");
+var special_properties_1 = require("ui/builder/special-properties");
 function validateArgs(element) {
     if (!element) {
         throw new Error("element cannot be null or undefinied.");
     }
     return element;
 }
+special_properties_1.registerSpecialProperty("left", function (instance, propertyValue) {
+    AbsoluteLayout.setLeft(instance, !isNaN(+propertyValue) && +propertyValue);
+});
+special_properties_1.registerSpecialProperty("top", function (instance, propertyValue) {
+    AbsoluteLayout.setTop(instance, !isNaN(+propertyValue) && +propertyValue);
+});
 var AbsoluteLayout = (function (_super) {
     __extends(AbsoluteLayout, _super);
     function AbsoluteLayout() {

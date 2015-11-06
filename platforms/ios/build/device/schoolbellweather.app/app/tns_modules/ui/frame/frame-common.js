@@ -55,7 +55,7 @@ function resolvePageFromEntry(entry) {
             throw new Error("Failed to load Page from entry.moduleName: " + entry.moduleName);
         }
         var cssFileName = fileResolverModule.resolveFileName(moduleNamePath, "css");
-        if (cssFileName) {
+        if (cssFileName && !page["cssFile"]) {
             page.addCssFile(cssFileName);
         }
     }
@@ -132,7 +132,7 @@ var Frame = (function (_super) {
         var entry = this._navigationQueue[0].entry;
         var currentNavigationPage = entry.resolvedPage;
         if (page !== currentNavigationPage) {
-            throw new Error("Corrupted navigation stack.");
+            throw new Error("Corrupted navigation stack; page: " + page.id + "; currentNavigationPage: " + currentNavigationPage.id);
         }
         this._navigationQueue.shift();
         if (this._navigationQueue.length > 0) {
@@ -162,7 +162,10 @@ var Frame = (function (_super) {
     Frame.prototype.performNavigation = function (navigationContext) {
         var navContext = navigationContext.entry;
         this._onNavigatingTo(navContext);
-        if (this._isEntryBackstackVisible(this._currentEntry)) {
+        if (navigationContext.entry.entry.clearHistory) {
+            this._backStack.length = 0;
+        }
+        else if (this._isEntryBackstackVisible(this._currentEntry)) {
             this._backStack.push(this._currentEntry);
         }
         this._navigateCore(navContext);
@@ -275,6 +278,9 @@ var Frame = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Frame.prototype._getNavBarVisible = function (page) {
+        throw new Error();
+    };
     Frame.prototype._addViewToNativeVisualTree = function (child) {
         return true;
     };

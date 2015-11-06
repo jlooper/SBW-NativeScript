@@ -1,4 +1,4 @@
-var common = require("ui/text-field/text-field-common");
+var common = require("./text-field-common");
 var textBase = require("ui/text-base");
 var enums = require("ui/enums");
 function onSecurePropertyChanged(data) {
@@ -36,6 +36,7 @@ var UITextFieldDelegateImpl = (function (_super) {
     };
     UITextFieldDelegateImpl.prototype.textFieldShouldReturn = function (textField) {
         this._owner.dismissSoftInput();
+        this._owner.notify({ eventName: TextField.returnPressEvent, object: this._owner });
         return true;
     };
     UITextFieldDelegateImpl.prototype.textFieldShouldChangeCharactersInRangeReplacementString = function (textField, range, replacementString) {
@@ -104,7 +105,7 @@ var TextField = (function (_super) {
     });
     TextField.prototype._onHintPropertyChanged = function (data) {
         var textField = data.object;
-        textField.ios.placeholder = data.newValue;
+        textField.ios.placeholder = data.newValue + "";
     };
     return TextField;
 })(common.TextField);

@@ -1,5 +1,5 @@
 var enums = require("ui/enums");
-var converters = require("ui/styling/converters");
+var converters = require("./converters");
 var Font = (function () {
     function Font(family, size, style, weight) {
         this._fontFamily = family;

@@ -1,8 +1,8 @@
-var styleModule = require("ui/styling/style");
-var stylePropertyModule = require("ui/styling/style-property");
-var stylersCommonModule = require("ui/styling/stylers-common");
-var visualStateConstatnsModule = require("ui/styling/visual-state-constants");
-var convertersModule = require("ui/styling/converters");
+var styleModule = require("./style");
+var stylePropertyModule = require("./style-property");
+var stylersCommonModule = require("./stylers-common");
+var visualStateConstatnsModule = require("./visual-state-constants");
+var convertersModule = require("./converters");
 exports.Property = stylePropertyModule.Property;
 exports.Style = styleModule.Style;
 var properties;

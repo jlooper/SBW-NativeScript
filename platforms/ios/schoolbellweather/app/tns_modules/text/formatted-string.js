@@ -1,4 +1,4 @@
-var formattedStringCommon = require("text/formatted-string-common");
+var formattedStringCommon = require("./formatted-string-common");
 global.moduleMerge(formattedStringCommon, exports);
 var FormattedString = (function (_super) {
     __extends(FormattedString, _super);

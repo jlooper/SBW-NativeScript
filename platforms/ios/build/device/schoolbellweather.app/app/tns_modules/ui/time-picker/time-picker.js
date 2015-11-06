@@ -1,4 +1,4 @@
-var common = require("ui/time-picker/time-picker-common");
+var common = require("./time-picker-common");
 function onHourPropertyChanged(data) {
     var picker = data.object;
     if (picker.ios) {

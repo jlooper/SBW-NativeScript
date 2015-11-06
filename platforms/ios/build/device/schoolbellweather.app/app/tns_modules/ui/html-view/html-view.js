@@ -1,4 +1,4 @@
-var common = require("ui/html-view/html-view-common");
+var common = require("./html-view-common");
 var utils = require("utils/utils");
 var types = require("utils/types");
 var viewModule = require("ui/core/view");

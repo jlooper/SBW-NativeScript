@@ -4,7 +4,6 @@ var Layout = (function (_super) {
     function Layout() {
         _super.call(this);
         this._view = new UIView();
-        this._view.autoresizesSubviews = false;
     }
     Object.defineProperty(Layout.prototype, "ios", {
         get: function () {

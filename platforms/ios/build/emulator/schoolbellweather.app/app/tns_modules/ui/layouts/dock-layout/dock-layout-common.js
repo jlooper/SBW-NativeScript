@@ -3,6 +3,7 @@ var dependencyObservable = require("ui/core/dependency-observable");
 var view = require("ui/core/view");
 var enums = require("ui/enums");
 var proxy = require("ui/core/proxy");
+var special_properties_1 = require("ui/builder/special-properties");
 var AffectsLayout = global.android ? dependencyObservable.PropertyMetadataSettings.None : dependencyObservable.PropertyMetadataSettings.AffectsLayout;
 function isDockValid(value) {
     return value === enums.Dock.left || value === enums.Dock.top || value === enums.Dock.right || value === enums.Dock.bottom;
@@ -13,6 +14,9 @@ function validateArgs(element) {
     }
     return element;
 }
+special_properties_1.registerSpecialProperty("dock", function (instance, propertyValue) {
+    DockLayout.setDock(instance, propertyValue);
+});
 var DockLayout = (function (_super) {
     __extends(DockLayout, _super);
     function DockLayout() {

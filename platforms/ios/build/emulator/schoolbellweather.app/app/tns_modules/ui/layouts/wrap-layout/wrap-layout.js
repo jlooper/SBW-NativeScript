@@ -1,7 +1,7 @@
 var utils = require("utils/utils");
 var view = require("ui/core/view");
 var enums = require("ui/enums");
-var common = require("ui/layouts/wrap-layout/wrap-layout-common");
+var common = require("./wrap-layout-common");
 global.moduleMerge(common, exports);
 var WrapLayout = (function (_super) {
     __extends(WrapLayout, _super);

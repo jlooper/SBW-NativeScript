@@ -1,4 +1,4 @@
-var common = require("ui/progress/progress-common");
+var common = require("./progress-common");
 function onValuePropertyChanged(data) {
     var progress = data.object;
     progress.ios.progress = data.newValue / progress.maxValue;

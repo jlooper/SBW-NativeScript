@@ -19,6 +19,7 @@ var TextField = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    TextField.returnPressEvent = "returnPress";
     return TextField;
 })(editableTextBase.EditableTextBase);
 exports.TextField = TextField;

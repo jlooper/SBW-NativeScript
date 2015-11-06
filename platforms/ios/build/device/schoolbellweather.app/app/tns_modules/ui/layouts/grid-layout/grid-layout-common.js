@@ -4,8 +4,9 @@ var dependencyObservable = require("ui/core/dependency-observable");
 var view = require("ui/core/view");
 var bindable = require("ui/core/bindable");
 var types = require("utils/types");
-var numberUtils = require("utils/number-utils");
+var numberUtils = require("../../../utils/number-utils");
 var proxy = require("ui/core/proxy");
+var special_properties_1 = require("ui/builder/special-properties");
 function validateArgs(element) {
     if (!element) {
         throw new Error("element cannot be null or undefinied.");
@@ -18,6 +19,18 @@ var GridUnitType;
     GridUnitType.pixel = "pixel";
     GridUnitType.star = "star";
 })(GridUnitType = exports.GridUnitType || (exports.GridUnitType = {}));
+special_properties_1.registerSpecialProperty("row", function (instance, propertyValue) {
+    GridLayout.setRow(instance, !isNaN(+propertyValue) && +propertyValue);
+});
+special_properties_1.registerSpecialProperty("col", function (instance, propertyValue) {
+    GridLayout.setColumn(instance, !isNaN(+propertyValue) && +propertyValue);
+});
+special_properties_1.registerSpecialProperty("colSpan", function (instance, propertyValue) {
+    GridLayout.setColumnSpan(instance, !isNaN(+propertyValue) && +propertyValue);
+});
+special_properties_1.registerSpecialProperty("rowSpan", function (instance, propertyValue) {
+    GridLayout.setRowSpan(instance, !isNaN(+propertyValue) && +propertyValue);
+});
 var ItemSpec = (function (_super) {
     __extends(ItemSpec, _super);
     function ItemSpec() {
@@ -165,6 +178,20 @@ var GridLayout = (function (_super) {
         itemSpec.index = -1;
         this._cols.splice(index, 1);
         this.onColumnRemoved(itemSpec, index);
+    };
+    GridLayout.prototype.removeColumns = function () {
+        for (var i = 0; i < this._cols.length; i++) {
+            this._cols[i].index = -1;
+        }
+        this._cols.length = 0;
+        this.invalidate();
+    };
+    GridLayout.prototype.removeRows = function () {
+        for (var i = 0; i < this._rows.length; i++) {
+            this._rows[i].index = -1;
+        }
+        this._rows.length = 0;
+        this.invalidate();
     };
     GridLayout.prototype.onRowChanged = function (element, oldValue, newValue) {
     };

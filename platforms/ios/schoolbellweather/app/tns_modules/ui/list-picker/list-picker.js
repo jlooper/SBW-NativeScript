@@ -1,4 +1,4 @@
-var common = require("ui/list-picker/list-picker-common");
+var common = require("./list-picker-common");
 var types = require("utils/types");
 global.moduleMerge(common, exports);
 var ListPicker = (function (_super) {

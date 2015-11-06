@@ -1,4 +1,4 @@
-var common = require("ui/animation/animation-common");
+var common = require("./animation-common");
 var trace = require("trace");
 global.moduleMerge(common, exports);
 var _transform = "_transform";
@@ -88,11 +88,11 @@ var Animation = (function (_super) {
         this._iOSAnimationFunction = Animation._createiOSAnimationFunction(this._mergedPropertyAnimations, 0, this._playSequentially, animationFinishedCallback);
     }
     Animation.prototype.play = function () {
-        _super.prototype.play.call(this);
+        var animationFinishedPromise = _super.prototype.play.call(this);
         this._finishedAnimations = 0;
         this._cancelledAnimations = 0;
         this._iOSAnimationFunction();
-        return this;
+        return animationFinishedPromise;
     };
     Animation.prototype.cancel = function () {
         _super.prototype.cancel.call(this);
@@ -213,34 +213,34 @@ var Animation = (function (_super) {
         var j;
         var length = propertyAnimations.length;
         for (; i < length; i++) {
-            if (propertyAnimations[i].property !== _skip) {
-                if (!Animation._isAffineTransform(propertyAnimations[i].property)) {
-                    result.push(propertyAnimations[i]);
-                }
-                else {
-                    var newTransformAnimation = {
-                        target: propertyAnimations[i].target,
-                        property: _transform,
-                        value: Animation._affineTransform(CGAffineTransformIdentity, propertyAnimations[i].property, propertyAnimations[i].value),
-                        duration: propertyAnimations[i].duration,
-                        delay: propertyAnimations[i].delay,
-                        iterations: propertyAnimations[i].iterations,
-                        iosUIViewAnimationCurve: propertyAnimations[i].curve
-                    };
-                    trace.write("Created new transform animation: " + common.Animation._getAnimationInfo(newTransformAnimation), trace.categories.Animation);
-                    j = i + 1;
-                    if (j < length) {
-                        for (; j < length; j++) {
-                            if (Animation._canBeMerged(propertyAnimations[i], propertyAnimations[j])) {
-                                trace.write("Merging animations: " + common.Animation._getAnimationInfo(newTransformAnimation) + " + " + common.Animation._getAnimationInfo(propertyAnimations[j]) + " = ", trace.categories.Animation);
-                                trace.write("New native transform is: " + NSStringFromCGAffineTransform(newTransformAnimation.value), trace.categories.Animation);
-                                newTransformAnimation.value = Animation._affineTransform(newTransformAnimation.value, propertyAnimations[j].property, propertyAnimations[j].value);
-                                propertyAnimations[j].property = _skip;
-                            }
+            if (propertyAnimations[i][_skip]) {
+                continue;
+            }
+            if (!Animation._isAffineTransform(propertyAnimations[i].property)) {
+                result.push(propertyAnimations[i]);
+            }
+            else {
+                var newTransformAnimation = {
+                    target: propertyAnimations[i].target,
+                    property: _transform,
+                    value: Animation._affineTransform(CGAffineTransformIdentity, propertyAnimations[i].property, propertyAnimations[i].value),
+                    duration: propertyAnimations[i].duration,
+                    delay: propertyAnimations[i].delay,
+                    iterations: propertyAnimations[i].iterations
+                };
+                trace.write("Created new transform animation: " + common.Animation._getAnimationInfo(newTransformAnimation), trace.categories.Animation);
+                j = i + 1;
+                if (j < length) {
+                    for (; j < length; j++) {
+                        if (Animation._canBeMerged(propertyAnimations[i], propertyAnimations[j])) {
+                            trace.write("Merging animations: " + common.Animation._getAnimationInfo(newTransformAnimation) + " + " + common.Animation._getAnimationInfo(propertyAnimations[j]) + " = ", trace.categories.Animation);
+                            trace.write("New native transform is: " + NSStringFromCGAffineTransform(newTransformAnimation.value), trace.categories.Animation);
+                            newTransformAnimation.value = Animation._affineTransform(newTransformAnimation.value, propertyAnimations[j].property, propertyAnimations[j].value);
+                            propertyAnimations[j][_skip] = true;
                         }
                     }
-                    result.push(newTransformAnimation);
                 }
+                result.push(newTransformAnimation);
             }
         }
         return result;

@@ -1,13 +1,15 @@
-var contentView = require("ui/content-view");
+var content_view_1 = require("ui/content-view");
 var view = require("ui/core/view");
-var styleModule = require("ui/styling/style");
-var styleScope = require("ui/styling/style-scope");
+var styleModule = require("../styling/style");
+var styleScope = require("../styling/style-scope");
 var fs = require("file-system");
-var frameCommon = require("ui/frame/frame-common");
-var actionBar = require("ui/action-bar");
-var dependencyObservable = require("ui/core/dependency-observable");
+var frameCommon = require("../frame/frame-common");
+var action_bar_1 = require("ui/action-bar");
+var dependency_observable_1 = require("ui/core/dependency-observable");
 var proxy = require("ui/core/proxy");
-var actionBarHiddenProperty = new dependencyObservable.Property("actionBarHidden", "Page", new proxy.PropertyMetadata(undefined, dependencyObservable.PropertyMetadataSettings.AffectsLayout));
+var AffectsLayout = global.android ? dependency_observable_1.PropertyMetadataSettings.None : dependency_observable_1.PropertyMetadataSettings.AffectsLayout;
+var backgroundSpanUnderStatusBarProperty = new dependency_observable_1.Property("backgroundSpanUnderStatusBar", "Page", new proxy.PropertyMetadata(false, AffectsLayout));
+var actionBarHiddenProperty = new dependency_observable_1.Property("actionBarHidden", "Page", new proxy.PropertyMetadata(undefined, AffectsLayout));
 function onActionBarHiddenPropertyChanged(data) {
     var page = data.object;
     if (page.isLoaded) {
@@ -21,16 +23,26 @@ var Page = (function (_super) {
         _super.call(this, options);
         this._styleScope = new styleScope.StyleScope();
         this._cssFiles = {};
-        this.actionBar = new actionBar.ActionBar();
+        this.actionBar = new action_bar_1.ActionBar();
     }
     Page.prototype.onLoaded = function () {
-        this.style._setValue(styleModule.backgroundColorProperty, "white", dependencyObservable.ValueSource.Inherited);
+        this.style._setValue(styleModule.backgroundColorProperty, "white", dependency_observable_1.ValueSource.Inherited);
         this._applyCss();
         if (this.actionBarHidden !== undefined) {
             this._updateActionBar(this.actionBarHidden);
         }
         _super.prototype.onLoaded.call(this);
     };
+    Object.defineProperty(Page.prototype, "backgroundSpanUnderStatusBar", {
+        get: function () {
+            return this._getValue(Page.backgroundSpanUnderStatusBarProperty);
+        },
+        set: function (value) {
+            this._setValue(Page.backgroundSpanUnderStatusBarProperty, value);
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Page.prototype, "actionBarHidden", {
         get: function () {
             return this._getValue(Page.actionBarHiddenProperty);
@@ -164,8 +176,13 @@ var Page = (function (_super) {
         var page = frameCommon.resolvePageFromEntry({ moduleName: moduleName });
         page._showNativeModalView(this, context, closeCallback, fullscreen);
     };
+    Page.prototype.closeModal = function () {
+        if (this._closeModalCallback) {
+            this._closeModalCallback.apply(undefined, arguments);
+        }
+    };
     Page.prototype._addChildFromBuilder = function (name, value) {
-        if (value instanceof actionBar.ActionBar) {
+        if (value instanceof action_bar_1.ActionBar) {
             this.actionBar = value;
         }
         else {
@@ -173,22 +190,25 @@ var Page = (function (_super) {
         }
     };
     Page.prototype._showNativeModalView = function (parent, context, closeCallback, fullscreen) {
+        var that = this;
+        this._closeModalCallback = function () {
+            if (that._closeModalCallback) {
+                that._closeModalCallback = null;
+                that._hideNativeModalView(parent);
+                if (typeof closeCallback === "function") {
+                    closeCallback.apply(undefined, arguments);
+                }
+            }
+        };
     };
     Page.prototype._hideNativeModalView = function (parent) {
     };
     Page.prototype._raiseShownModallyEvent = function (parent, context, closeCallback) {
-        var that = this;
-        var closeProxy = function () {
-            that._hideNativeModalView(parent);
-            if (closeCallback) {
-                closeCallback.apply(undefined, arguments);
-            }
-        };
         this.notify({
             eventName: Page.shownModallyEvent,
             object: this,
             context: context,
-            closeCallback: closeProxy
+            closeCallback: this._closeModalCallback
         });
     };
     Page.prototype._getStyleScope = function () {
@@ -220,6 +240,7 @@ var Page = (function (_super) {
         resetCssValuesFunc(this);
         view.eachDescendant(this, resetCssValuesFunc);
     };
+    Page.backgroundSpanUnderStatusBarProperty = backgroundSpanUnderStatusBarProperty;
     Page.actionBarHiddenProperty = actionBarHiddenProperty;
     Page.navigatingToEvent = "navigatingTo";
     Page.navigatedToEvent = "navigatedTo";
@@ -227,5 +248,5 @@ var Page = (function (_super) {
     Page.navigatedFromEvent = "navigatedFrom";
     Page.shownModallyEvent = "shownModally";
     return Page;
-})(contentView.ContentView);
+})(content_view_1.ContentView);
 exports.Page = Page;

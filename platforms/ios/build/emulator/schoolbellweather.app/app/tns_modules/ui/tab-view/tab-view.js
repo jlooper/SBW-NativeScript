@@ -1,5 +1,4 @@
-var common = require("ui/tab-view/tab-view-common");
-var utilsModule = require("utils/utils");
+var common = require("./tab-view-common");
 var trace = require("trace");
 var utils = require("utils/utils");
 var view = require("ui/core/view");
@@ -76,7 +75,12 @@ var TabViewItem = (function (_super) {
             var icon = this._parent._getIcon(this.iconSource);
             var tabBarItem = UITabBarItem.alloc().initWithTitleImageTag((this.title || ""), icon, this._parent.items.indexOf(this));
             if (!icon) {
-                tabBarItem.setTitlePositionAdjustment({ horizontal: 0, vertical: -20 });
+                if (types.isFunction(tabBarItem.setTitlePositionAdjustment)) {
+                    tabBarItem.setTitlePositionAdjustment({ horizontal: 0, vertical: -20 });
+                }
+                else {
+                    tabBarItem.titlePositionAdjustment = { horizontal: 0, vertical: -20 };
+                }
             }
             this._controller.tabBarItem = tabBarItem;
         }
@@ -165,7 +169,12 @@ var TabView = (function (_super) {
             var icon = this._getIcon(item.iconSource);
             var tabBarItem = UITabBarItem.alloc().initWithTitleImageTag((item.title || ""), icon, i);
             if (!icon) {
-                tabBarItem.setTitlePositionAdjustment({ horizontal: 0, vertical: -20 });
+                if (types.isFunction(tabBarItem.setTitlePositionAdjustment)) {
+                    tabBarItem.setTitlePositionAdjustment({ horizontal: 0, vertical: -20 });
+                }
+                else {
+                    tabBarItem.titlePositionAdjustment = { horizontal: 0, vertical: -20 };
+                }
             }
             newController.tabBarItem = tabBarItem;
             newControllers.addObject(newController);
@@ -209,14 +218,15 @@ var TabView = (function (_super) {
             var widthMode = utils.layout.getMeasureSpecMode(widthMeasureSpec);
             var height = utils.layout.getMeasureSpecSize(heightMeasureSpec);
             var heightMode = utils.layout.getMeasureSpecMode(heightMeasureSpec);
-            this._tabBarHeight = utilsModule.ios.getActualHeight(this._ios.tabBar);
-            this._navBarHeight = utilsModule.ios.getActualHeight(this._ios.moreNavigationController.navigationBar);
+            this._tabBarHeight = TabView.measureHelper(this._ios.tabBar, width, widthMode, height, heightMode).height;
+            var moreNavBarVisible = !!this._ios.moreNavigationController.navigationBar.window;
+            this._navBarHeight = moreNavBarVisible ? TabView.measureHelper(this._ios.moreNavigationController.navigationBar, width, widthMode, height, heightMode).height : 0;
             var density = utils.layout.getDisplayDensity();
             var measureWidth = 0;
             var measureHeight = 0;
             var child = this._selectedView;
             if (child) {
-                var childHeightMeasureSpec = utils.layout.makeMeasureSpec(height - (this._navBarHeight + this._tabBarHeight), heightMode);
+                var childHeightMeasureSpec = utils.layout.makeMeasureSpec(height - this._navBarHeight - this._tabBarHeight, heightMode);
                 var childSize = view.View.measureChild(this, child, widthMeasureSpec, childHeightMeasureSpec);
                 measureHeight = childSize.measuredHeight;
                 measureWidth = childSize.measuredWidth;
@@ -234,6 +244,9 @@ var TabView = (function (_super) {
         if (child) {
             view.View.layoutChild(this, child, 0, this._navBarHeight, right, (bottom - this._navBarHeight - this._tabBarHeight));
         }
+    };
+    TabView.measureHelper = function (nativeView, width, widthMode, height, heightMode) {
+        return nativeView.sizeThatFits(CGSizeMake((widthMode === utils.layout.UNSPECIFIED) ? Number.POSITIVE_INFINITY : width, (heightMode === utils.layout.UNSPECIFIED) ? Number.POSITIVE_INFINITY : height));
     };
     return TabView;
 })(common.TabView);

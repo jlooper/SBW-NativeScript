@@ -1,4 +1,4 @@
-var common = require("ui/list-view/list-view-common");
+var common = require("./list-view-common");
 var utils = require("utils/utils");
 var view = require("ui/core/view");
 var color = require("color");
@@ -113,7 +113,6 @@ var ListView = (function (_super) {
         this.widthMeasureSpec = 0;
         this._ios = new UITableView();
         this._ios.registerClassForCellReuseIdentifier(ListViewCell.class(), CELLIDENTIFIER);
-        this._ios.autoresizesSubviews = false;
         this._ios.autoresizingMask = UIViewAutoresizing.UIViewAutoresizingNone;
         this._ios.estimatedRowHeight = DEFAULT_HEIGHT;
         var dataSource = DataSource.new().initWithOwner(this);
@@ -193,11 +192,11 @@ var ListView = (function (_super) {
             }
             var args = notifyForItemAtIndex(this, cell, ITEMLOADING, indexPath);
             var view = cell.view = args.view || this._getDefaultItemContent(indexPath.row);
+            this._prepareItem(view, indexPath.row);
             if (view && !view.parent && view.ios) {
                 cell.contentView.addSubview(view.ios);
                 this._addView(view);
             }
-            this._prepareItem(view, indexPath.row);
             cellHeight = this._layoutCell(view, indexPath);
         }
         finally {

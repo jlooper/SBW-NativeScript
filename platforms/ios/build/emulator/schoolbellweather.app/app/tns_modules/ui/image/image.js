@@ -1,4 +1,4 @@
-var imageCommon = require("ui/image/image-common");
+var imageCommon = require("./image-common");
 var enums = require("ui/enums");
 var utils = require("utils/utils");
 var trace = require("trace");

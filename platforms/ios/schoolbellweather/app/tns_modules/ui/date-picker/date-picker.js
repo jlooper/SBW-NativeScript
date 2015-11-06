@@ -1,4 +1,4 @@
-var common = require("ui/date-picker/date-picker-common");
+var common = require("./date-picker-common");
 function onYearPropertyChanged(data) {
     var picker = data.object;
     if (picker.ios) {

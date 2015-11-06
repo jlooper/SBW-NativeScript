@@ -1,5 +1,5 @@
-var style = require("ui/styling/style");
-var stylersCommon = require("ui/styling/stylers-common");
+var style = require("./style");
+var stylersCommon = require("./stylers-common");
 var enums = require("ui/enums");
 var background = require("ui/styling/background");
 global.moduleMerge(stylersCommon, exports);
@@ -84,6 +84,7 @@ var DefaultStyler = (function () {
     DefaultStyler.setBorderRadiusProperty = function (view, newValue) {
         if (view._nativeView instanceof UIView) {
             view._nativeView.layer.cornerRadius = newValue;
+            view._nativeView.clipsToBounds = true;
         }
     };
     DefaultStyler.resetBorderRadiusProperty = function (view, nativeValue) {

@@ -1,4 +1,4 @@
-var common = require("ui/switch/switch-common");
+var common = require("./switch-common");
 function onCheckedPropertyChanged(data) {
     var swtch = data.object;
     swtch.ios.on = data.newValue;

@@ -1,7 +1,7 @@
 var utils = require("utils/utils");
 var enums = require("ui/enums");
 var view = require("ui/core/view");
-var common = require("ui/layouts/grid-layout/grid-layout-common");
+var common = require("./grid-layout-common");
 global.moduleMerge(common, exports);
 var GridLayout = (function (_super) {
     __extends(GridLayout, _super);

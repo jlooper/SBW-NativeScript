@@ -1,4 +1,4 @@
-var aiCommon = require("ui/activity-indicator/activity-indicator-common");
+var aiCommon = require("./activity-indicator-common");
 function onBusyPropertyChanged(data) {
     var indicator = data.object;
     if (!indicator.ios) {

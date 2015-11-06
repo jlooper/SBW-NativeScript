@@ -1,5 +1,5 @@
-var style = require("ui/styling/style");
-var common = require("ui/styling/background-common");
+var style = require("./style");
+var common = require("./background-common");
 global.moduleMerge(common, exports);
 var ios;
 (function (ios) {
@@ -26,7 +26,7 @@ var ios;
                     img = UIGraphicsGetImageFromCurrentImageContext();
                     UIGraphicsEndImageContext();
                 }
-                UIGraphicsBeginImageContextWithOptions(frame.size, false, 1.0);
+                UIGraphicsBeginImageContextWithOptions(frame.size, false, 0.0);
                 var context = UIGraphicsGetCurrentContext();
                 if (background.color && background.color.ios) {
                     CGContextSetFillColorWithColor(context, background.color.ios.CGColor);

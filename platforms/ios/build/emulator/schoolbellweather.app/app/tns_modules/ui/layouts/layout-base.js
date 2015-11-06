@@ -44,6 +44,11 @@ var LayoutBase = (function (_super) {
         var index = this._subViews.indexOf(child);
         this._subViews.splice(index, 1);
     };
+    LayoutBase.prototype.removeChildren = function () {
+        while (this.getChildrenCount() !== 0) {
+            this.removeChild(this._subViews[this.getChildrenCount() - 1]);
+        }
+    };
     LayoutBase.prototype._eachChildView = function (callback) {
         var i;
         var length = this._subViews.length;

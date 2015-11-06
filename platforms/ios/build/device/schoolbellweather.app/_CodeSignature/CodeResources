@@ -40,10 +40,6 @@
 		<data>
 		nU7INQjTwfhuG299eV+4oGDlgyE=
 		</data>
-		<key>AppIcon60x60@3x.png</key>
-		<data>
-		slwbcHnYArdaNJdn1S/pbC0p6LM=
-		</data>
 		<key>AppIcon76x76@2x~ipad.png</key>
 		<data>
 		hYqTeZ+S/saXsm+cH3gerWJmZME=
@@ -52,25 +48,45 @@
 		<data>
 		4PlsTB1jzx7mM+kR4+x8svdSrxA=
 		</data>
-		<key>BrandAsset-700-Landscape@2x~ipad.png</key>
+		<key>Default-568h@2x.png</key>
 		<data>
-		u3qgdWahNOiIfg+dQdQgd+zkw0Q=
+		gAQri/1LNBLUf9IRPXAy5sTujwM=
 		</data>
-		<key>BrandAsset-700-Landscape~ipad.png</key>
+		<key>Default-Landscape.png</key>
 		<data>
 		Hb9Juis8aZ7Q7utU8bSBB18qGQ0=
 		</data>
-		<key>BrandAsset-700-Portrait@2x~ipad.png</key>
+		<key>Default-Landscape@2x.png</key>
 		<data>
-		oQjYJ3bERqyxokOWaUuudwWJX/c=
+		u3qgdWahNOiIfg+dQdQgd+zkw0Q=
 		</data>
-		<key>BrandAsset-700-Portrait~ipad.png</key>
+		<key>Default-Portrait-1024.png</key>
 		<data>
 		zdaprRao0BSwZaPKs35y6iiq1xM=
 		</data>
-		<key>Default-568h@2x.png</key>
+		<key>Default-Portrait.png</key>
 		<data>
-		/bLZzJqLzQ73jQOWltLL0/y+E7Y=
+		KajD6nIihorsa/RInFzyg/9voeM=
+		</data>
+		<key>Default-Portrait@2x-2048.png</key>
+		<data>
+		oQjYJ3bERqyxokOWaUuudwWJX/c=
+		</data>
+		<key>Default-Portrait@2x.png</key>
+		<data>
+		yjFJ7sH7Hcya61yFOaF+nssLmoo=
+		</data>
+		<key>Default.png</key>
+		<data>
+		esHiTZT/eWqgLfuekAbX+rbQ0Pw=
+		</data>
+		<key>Default@2x.png</key>
+		<data>
+		J88D/GgbvwW4xHmctXMaWuwOCSE=
+		</data>
+		<key>Default@4x.png</key>
+		<data>
+		NRrQ1jFdLZbDCGet7jjjkTaao5U=
 		</data>
 		<key>Icon-Small-50.png</key>
 		<data>
@@ -94,7 +110,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		+3jplRRaij+WtRMl+rsKHOjK1XE=
+		5l08C4fTjzf2DTIN/7I0D3EI1F8=
 		</data>
 		<key>PkgInfo</key>
 		<data>
@@ -146,7 +162,7 @@
 		</data>
 		<key>app/tns_modules/application-settings/application-settings.js</key>
 		<data>
-		YUYOXY9QWXu066wQ/qnWGLqjSnE=
+		ildOzOr/clHRhyIYiU21Z7Reod0=
 		</data>
 		<key>app/tns_modules/application-settings/package.json</key>
 		<data>
@@ -154,11 +170,11 @@
 		</data>
 		<key>app/tns_modules/application/application-common.js</key>
 		<data>
-		SOTLq2Nj/9WT5H04+L4KVWy5LTQ=
+		wItXPbtwvXjBleUvYqkR7zAuga4=
 		</data>
 		<key>app/tns_modules/application/application.js</key>
 		<data>
-		a8pVPwDhsJQcZ+lYHW624S9bouI=
+		YuySi0UFMMeYO2gDmDaoZSikuLc=
 		</data>
 		<key>app/tns_modules/application/package.json</key>
 		<data>
@@ -170,7 +186,7 @@
 		</data>
 		<key>app/tns_modules/camera/camera.js</key>
 		<data>
-		ppgxoVBuTgK1Xr1Gms5+MqWHHb0=
+		0GZvPQ0Mz+Y+o+mMAKkswZKrL7s=
 		</data>
 		<key>app/tns_modules/camera/package.json</key>
 		<data>
@@ -182,7 +198,7 @@
 		</data>
 		<key>app/tns_modules/color/color.js</key>
 		<data>
-		Ds2nsk6NL3iupdeCP41diS1EpvE=
+		wTNClZXd2mH7b2ML8YTaO7iypvw=
 		</data>
 		<key>app/tns_modules/color/known-colors.js</key>
 		<data>
@@ -198,7 +214,7 @@
 		</data>
 		<key>app/tns_modules/connectivity/connectivity.js</key>
 		<data>
-		ZbodtmT0KjDU1tomFM8qBtsYV3A=
+		/3GYLy6a+Du+j5cLxmBoThzOf2c=
 		</data>
 		<key>app/tns_modules/connectivity/package.json</key>
 		<data>
@@ -206,7 +222,7 @@
 		</data>
 		<key>app/tns_modules/console/console.js</key>
 		<data>
-		M5Jkyk4QAikBLjqLJNha7pUiT+M=
+		2jBbLKfCrs/B+hQ5rc+hWMvG+W8=
 		</data>
 		<key>app/tns_modules/console/package.json</key>
 		<data>
@@ -238,7 +254,7 @@
 		</data>
 		<key>app/tns_modules/data/observable/observable.js</key>
 		<data>
-		sSgYQISKyr+TRG9bO9cqzgS4Shw=
+		3GFp+ojJNU6q3yOcezoYV12pS/k=
 		</data>
 		<key>app/tns_modules/data/observable/package.json</key>
 		<data>
@@ -290,7 +306,7 @@
 		</data>
 		<key>app/tns_modules/globals/globals.js</key>
 		<data>
-		DI4J2gadfxjnWuHNjYikhZ9ahk8=
+		VEdsybxKpd/M/MPXdCqZfhu8aqY=
 		</data>
 		<key>app/tns_modules/globals/package.json</key>
 		<data>
@@ -314,7 +330,7 @@
 		</data>
 		<key>app/tns_modules/image-source/image-source.js</key>
 		<data>
-		YGgmuh2JGid7uKLzUjRiicSCrJE=
+		sBtA2FdygRKClj3S6tJDL/4xrYs=
 		</data>
 		<key>app/tns_modules/image-source/package.json</key>
 		<data>
@@ -354,7 +370,7 @@
 		</data>
 		<key>app/tns_modules/location/location.js</key>
 		<data>
-		Mj9w3Jkuk1BpDU87uQYUGq9ZdbQ=
+		UV340+DKToyfN/j8k4BkbfUTqPw=
 		</data>
 		<key>app/tns_modules/location/package.json</key>
 		<data>
@@ -750,7 +766,7 @@
 		</data>
 		<key>app/tns_modules/package.json</key>
 		<data>
-		+T2619jSpS/tNgiJgVtUvSSXefM=
+		yZIKrVJtpCfVHS40WIsusvo0thY=
 		</data>
 		<key>app/tns_modules/platform/package.json</key>
 		<data>
@@ -766,7 +782,7 @@
 		</data>
 		<key>app/tns_modules/text/formatted-string.js</key>
 		<data>
-		7lgICQcXHPH0uEGQJ9xYznVDRXs=
+		t2sWkKWWq8onhVXEiKLQhK3DqGM=
 		</data>
 		<key>app/tns_modules/text/package.json</key>
 		<data>
@@ -778,7 +794,7 @@
 		</data>
 		<key>app/tns_modules/text/span.js</key>
 		<data>
-		LtYTj2FDsIpEKRs6kF3KBEICKUY=
+		/XKzrP4tuXf6kJU+kjVImu2Si9c=
 		</data>
 		<key>app/tns_modules/text/text.js</key>
 		<data>
@@ -802,11 +818,11 @@
 		</data>
 		<key>app/tns_modules/ui/action-bar/action-bar-common.js</key>
 		<data>
-		0CXhHo5a68atsKRyQXGOyBZgK/8=
+		7iTe0litreuIWvw1hhWRxeq8cyU=
 		</data>
 		<key>app/tns_modules/ui/action-bar/action-bar.js</key>
 		<data>
-		Po9nwTBnBFWrlqt054JDjHYov5U=
+		/9MjAnpKwdEdfkMf+cA+SXql6f4=
 		</data>
 		<key>app/tns_modules/ui/action-bar/package.json</key>
 		<data>
@@ -818,7 +834,7 @@
 		</data>
 		<key>app/tns_modules/ui/activity-indicator/activity-indicator.js</key>
 		<data>
-		wGLCBDzl9dBubBYRCpbsAnobmbA=
+		8mirnlvLfIk/dTtegbUreA+Iyy8=
 		</data>
 		<key>app/tns_modules/ui/activity-indicator/package.json</key>
 		<data>
@@ -826,11 +842,11 @@
 		</data>
 		<key>app/tns_modules/ui/animation/animation-common.js</key>
 		<data>
-		fcBRc3pPPTAafiAbXpK19sSYJZg=
+		SEgPuVL3FqvVS1CzkTIFSnlRhrE=
 		</data>
 		<key>app/tns_modules/ui/animation/animation.js</key>
 		<data>
-		Zn2VxsAL/hGoScvNXouPZdZVG6Q=
+		0w/WoJbhtB1yVIodRk4sMKhuETk=
 		</data>
 		<key>app/tns_modules/ui/animation/package.json</key>
 		<data>
@@ -846,7 +862,7 @@
 		</data>
 		<key>app/tns_modules/ui/builder/binding-builder.js</key>
 		<data>
-		tPtjJBFzVO/X7v2PwCUjCIJ9NQw=
+		2LZTiP2bNVgqFb6VcQCBIk1QztI=
 		</data>
 		<key>app/tns_modules/ui/builder/builder.js</key>
 		<data>
@@ -854,11 +870,15 @@
 		</data>
 		<key>app/tns_modules/ui/builder/component-builder.js</key>
 		<data>
-		2HmYPu+IP6fj0U6p3Yzi/g8KRRE=
+		R2vpdcBh2qRnr2sjCOX+uQwjTPY=
 		</data>
 		<key>app/tns_modules/ui/builder/package.json</key>
 		<data>
 		iscAVR6jaeLVR+WAVA+ivT0GDsY=
+		</data>
+		<key>app/tns_modules/ui/builder/special-properties.js</key>
+		<data>
+		RIoEZiH7QZptHu7TL0LFqoX4tsc=
 		</data>
 		<key>app/tns_modules/ui/builder/template-builder.js</key>
 		<data>
@@ -870,7 +890,7 @@
 		</data>
 		<key>app/tns_modules/ui/button/button.js</key>
 		<data>
-		2fz8MIsZvFHjY+1YIScnUOSmBZI=
+		1XAr/ljLEo9oLpJvPoucg65GHb0=
 		</data>
 		<key>app/tns_modules/ui/button/package.json</key>
 		<data>
@@ -886,7 +906,7 @@
 		</data>
 		<key>app/tns_modules/ui/core/bindable.js</key>
 		<data>
-		+iETCYCt/RTH8/4GuVnE/hkW8j4=
+		3avhLSnZr3soM73gK0EWe4RfuAo=
 		</data>
 		<key>app/tns_modules/ui/core/control-state-change.js</key>
 		<data>
@@ -902,11 +922,11 @@
 		</data>
 		<key>app/tns_modules/ui/core/view-common.js</key>
 		<data>
-		HaBFcLb1Cce6cnSl/MhGFxIVMFw=
+		ayW1iT2gDop15pU/AMFqfbYL1no=
 		</data>
 		<key>app/tns_modules/ui/core/view.js</key>
 		<data>
-		uf1VGuWdn/ktJ2GNI7dBhv1VG9c=
+		jm2aZva5amN//s4CFf7gYXzcWIY=
 		</data>
 		<key>app/tns_modules/ui/core/weak-event-listener.js</key>
 		<data>
@@ -918,7 +938,7 @@
 		</data>
 		<key>app/tns_modules/ui/date-picker/date-picker.js</key>
 		<data>
-		0wh9H4PDHT1rl72otR8VPTerZSE=
+		UFlhLU0tsDYA2bzzhDooBI5li2Q=
 		</data>
 		<key>app/tns_modules/ui/date-picker/package.json</key>
 		<data>
@@ -930,7 +950,7 @@
 		</data>
 		<key>app/tns_modules/ui/dialogs/dialogs.js</key>
 		<data>
-		+Vm/mly6vIoAg3zeM6GOtx+WaBE=
+		mIMUuIAwIbh7zrQNklDw6wl9Db8=
 		</data>
 		<key>app/tns_modules/ui/dialogs/package.json</key>
 		<data>
@@ -942,7 +962,7 @@
 		</data>
 		<key>app/tns_modules/ui/editable-text-base/editable-text-base.js</key>
 		<data>
-		xl4yOChmH2QRh/0vjISKF0JaNyA=
+		5UZw7lNrCCflBzHkOOdIsPKROXI=
 		</data>
 		<key>app/tns_modules/ui/editable-text-base/package.json</key>
 		<data>
@@ -958,11 +978,11 @@
 		</data>
 		<key>app/tns_modules/ui/frame/frame-common.js</key>
 		<data>
-		pLj5j9nfDC3pgi4LnKZZTnoL/s4=
+		cOSGJgjwZrrW0LiabtKDwyrWClE=
 		</data>
 		<key>app/tns_modules/ui/frame/frame.js</key>
 		<data>
-		RtXg0R5CBR5PBPZvHenN0z/mTww=
+		2rjx0tpFspkV43MFLjwnD2qqN9I=
 		</data>
 		<key>app/tns_modules/ui/frame/package.json</key>
 		<data>
@@ -974,7 +994,7 @@
 		</data>
 		<key>app/tns_modules/ui/gestures/gestures.js</key>
 		<data>
-		jfHvrZcgYtfSm5ehwuQKETQEpXM=
+		nwsDxBe28F+n8/vKrVSEGxzEzw0=
 		</data>
 		<key>app/tns_modules/ui/gestures/package.json</key>
 		<data>
@@ -986,7 +1006,7 @@
 		</data>
 		<key>app/tns_modules/ui/html-view/html-view.js</key>
 		<data>
-		zi23/9avBgtkblsiM5Gp9iSsUV4=
+		U7Q1WuMc55F2BtsBXtMl6kxR++w=
 		</data>
 		<key>app/tns_modules/ui/html-view/package.json</key>
 		<data>
@@ -998,7 +1018,7 @@
 		</data>
 		<key>app/tns_modules/ui/image-cache/image-cache.js</key>
 		<data>
-		yZg0q2BDbrDIHdygCMcIX/RgpmM=
+		b9yWppdo5tjtmz1QMHfNlO1fhHs=
 		</data>
 		<key>app/tns_modules/ui/image-cache/package.json</key>
 		<data>
@@ -1010,7 +1030,7 @@
 		</data>
 		<key>app/tns_modules/ui/image/image.js</key>
 		<data>
-		jO6BfOfhAb9Ona6LSiNY7kgJq14=
+		vw4GmsfvQdfBW2uo0836z6qXJZ4=
 		</data>
 		<key>app/tns_modules/ui/image/package.json</key>
 		<data>
@@ -1022,7 +1042,7 @@
 		</data>
 		<key>app/tns_modules/ui/label/label.js</key>
 		<data>
-		nGtgk9IAAO6PJ149kG8aOGrxtSU=
+		5cAdIGR1rMxV9jKCAZYd8R6A6FI=
 		</data>
 		<key>app/tns_modules/ui/label/package.json</key>
 		<data>
@@ -1030,11 +1050,11 @@
 		</data>
 		<key>app/tns_modules/ui/layouts/absolute-layout/absolute-layout-common.js</key>
 		<data>
-		plYzQpROPqF6rdMxrBiQXDdvLus=
+		W5HdNMxmXNJJ4IT/D98fQRvxJ2s=
 		</data>
 		<key>app/tns_modules/ui/layouts/absolute-layout/absolute-layout.js</key>
 		<data>
-		2NRVOL8s9mubkRqBJCF6cmJcoJY=
+		XR0mHE/Pf4vuLYzqCYLX7GMWErY=
 		</data>
 		<key>app/tns_modules/ui/layouts/absolute-layout/package.json</key>
 		<data>
@@ -1042,11 +1062,11 @@
 		</data>
 		<key>app/tns_modules/ui/layouts/dock-layout/dock-layout-common.js</key>
 		<data>
-		ZsIR6/qFrrLsIzwDCXqUAYs1AVk=
+		gwGfzVrgZAD1+oPwcIUPwFLFzok=
 		</data>
 		<key>app/tns_modules/ui/layouts/dock-layout/dock-layout.js</key>
 		<data>
-		jsvkDgItEnNI3MgE40I19mzG1cA=
+		26GEgu5/md2+uMxfO0OycOLr8WQ=
 		</data>
 		<key>app/tns_modules/ui/layouts/dock-layout/package.json</key>
 		<data>
@@ -1054,11 +1074,11 @@
 		</data>
 		<key>app/tns_modules/ui/layouts/grid-layout/grid-layout-common.js</key>
 		<data>
-		TwMtK3VCB6zQhHX6OfAxti1Hf6o=
+		VhkAZe/T00lfKYP7VkdHyV2C5LE=
 		</data>
 		<key>app/tns_modules/ui/layouts/grid-layout/grid-layout.js</key>
 		<data>
-		ljS2plZt14M5xg2AiWtBarK6Vr0=
+		zDVK7ElNmCXaJkvwRXFIaLrQqv0=
 		</data>
 		<key>app/tns_modules/ui/layouts/grid-layout/package.json</key>
 		<data>
@@ -1066,11 +1086,11 @@
 		</data>
 		<key>app/tns_modules/ui/layouts/layout-base.js</key>
 		<data>
-		rDEDi0XkFOKyU4ReX/gKdJX5kN0=
+		SG4f/fFFCopDEIzBiEztl+d31qQ=
 		</data>
 		<key>app/tns_modules/ui/layouts/layout.js</key>
 		<data>
-		MLgPh6Z+qKB2aZ+hfyE6ONg4txY=
+		8Vx0QZeLzL+we18HVIVAL935h7M=
 		</data>
 		<key>app/tns_modules/ui/layouts/stack-layout/package.json</key>
 		<data>
@@ -1082,7 +1102,7 @@
 		</data>
 		<key>app/tns_modules/ui/layouts/stack-layout/stack-layout.js</key>
 		<data>
-		cil7AuCg/i71je2c/Cqfiu1InwI=
+		OZn7oIT3F1xqnswxc0UefMV2qFM=
 		</data>
 		<key>app/tns_modules/ui/layouts/wrap-layout/package.json</key>
 		<data>
@@ -1094,7 +1114,7 @@
 		</data>
 		<key>app/tns_modules/ui/layouts/wrap-layout/wrap-layout.js</key>
 		<data>
-		EHmRmw1dQ8YrIlZSBoTQBzgZzSw=
+		Gebmd6EqIGzxUtIHKOiPlQVbnPk=
 		</data>
 		<key>app/tns_modules/ui/list-picker/list-picker-common.js</key>
 		<data>
@@ -1102,7 +1122,7 @@
 		</data>
 		<key>app/tns_modules/ui/list-picker/list-picker.js</key>
 		<data>
-		h0s3PYvQ1wTTo/lSdP1urOzkoa4=
+		XslWmI3fE/2d85ofvBKwE95wyuM=
 		</data>
 		<key>app/tns_modules/ui/list-picker/package.json</key>
 		<data>
@@ -1114,7 +1134,7 @@
 		</data>
 		<key>app/tns_modules/ui/list-view/list-view.js</key>
 		<data>
-		2x1h7lbsCQkUxxu8OMxnf/0b8q0=
+		2h6xfk30VyCH6tO+lyhvySa8ENU=
 		</data>
 		<key>app/tns_modules/ui/list-view/package.json</key>
 		<data>
@@ -1130,11 +1150,11 @@
 		</data>
 		<key>app/tns_modules/ui/page/page-common.js</key>
 		<data>
-		hZMhMVg4XV6T3Zkbl9v4nwLAc4s=
+		mdsapTrbAXwtK8cHs9tcpC4kxaA=
 		</data>
 		<key>app/tns_modules/ui/page/page.js</key>
 		<data>
-		hCq5TUsiNucJsV/XqTCcGeDR5hU=
+		ASWuV5J4PnJCqftqAPGxYneMfsw=
 		</data>
 		<key>app/tns_modules/ui/placeholder/package.json</key>
 		<data>
@@ -1146,7 +1166,7 @@
 		</data>
 		<key>app/tns_modules/ui/placeholder/placeholder.js</key>
 		<data>
-		pp476cQXzLgGsTeDNJnVrglfHnQ=
+		XvrXoFnDBm8yqn2BeO4/xynTYoY=
 		</data>
 		<key>app/tns_modules/ui/progress/package.json</key>
 		<data>
@@ -1158,7 +1178,7 @@
 		</data>
 		<key>app/tns_modules/ui/progress/progress.js</key>
 		<data>
-		i8BoWRl7r/uD+dsPAu4VHH5hVTM=
+		5HxUtb6jP6SJaUnE8VXs+PM/fgE=
 		</data>
 		<key>app/tns_modules/ui/repeater/package.json</key>
 		<data>
@@ -1166,7 +1186,7 @@
 		</data>
 		<key>app/tns_modules/ui/repeater/repeater.js</key>
 		<data>
-		HyIgR+1NXxry/5oqSqos1VigSKs=
+		oQ5+c4iUGlhUuXKAKNC0mtAQDEY=
 		</data>
 		<key>app/tns_modules/ui/scroll-view/package.json</key>
 		<data>
@@ -1178,7 +1198,7 @@
 		</data>
 		<key>app/tns_modules/ui/scroll-view/scroll-view.js</key>
 		<data>
-		MYOc/PEsPZi6XKQvJHRyDgJ1t2I=
+		MwkDBPqnXJfl7xmUz6NTPD/AkaY=
 		</data>
 		<key>app/tns_modules/ui/search-bar/package.json</key>
 		<data>
@@ -1190,7 +1210,7 @@
 		</data>
 		<key>app/tns_modules/ui/search-bar/search-bar.js</key>
 		<data>
-		cn2fbrJOSVDVS63FeGzbX8trNoA=
+		C2uHcn4SbG9xCI8DLeUSVgkagNo=
 		</data>
 		<key>app/tns_modules/ui/segmented-bar/package.json</key>
 		<data>
@@ -1202,7 +1222,7 @@
 		</data>
 		<key>app/tns_modules/ui/segmented-bar/segmented-bar.js</key>
 		<data>
-		yNMLIVnXXl+FUOtTREU8KmhXsqA=
+		KesjcEGr7EQtSm0LtYq15Mt0A00=
 		</data>
 		<key>app/tns_modules/ui/slider/package.json</key>
 		<data>
@@ -1214,7 +1234,7 @@
 		</data>
 		<key>app/tns_modules/ui/slider/slider.js</key>
 		<data>
-		4JviWQReAS1CD7gDYboDdCUO86I=
+		hZ2z4EV3I7sBshw5+T4rlTDWBok=
 		</data>
 		<key>app/tns_modules/ui/styling/background-common.js</key>
 		<data>
@@ -1222,7 +1242,7 @@
 		</data>
 		<key>app/tns_modules/ui/styling/background.js</key>
 		<data>
-		FwVwcruhXAxdzpDvytjpjqCQyjg=
+		fo93I0GEb4zsTk5vfSLf3lpCdEc=
 		</data>
 		<key>app/tns_modules/ui/styling/converters.js</key>
 		<data>
@@ -1234,11 +1254,11 @@
 		</data>
 		<key>app/tns_modules/ui/styling/font-common.js</key>
 		<data>
-		o8UvDlciALlc70tWWe3pfOWmqEk=
+		yih13YLetfY92d3E854rTy1KWTs=
 		</data>
 		<key>app/tns_modules/ui/styling/font.js</key>
 		<data>
-		/HKerR0VEerAPGP5pPw2wKaQyj4=
+		efj3rNCbpR+BJrnckk4/9YnyOT4=
 		</data>
 		<key>app/tns_modules/ui/styling/package.json</key>
 		<data>
@@ -1250,11 +1270,11 @@
 		</data>
 		<key>app/tns_modules/ui/styling/style-scope.js</key>
 		<data>
-		yet/pFid/CRF7JIkWcdY99Hl+4I=
+		y5Ag2rYbAmWwTzf2riPlEuLXfnk=
 		</data>
 		<key>app/tns_modules/ui/styling/style.js</key>
 		<data>
-		VHX5vEIh02QseoHFLQMm0MCwuKI=
+		QbqXFl79C8NsLHoQzvZsqHsaaJk=
 		</data>
 		<key>app/tns_modules/ui/styling/stylers-common.js</key>
 		<data>
@@ -1262,11 +1282,11 @@
 		</data>
 		<key>app/tns_modules/ui/styling/stylers.js</key>
 		<data>
-		nrVfpOhMRsB49gJJYydDYVv4VYE=
+		j9lCcxHTzrTLdRjbKq0wdl2Lj8s=
 		</data>
 		<key>app/tns_modules/ui/styling/styling.js</key>
 		<data>
-		Pq54JObvMn/pmz8X9qsaa6sEILE=
+		pdSVfekYKbJxHI9vjM5hOfkRjUM=
 		</data>
 		<key>app/tns_modules/ui/styling/visual-state-constants.js</key>
 		<data>
@@ -1286,7 +1306,7 @@
 		</data>
 		<key>app/tns_modules/ui/switch/switch.js</key>
 		<data>
-		2BFpDnR5lXkslcFL/HTUT8VQlHA=
+		vLUn2/5cqq68GVDFcaxz8dxMMr4=
 		</data>
 		<key>app/tns_modules/ui/tab-view/package.json</key>
 		<data>
@@ -1298,7 +1318,7 @@
 		</data>
 		<key>app/tns_modules/ui/tab-view/tab-view.js</key>
 		<data>
-		bTVVL2c0w2ltEGkutDd+0M+Uty4=
+		upbYZM9ZZbQMZwYrwm+FDUvRMyM=
 		</data>
 		<key>app/tns_modules/ui/text-base/package.json</key>
 		<data>
@@ -1314,11 +1334,11 @@
 		</data>
 		<key>app/tns_modules/ui/text-field/text-field-common.js</key>
 		<data>
-		Bhg09J4rh1GM80aHXkfRQtl1r+4=
+		ENycJuS9c1EBe7Lz3rTPfGM+Xfk=
 		</data>
 		<key>app/tns_modules/ui/text-field/text-field.js</key>
 		<data>
-		9/OFrzNdBiXwcS6Ie8zo1M6RZLA=
+		oKZJaDqPXQph6zJpmPfOKzhrsLk=
 		</data>
 		<key>app/tns_modules/ui/text-view/package.json</key>
 		<data>
@@ -1330,7 +1350,7 @@
 		</data>
 		<key>app/tns_modules/ui/text-view/text-view.js</key>
 		<data>
-		zQtsH3GcERLDudHZMIFEDR+8GQw=
+		5GKgkT/CP0Rbu4kX4aokLiQXavM=
 		</data>
 		<key>app/tns_modules/ui/time-picker/package.json</key>
 		<data>
@@ -1342,11 +1362,15 @@
 		</data>
 		<key>app/tns_modules/ui/time-picker/time-picker.js</key>
 		<data>
-		eVJLz1S9FSJdpCJ33qR8WA9hRuE=
+		Zh++ALaouoDBnG8xNXT85sdWA38=
 		</data>
 		<key>app/tns_modules/ui/ui.js</key>
 		<data>
 		EPxG9hlQCvrQys71NpdO68q7cso=
+		</data>
+		<key>app/tns_modules/ui/utils.js</key>
+		<data>
+		5FRy+jjmvos8SHDSSkGrQFgzD68=
 		</data>
 		<key>app/tns_modules/ui/web-view/package.json</key>
 		<data>
@@ -1354,11 +1378,11 @@
 		</data>
 		<key>app/tns_modules/ui/web-view/web-view-common.js</key>
 		<data>
-		xMw3wRXfz9N/kSBdzbXjqNs2GGw=
+		aUjDVx+iXmddfbxQDY7M2kdH0B8=
 		</data>
 		<key>app/tns_modules/ui/web-view/web-view.js</key>
 		<data>
-		ksiYOjgtYAptiJOIgQMKO7wqfnA=
+		LxXRrzeTtWul3QQWCMbHvHgHwYs=
 		</data>
 		<key>app/tns_modules/utils/module-merge.js</key>
 		<data>
@@ -1378,7 +1402,7 @@
 		</data>
 		<key>app/tns_modules/utils/utils.js</key>
 		<data>
-		moKUiYsTr9oaK6kU2Zd+uCLc/xs=
+		QQCEzIOag6RrNMOlUX0xsCr7L7E=
 		</data>
 		<key>app/tns_modules/xhr/package.json</key>
 		<data>
@@ -1394,7 +1418,7 @@
 		</data>
 		<key>app/tns_modules/xml/xml.js</key>
 		<data>
-		oTf5m2TGzYEtEcccii3zn0rtwVA=
+		odIB4U5UnF/AMHKB4Sy/GOY0m4s=
 		</data>
 		<key>bike.png</key>
 		<data>
@@ -1470,15 +1494,15 @@
 		</data>
 		<key>coldbg.png</key>
 		<data>
-		ykXjMC/A9nBy7e95QlcTAYTmD3c=
+		YPYtlK79otHJLtv4p1bAQziIhao=
 		</data>
 		<key>coldbg@2x.png</key>
 		<data>
-		uQaGrKUk+L898nMZwMaEY2PgaMM=
+		OMbYMQnWPv20YFsHpac24mwvbUg=
 		</data>
 		<key>coldbg@3x.png</key>
 		<data>
-		9CA2nOXfc1uIHGCncpIe3OC2Q8Y=
+		OsAd/j34ZOF0CzGmzfZswByLzJU=
 		</data>
 		<key>day.png</key>
 		<data>
@@ -1494,7 +1518,7 @@
 		</data>
 		<key>embedded.mobileprovision</key>
 		<data>
-		p7mBT+RC9fqlZpSUXzF4sIhcB6o=
+		O1UrwEPiGkeFRsa7Gn/i1L5yRu0=
 		</data>
 		<key>en.lproj/InfoPlist.strings</key>
 		<dict>
@@ -1832,10 +1856,6 @@
 		<data>
 		nU7INQjTwfhuG299eV+4oGDlgyE=
 		</data>
-		<key>AppIcon60x60@3x.png</key>
-		<data>
-		slwbcHnYArdaNJdn1S/pbC0p6LM=
-		</data>
 		<key>AppIcon76x76@2x~ipad.png</key>
 		<data>
 		hYqTeZ+S/saXsm+cH3gerWJmZME=
@@ -1844,25 +1864,45 @@
 		<data>
 		4PlsTB1jzx7mM+kR4+x8svdSrxA=
 		</data>
-		<key>BrandAsset-700-Landscape@2x~ipad.png</key>
+		<key>Default-568h@2x.png</key>
 		<data>
-		u3qgdWahNOiIfg+dQdQgd+zkw0Q=
+		gAQri/1LNBLUf9IRPXAy5sTujwM=
 		</data>
-		<key>BrandAsset-700-Landscape~ipad.png</key>
+		<key>Default-Landscape.png</key>
 		<data>
 		Hb9Juis8aZ7Q7utU8bSBB18qGQ0=
 		</data>
-		<key>BrandAsset-700-Portrait@2x~ipad.png</key>
+		<key>Default-Landscape@2x.png</key>
 		<data>
-		oQjYJ3bERqyxokOWaUuudwWJX/c=
+		u3qgdWahNOiIfg+dQdQgd+zkw0Q=
 		</data>
-		<key>BrandAsset-700-Portrait~ipad.png</key>
+		<key>Default-Portrait-1024.png</key>
 		<data>
 		zdaprRao0BSwZaPKs35y6iiq1xM=
 		</data>
-		<key>Default-568h@2x.png</key>
+		<key>Default-Portrait.png</key>
 		<data>
-		/bLZzJqLzQ73jQOWltLL0/y+E7Y=
+		KajD6nIihorsa/RInFzyg/9voeM=
+		</data>
+		<key>Default-Portrait@2x-2048.png</key>
+		<data>
+		oQjYJ3bERqyxokOWaUuudwWJX/c=
+		</data>
+		<key>Default-Portrait@2x.png</key>
+		<data>
+		yjFJ7sH7Hcya61yFOaF+nssLmoo=
+		</data>
+		<key>Default.png</key>
+		<data>
+		esHiTZT/eWqgLfuekAbX+rbQ0Pw=
+		</data>
+		<key>Default@2x.png</key>
+		<data>
+		J88D/GgbvwW4xHmctXMaWuwOCSE=
+		</data>
+		<key>Default@4x.png</key>
+		<data>
+		NRrQ1jFdLZbDCGet7jjjkTaao5U=
 		</data>
 		<key>Icon-Small-50.png</key>
 		<data>
@@ -1930,7 +1970,7 @@
 		</data>
 		<key>app/tns_modules/application-settings/application-settings.js</key>
 		<data>
-		YUYOXY9QWXu066wQ/qnWGLqjSnE=
+		ildOzOr/clHRhyIYiU21Z7Reod0=
 		</data>
 		<key>app/tns_modules/application-settings/package.json</key>
 		<data>
@@ -1938,11 +1978,11 @@
 		</data>
 		<key>app/tns_modules/application/application-common.js</key>
 		<data>
-		SOTLq2Nj/9WT5H04+L4KVWy5LTQ=
+		wItXPbtwvXjBleUvYqkR7zAuga4=
 		</data>
 		<key>app/tns_modules/application/application.js</key>
 		<data>
-		a8pVPwDhsJQcZ+lYHW624S9bouI=
+		YuySi0UFMMeYO2gDmDaoZSikuLc=
 		</data>
 		<key>app/tns_modules/application/package.json</key>
 		<data>
@@ -1954,7 +1994,7 @@
 		</data>
 		<key>app/tns_modules/camera/camera.js</key>
 		<data>
-		ppgxoVBuTgK1Xr1Gms5+MqWHHb0=
+		0GZvPQ0Mz+Y+o+mMAKkswZKrL7s=
 		</data>
 		<key>app/tns_modules/camera/package.json</key>
 		<data>
@@ -1966,7 +2006,7 @@
 		</data>
 		<key>app/tns_modules/color/color.js</key>
 		<data>
-		Ds2nsk6NL3iupdeCP41diS1EpvE=
+		wTNClZXd2mH7b2ML8YTaO7iypvw=
 		</data>
 		<key>app/tns_modules/color/known-colors.js</key>
 		<data>
@@ -1982,7 +2022,7 @@
 		</data>
 		<key>app/tns_modules/connectivity/connectivity.js</key>
 		<data>
-		ZbodtmT0KjDU1tomFM8qBtsYV3A=
+		/3GYLy6a+Du+j5cLxmBoThzOf2c=
 		</data>
 		<key>app/tns_modules/connectivity/package.json</key>
 		<data>
@@ -1990,7 +2030,7 @@
 		</data>
 		<key>app/tns_modules/console/console.js</key>
 		<data>
-		M5Jkyk4QAikBLjqLJNha7pUiT+M=
+		2jBbLKfCrs/B+hQ5rc+hWMvG+W8=
 		</data>
 		<key>app/tns_modules/console/package.json</key>
 		<data>
@@ -2022,7 +2062,7 @@
 		</data>
 		<key>app/tns_modules/data/observable/observable.js</key>
 		<data>
-		sSgYQISKyr+TRG9bO9cqzgS4Shw=
+		3GFp+ojJNU6q3yOcezoYV12pS/k=
 		</data>
 		<key>app/tns_modules/data/observable/package.json</key>
 		<data>
@@ -2074,7 +2114,7 @@
 		</data>
 		<key>app/tns_modules/globals/globals.js</key>
 		<data>
-		DI4J2gadfxjnWuHNjYikhZ9ahk8=
+		VEdsybxKpd/M/MPXdCqZfhu8aqY=
 		</data>
 		<key>app/tns_modules/globals/package.json</key>
 		<data>
@@ -2098,7 +2138,7 @@
 		</data>
 		<key>app/tns_modules/image-source/image-source.js</key>
 		<data>
-		YGgmuh2JGid7uKLzUjRiicSCrJE=
+		sBtA2FdygRKClj3S6tJDL/4xrYs=
 		</data>
 		<key>app/tns_modules/image-source/package.json</key>
 		<data>
@@ -2138,7 +2178,7 @@
 		</data>
 		<key>app/tns_modules/location/location.js</key>
 		<data>
-		Mj9w3Jkuk1BpDU87uQYUGq9ZdbQ=
+		UV340+DKToyfN/j8k4BkbfUTqPw=
 		</data>
 		<key>app/tns_modules/location/package.json</key>
 		<data>
@@ -2534,7 +2574,7 @@
 		</data>
 		<key>app/tns_modules/package.json</key>
 		<data>
-		+T2619jSpS/tNgiJgVtUvSSXefM=
+		yZIKrVJtpCfVHS40WIsusvo0thY=
 		</data>
 		<key>app/tns_modules/platform/package.json</key>
 		<data>
@@ -2550,7 +2590,7 @@
 		</data>
 		<key>app/tns_modules/text/formatted-string.js</key>
 		<data>
-		7lgICQcXHPH0uEGQJ9xYznVDRXs=
+		t2sWkKWWq8onhVXEiKLQhK3DqGM=
 		</data>
 		<key>app/tns_modules/text/package.json</key>
 		<data>
@@ -2562,7 +2602,7 @@
 		</data>
 		<key>app/tns_modules/text/span.js</key>
 		<data>
-		LtYTj2FDsIpEKRs6kF3KBEICKUY=
+		/XKzrP4tuXf6kJU+kjVImu2Si9c=
 		</data>
 		<key>app/tns_modules/text/text.js</key>
 		<data>
@@ -2586,11 +2626,11 @@
 		</data>
 		<key>app/tns_modules/ui/action-bar/action-bar-common.js</key>
 		<data>
-		0CXhHo5a68atsKRyQXGOyBZgK/8=
+		7iTe0litreuIWvw1hhWRxeq8cyU=
 		</data>
 		<key>app/tns_modules/ui/action-bar/action-bar.js</key>
 		<data>
-		Po9nwTBnBFWrlqt054JDjHYov5U=
+		/9MjAnpKwdEdfkMf+cA+SXql6f4=
 		</data>
 		<key>app/tns_modules/ui/action-bar/package.json</key>
 		<data>
@@ -2602,7 +2642,7 @@
 		</data>
 		<key>app/tns_modules/ui/activity-indicator/activity-indicator.js</key>
 		<data>
-		wGLCBDzl9dBubBYRCpbsAnobmbA=
+		8mirnlvLfIk/dTtegbUreA+Iyy8=
 		</data>
 		<key>app/tns_modules/ui/activity-indicator/package.json</key>
 		<data>
@@ -2610,11 +2650,11 @@
 		</data>
 		<key>app/tns_modules/ui/animation/animation-common.js</key>
 		<data>
-		fcBRc3pPPTAafiAbXpK19sSYJZg=
+		SEgPuVL3FqvVS1CzkTIFSnlRhrE=
 		</data>
 		<key>app/tns_modules/ui/animation/animation.js</key>
 		<data>
-		Zn2VxsAL/hGoScvNXouPZdZVG6Q=
+		0w/WoJbhtB1yVIodRk4sMKhuETk=
 		</data>
 		<key>app/tns_modules/ui/animation/package.json</key>
 		<data>
@@ -2630,7 +2670,7 @@
 		</data>
 		<key>app/tns_modules/ui/builder/binding-builder.js</key>
 		<data>
-		tPtjJBFzVO/X7v2PwCUjCIJ9NQw=
+		2LZTiP2bNVgqFb6VcQCBIk1QztI=
 		</data>
 		<key>app/tns_modules/ui/builder/builder.js</key>
 		<data>
@@ -2638,11 +2678,15 @@
 		</data>
 		<key>app/tns_modules/ui/builder/component-builder.js</key>
 		<data>
-		2HmYPu+IP6fj0U6p3Yzi/g8KRRE=
+		R2vpdcBh2qRnr2sjCOX+uQwjTPY=
 		</data>
 		<key>app/tns_modules/ui/builder/package.json</key>
 		<data>
 		iscAVR6jaeLVR+WAVA+ivT0GDsY=
+		</data>
+		<key>app/tns_modules/ui/builder/special-properties.js</key>
+		<data>
+		RIoEZiH7QZptHu7TL0LFqoX4tsc=
 		</data>
 		<key>app/tns_modules/ui/builder/template-builder.js</key>
 		<data>
@@ -2654,7 +2698,7 @@
 		</data>
 		<key>app/tns_modules/ui/button/button.js</key>
 		<data>
-		2fz8MIsZvFHjY+1YIScnUOSmBZI=
+		1XAr/ljLEo9oLpJvPoucg65GHb0=
 		</data>
 		<key>app/tns_modules/ui/button/package.json</key>
 		<data>
@@ -2670,7 +2714,7 @@
 		</data>
 		<key>app/tns_modules/ui/core/bindable.js</key>
 		<data>
-		+iETCYCt/RTH8/4GuVnE/hkW8j4=
+		3avhLSnZr3soM73gK0EWe4RfuAo=
 		</data>
 		<key>app/tns_modules/ui/core/control-state-change.js</key>
 		<data>
@@ -2686,11 +2730,11 @@
 		</data>
 		<key>app/tns_modules/ui/core/view-common.js</key>
 		<data>
-		HaBFcLb1Cce6cnSl/MhGFxIVMFw=
+		ayW1iT2gDop15pU/AMFqfbYL1no=
 		</data>
 		<key>app/tns_modules/ui/core/view.js</key>
 		<data>
-		uf1VGuWdn/ktJ2GNI7dBhv1VG9c=
+		jm2aZva5amN//s4CFf7gYXzcWIY=
 		</data>
 		<key>app/tns_modules/ui/core/weak-event-listener.js</key>
 		<data>
@@ -2702,7 +2746,7 @@
 		</data>
 		<key>app/tns_modules/ui/date-picker/date-picker.js</key>
 		<data>
-		0wh9H4PDHT1rl72otR8VPTerZSE=
+		UFlhLU0tsDYA2bzzhDooBI5li2Q=
 		</data>
 		<key>app/tns_modules/ui/date-picker/package.json</key>
 		<data>
@@ -2714,7 +2758,7 @@
 		</data>
 		<key>app/tns_modules/ui/dialogs/dialogs.js</key>
 		<data>
-		+Vm/mly6vIoAg3zeM6GOtx+WaBE=
+		mIMUuIAwIbh7zrQNklDw6wl9Db8=
 		</data>
 		<key>app/tns_modules/ui/dialogs/package.json</key>
 		<data>
@@ -2726,7 +2770,7 @@
 		</data>
 		<key>app/tns_modules/ui/editable-text-base/editable-text-base.js</key>
 		<data>
-		xl4yOChmH2QRh/0vjISKF0JaNyA=
+		5UZw7lNrCCflBzHkOOdIsPKROXI=
 		</data>
 		<key>app/tns_modules/ui/editable-text-base/package.json</key>
 		<data>
@@ -2742,11 +2786,11 @@
 		</data>
 		<key>app/tns_modules/ui/frame/frame-common.js</key>
 		<data>
-		pLj5j9nfDC3pgi4LnKZZTnoL/s4=
+		cOSGJgjwZrrW0LiabtKDwyrWClE=
 		</data>
 		<key>app/tns_modules/ui/frame/frame.js</key>
 		<data>
-		RtXg0R5CBR5PBPZvHenN0z/mTww=
+		2rjx0tpFspkV43MFLjwnD2qqN9I=
 		</data>
 		<key>app/tns_modules/ui/frame/package.json</key>
 		<data>
@@ -2758,7 +2802,7 @@
 		</data>
 		<key>app/tns_modules/ui/gestures/gestures.js</key>
 		<data>
-		jfHvrZcgYtfSm5ehwuQKETQEpXM=
+		nwsDxBe28F+n8/vKrVSEGxzEzw0=
 		</data>
 		<key>app/tns_modules/ui/gestures/package.json</key>
 		<data>
@@ -2770,7 +2814,7 @@
 		</data>
 		<key>app/tns_modules/ui/html-view/html-view.js</key>
 		<data>
-		zi23/9avBgtkblsiM5Gp9iSsUV4=
+		U7Q1WuMc55F2BtsBXtMl6kxR++w=
 		</data>
 		<key>app/tns_modules/ui/html-view/package.json</key>
 		<data>
@@ -2782,7 +2826,7 @@
 		</data>
 		<key>app/tns_modules/ui/image-cache/image-cache.js</key>
 		<data>
-		yZg0q2BDbrDIHdygCMcIX/RgpmM=
+		b9yWppdo5tjtmz1QMHfNlO1fhHs=
 		</data>
 		<key>app/tns_modules/ui/image-cache/package.json</key>
 		<data>
@@ -2794,7 +2838,7 @@
 		</data>
 		<key>app/tns_modules/ui/image/image.js</key>
 		<data>
-		jO6BfOfhAb9Ona6LSiNY7kgJq14=
+		vw4GmsfvQdfBW2uo0836z6qXJZ4=
 		</data>
 		<key>app/tns_modules/ui/image/package.json</key>
 		<data>
@@ -2806,7 +2850,7 @@
 		</data>
 		<key>app/tns_modules/ui/label/label.js</key>
 		<data>
-		nGtgk9IAAO6PJ149kG8aOGrxtSU=
+		5cAdIGR1rMxV9jKCAZYd8R6A6FI=
 		</data>
 		<key>app/tns_modules/ui/label/package.json</key>
 		<data>
@@ -2814,11 +2858,11 @@
 		</data>
 		<key>app/tns_modules/ui/layouts/absolute-layout/absolute-layout-common.js</key>
 		<data>
-		plYzQpROPqF6rdMxrBiQXDdvLus=
+		W5HdNMxmXNJJ4IT/D98fQRvxJ2s=
 		</data>
 		<key>app/tns_modules/ui/layouts/absolute-layout/absolute-layout.js</key>
 		<data>
-		2NRVOL8s9mubkRqBJCF6cmJcoJY=
+		XR0mHE/Pf4vuLYzqCYLX7GMWErY=
 		</data>
 		<key>app/tns_modules/ui/layouts/absolute-layout/package.json</key>
 		<data>
@@ -2826,11 +2870,11 @@
 		</data>
 		<key>app/tns_modules/ui/layouts/dock-layout/dock-layout-common.js</key>
 		<data>
-		ZsIR6/qFrrLsIzwDCXqUAYs1AVk=
+		gwGfzVrgZAD1+oPwcIUPwFLFzok=
 		</data>
 		<key>app/tns_modules/ui/layouts/dock-layout/dock-layout.js</key>
 		<data>
-		jsvkDgItEnNI3MgE40I19mzG1cA=
+		26GEgu5/md2+uMxfO0OycOLr8WQ=
 		</data>
 		<key>app/tns_modules/ui/layouts/dock-layout/package.json</key>
 		<data>
@@ -2838,11 +2882,11 @@
 		</data>
 		<key>app/tns_modules/ui/layouts/grid-layout/grid-layout-common.js</key>
 		<data>
-		TwMtK3VCB6zQhHX6OfAxti1Hf6o=
+		VhkAZe/T00lfKYP7VkdHyV2C5LE=
 		</data>
 		<key>app/tns_modules/ui/layouts/grid-layout/grid-layout.js</key>
 		<data>
-		ljS2plZt14M5xg2AiWtBarK6Vr0=
+		zDVK7ElNmCXaJkvwRXFIaLrQqv0=
 		</data>
 		<key>app/tns_modules/ui/layouts/grid-layout/package.json</key>
 		<data>
@@ -2850,11 +2894,11 @@
 		</data>
 		<key>app/tns_modules/ui/layouts/layout-base.js</key>
 		<data>
-		rDEDi0XkFOKyU4ReX/gKdJX5kN0=
+		SG4f/fFFCopDEIzBiEztl+d31qQ=
 		</data>
 		<key>app/tns_modules/ui/layouts/layout.js</key>
 		<data>
-		MLgPh6Z+qKB2aZ+hfyE6ONg4txY=
+		8Vx0QZeLzL+we18HVIVAL935h7M=
 		</data>
 		<key>app/tns_modules/ui/layouts/stack-layout/package.json</key>
 		<data>
@@ -2866,7 +2910,7 @@
 		</data>
 		<key>app/tns_modules/ui/layouts/stack-layout/stack-layout.js</key>
 		<data>
-		cil7AuCg/i71je2c/Cqfiu1InwI=
+		OZn7oIT3F1xqnswxc0UefMV2qFM=
 		</data>
 		<key>app/tns_modules/ui/layouts/wrap-layout/package.json</key>
 		<data>
@@ -2878,7 +2922,7 @@
 		</data>
 		<key>app/tns_modules/ui/layouts/wrap-layout/wrap-layout.js</key>
 		<data>
-		EHmRmw1dQ8YrIlZSBoTQBzgZzSw=
+		Gebmd6EqIGzxUtIHKOiPlQVbnPk=
 		</data>
 		<key>app/tns_modules/ui/list-picker/list-picker-common.js</key>
 		<data>
@@ -2886,7 +2930,7 @@
 		</data>
 		<key>app/tns_modules/ui/list-picker/list-picker.js</key>
 		<data>
-		h0s3PYvQ1wTTo/lSdP1urOzkoa4=
+		XslWmI3fE/2d85ofvBKwE95wyuM=
 		</data>
 		<key>app/tns_modules/ui/list-picker/package.json</key>
 		<data>
@@ -2898,7 +2942,7 @@
 		</data>
 		<key>app/tns_modules/ui/list-view/list-view.js</key>
 		<data>
-		2x1h7lbsCQkUxxu8OMxnf/0b8q0=
+		2h6xfk30VyCH6tO+lyhvySa8ENU=
 		</data>
 		<key>app/tns_modules/ui/list-view/package.json</key>
 		<data>
@@ -2914,11 +2958,11 @@
 		</data>
 		<key>app/tns_modules/ui/page/page-common.js</key>
 		<data>
-		hZMhMVg4XV6T3Zkbl9v4nwLAc4s=
+		mdsapTrbAXwtK8cHs9tcpC4kxaA=
 		</data>
 		<key>app/tns_modules/ui/page/page.js</key>
 		<data>
-		hCq5TUsiNucJsV/XqTCcGeDR5hU=
+		ASWuV5J4PnJCqftqAPGxYneMfsw=
 		</data>
 		<key>app/tns_modules/ui/placeholder/package.json</key>
 		<data>
@@ -2930,7 +2974,7 @@
 		</data>
 		<key>app/tns_modules/ui/placeholder/placeholder.js</key>
 		<data>
-		pp476cQXzLgGsTeDNJnVrglfHnQ=
+		XvrXoFnDBm8yqn2BeO4/xynTYoY=
 		</data>
 		<key>app/tns_modules/ui/progress/package.json</key>
 		<data>
@@ -2942,7 +2986,7 @@
 		</data>
 		<key>app/tns_modules/ui/progress/progress.js</key>
 		<data>
-		i8BoWRl7r/uD+dsPAu4VHH5hVTM=
+		5HxUtb6jP6SJaUnE8VXs+PM/fgE=
 		</data>
 		<key>app/tns_modules/ui/repeater/package.json</key>
 		<data>
@@ -2950,7 +2994,7 @@
 		</data>
 		<key>app/tns_modules/ui/repeater/repeater.js</key>
 		<data>
-		HyIgR+1NXxry/5oqSqos1VigSKs=
+		oQ5+c4iUGlhUuXKAKNC0mtAQDEY=
 		</data>
 		<key>app/tns_modules/ui/scroll-view/package.json</key>
 		<data>
@@ -2962,7 +3006,7 @@
 		</data>
 		<key>app/tns_modules/ui/scroll-view/scroll-view.js</key>
 		<data>
-		MYOc/PEsPZi6XKQvJHRyDgJ1t2I=
+		MwkDBPqnXJfl7xmUz6NTPD/AkaY=
 		</data>
 		<key>app/tns_modules/ui/search-bar/package.json</key>
 		<data>
@@ -2974,7 +3018,7 @@
 		</data>
 		<key>app/tns_modules/ui/search-bar/search-bar.js</key>
 		<data>
-		cn2fbrJOSVDVS63FeGzbX8trNoA=
+		C2uHcn4SbG9xCI8DLeUSVgkagNo=
 		</data>
 		<key>app/tns_modules/ui/segmented-bar/package.json</key>
 		<data>
@@ -2986,7 +3030,7 @@
 		</data>
 		<key>app/tns_modules/ui/segmented-bar/segmented-bar.js</key>
 		<data>
-		yNMLIVnXXl+FUOtTREU8KmhXsqA=
+		KesjcEGr7EQtSm0LtYq15Mt0A00=
 		</data>
 		<key>app/tns_modules/ui/slider/package.json</key>
 		<data>
@@ -2998,7 +3042,7 @@
 		</data>
 		<key>app/tns_modules/ui/slider/slider.js</key>
 		<data>
-		4JviWQReAS1CD7gDYboDdCUO86I=
+		hZ2z4EV3I7sBshw5+T4rlTDWBok=
 		</data>
 		<key>app/tns_modules/ui/styling/background-common.js</key>
 		<data>
@@ -3006,7 +3050,7 @@
 		</data>
 		<key>app/tns_modules/ui/styling/background.js</key>
 		<data>
-		FwVwcruhXAxdzpDvytjpjqCQyjg=
+		fo93I0GEb4zsTk5vfSLf3lpCdEc=
 		</data>
 		<key>app/tns_modules/ui/styling/converters.js</key>
 		<data>
@@ -3018,11 +3062,11 @@
 		</data>
 		<key>app/tns_modules/ui/styling/font-common.js</key>
 		<data>
-		o8UvDlciALlc70tWWe3pfOWmqEk=
+		yih13YLetfY92d3E854rTy1KWTs=
 		</data>
 		<key>app/tns_modules/ui/styling/font.js</key>
 		<data>
-		/HKerR0VEerAPGP5pPw2wKaQyj4=
+		efj3rNCbpR+BJrnckk4/9YnyOT4=
 		</data>
 		<key>app/tns_modules/ui/styling/package.json</key>
 		<data>
@@ -3034,11 +3078,11 @@
 		</data>
 		<key>app/tns_modules/ui/styling/style-scope.js</key>
 		<data>
-		yet/pFid/CRF7JIkWcdY99Hl+4I=
+		y5Ag2rYbAmWwTzf2riPlEuLXfnk=
 		</data>
 		<key>app/tns_modules/ui/styling/style.js</key>
 		<data>
-		VHX5vEIh02QseoHFLQMm0MCwuKI=
+		QbqXFl79C8NsLHoQzvZsqHsaaJk=
 		</data>
 		<key>app/tns_modules/ui/styling/stylers-common.js</key>
 		<data>
@@ -3046,11 +3090,11 @@
 		</data>
 		<key>app/tns_modules/ui/styling/stylers.js</key>
 		<data>
-		nrVfpOhMRsB49gJJYydDYVv4VYE=
+		j9lCcxHTzrTLdRjbKq0wdl2Lj8s=
 		</data>
 		<key>app/tns_modules/ui/styling/styling.js</key>
 		<data>
-		Pq54JObvMn/pmz8X9qsaa6sEILE=
+		pdSVfekYKbJxHI9vjM5hOfkRjUM=
 		</data>
 		<key>app/tns_modules/ui/styling/visual-state-constants.js</key>
 		<data>
@@ -3070,7 +3114,7 @@
 		</data>
 		<key>app/tns_modules/ui/switch/switch.js</key>
 		<data>
-		2BFpDnR5lXkslcFL/HTUT8VQlHA=
+		vLUn2/5cqq68GVDFcaxz8dxMMr4=
 		</data>
 		<key>app/tns_modules/ui/tab-view/package.json</key>
 		<data>
@@ -3082,7 +3126,7 @@
 		</data>
 		<key>app/tns_modules/ui/tab-view/tab-view.js</key>
 		<data>
-		bTVVL2c0w2ltEGkutDd+0M+Uty4=
+		upbYZM9ZZbQMZwYrwm+FDUvRMyM=
 		</data>
 		<key>app/tns_modules/ui/text-base/package.json</key>
 		<data>
@@ -3098,11 +3142,11 @@
 		</data>
 		<key>app/tns_modules/ui/text-field/text-field-common.js</key>
 		<data>
-		Bhg09J4rh1GM80aHXkfRQtl1r+4=
+		ENycJuS9c1EBe7Lz3rTPfGM+Xfk=
 		</data>
 		<key>app/tns_modules/ui/text-field/text-field.js</key>
 		<data>
-		9/OFrzNdBiXwcS6Ie8zo1M6RZLA=
+		oKZJaDqPXQph6zJpmPfOKzhrsLk=
 		</data>
 		<key>app/tns_modules/ui/text-view/package.json</key>
 		<data>
@@ -3114,7 +3158,7 @@
 		</data>
 		<key>app/tns_modules/ui/text-view/text-view.js</key>
 		<data>
-		zQtsH3GcERLDudHZMIFEDR+8GQw=
+		5GKgkT/CP0Rbu4kX4aokLiQXavM=
 		</data>
 		<key>app/tns_modules/ui/time-picker/package.json</key>
 		<data>
@@ -3126,11 +3170,15 @@
 		</data>
 		<key>app/tns_modules/ui/time-picker/time-picker.js</key>
 		<data>
-		eVJLz1S9FSJdpCJ33qR8WA9hRuE=
+		Zh++ALaouoDBnG8xNXT85sdWA38=
 		</data>
 		<key>app/tns_modules/ui/ui.js</key>
 		<data>
 		EPxG9hlQCvrQys71NpdO68q7cso=
+		</data>
+		<key>app/tns_modules/ui/utils.js</key>
+		<data>
+		5FRy+jjmvos8SHDSSkGrQFgzD68=
 		</data>
 		<key>app/tns_modules/ui/web-view/package.json</key>
 		<data>
@@ -3138,11 +3186,11 @@
 		</data>
 		<key>app/tns_modules/ui/web-view/web-view-common.js</key>
 		<data>
-		xMw3wRXfz9N/kSBdzbXjqNs2GGw=
+		aUjDVx+iXmddfbxQDY7M2kdH0B8=
 		</data>
 		<key>app/tns_modules/ui/web-view/web-view.js</key>
 		<data>
-		ksiYOjgtYAptiJOIgQMKO7wqfnA=
+		LxXRrzeTtWul3QQWCMbHvHgHwYs=
 		</data>
 		<key>app/tns_modules/utils/module-merge.js</key>
 		<data>
@@ -3162,7 +3210,7 @@
 		</data>
 		<key>app/tns_modules/utils/utils.js</key>
 		<data>
-		moKUiYsTr9oaK6kU2Zd+uCLc/xs=
+		QQCEzIOag6RrNMOlUX0xsCr7L7E=
 		</data>
 		<key>app/tns_modules/xhr/package.json</key>
 		<data>
@@ -3178,7 +3226,7 @@
 		</data>
 		<key>app/tns_modules/xml/xml.js</key>
 		<data>
-		oTf5m2TGzYEtEcccii3zn0rtwVA=
+		odIB4U5UnF/AMHKB4Sy/GOY0m4s=
 		</data>
 		<key>bike.png</key>
 		<data>
@@ -3254,15 +3302,15 @@
 		</data>
 		<key>coldbg.png</key>
 		<data>
-		ykXjMC/A9nBy7e95QlcTAYTmD3c=
+		YPYtlK79otHJLtv4p1bAQziIhao=
 		</data>
 		<key>coldbg@2x.png</key>
 		<data>
-		uQaGrKUk+L898nMZwMaEY2PgaMM=
+		OMbYMQnWPv20YFsHpac24mwvbUg=
 		</data>
 		<key>coldbg@3x.png</key>
 		<data>
-		9CA2nOXfc1uIHGCncpIe3OC2Q8Y=
+		OsAd/j34ZOF0CzGmzfZswByLzJU=
 		</data>
 		<key>day.png</key>
 		<data>
@@ -3278,7 +3326,7 @@
 		</data>
 		<key>embedded.mobileprovision</key>
 		<data>
-		p7mBT+RC9fqlZpSUXzF4sIhcB6o=
+		O1UrwEPiGkeFRsa7Gn/i1L5yRu0=
 		</data>
 		<key>en.lproj/InfoPlist.strings</key>
 		<dict>

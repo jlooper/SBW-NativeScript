@@ -3,7 +3,7 @@ var dependencyObservable = require("ui/core/dependency-observable");
 var enums = require("ui/enums");
 var proxy = require("ui/core/proxy");
 var view = require("ui/core/view");
-var style = require("ui/styling/style");
+var style = require("../styling/style");
 var observable = require("ui/core/dependency-observable");
 var ACTION_ITEMS = "actionItems";
 var knownCollections;

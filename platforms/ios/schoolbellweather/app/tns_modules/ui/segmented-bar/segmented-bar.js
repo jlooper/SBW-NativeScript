@@ -1,4 +1,4 @@
-var common = require("ui/segmented-bar/segmented-bar-common");
+var common = require("./segmented-bar-common");
 var types = require("utils/types");
 var color = require("color");
 global.moduleMerge(common, exports);

@@ -1,4 +1,4 @@
-var common = require("ui/placeholder/placeholder-common");
+var common = require("./placeholder-common");
 global.moduleMerge(common, exports);
 var Placeholder = (function (_super) {
     __extends(Placeholder, _super);
@@ -10,7 +10,7 @@ var Placeholder = (function (_super) {
             if (!this._ios) {
                 var args = { eventName: common.Placeholder.creatingViewEvent, object: this, view: undefined, context: undefined };
                 _super.prototype.notify.call(this, args);
-                this._ios = args.view || new UIView();
+                this._ios = args.view;
             }
             return this._ios;
         },

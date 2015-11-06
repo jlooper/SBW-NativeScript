@@ -12,8 +12,6 @@ exports.exitEvent = "exit";
 exports.lowMemoryEvent = "lowMemory";
 exports.uncaughtErrorEvent = "uncaughtError";
 exports.orientationChangedEvent = "orientationChanged";
-exports.mainModule;
-exports.mainEntry;
 exports.cssFile = "app.css";
 exports.resources = {};
 exports.onUncaughtError = undefined;

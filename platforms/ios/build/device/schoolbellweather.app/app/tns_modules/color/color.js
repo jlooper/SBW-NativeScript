@@ -1,4 +1,4 @@
-var common = require("color/color-common");
+var common = require("./color-common");
 var AMP = "#";
 var Color = (function (_super) {
     __extends(Color, _super);

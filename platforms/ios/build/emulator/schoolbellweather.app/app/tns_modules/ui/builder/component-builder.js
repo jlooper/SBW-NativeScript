@@ -1,12 +1,13 @@
-var observable = require("data/observable");
-var dockLayoutDef = require("ui/layouts/dock-layout");
-var gridLayoutModule = require("ui/layouts/grid-layout");
-var absoluteLayoutDef = require("ui/layouts/absolute-layout");
+var view = require("ui/core/view");
 var types = require("utils/types");
 var fs = require("file-system");
-var gestures = require("ui/gestures");
-var bindingBuilder = require("ui/builder/binding-builder");
+var bindingBuilder = require("./binding-builder");
 var platform = require("platform");
+var pages = require("ui/page");
+require("ui/layouts/dock-layout");
+require("ui/layouts/grid-layout");
+require("ui/layouts/absolute-layout");
+var special_properties_1 = require("ui/builder/special-properties");
 var UI_PATH = "ui/";
 var MODULES = {
     "TabViewItem": "ui/tab-view",
@@ -16,23 +17,8 @@ var MODULES = {
     "NavigationButton": "ui/action-bar",
     "SegmentedBarItem": "ui/segmented-bar",
 };
-var ROW = "row";
-var COL = "col";
-var COL_SPAN = "colSpan";
-var ROW_SPAN = "rowSpan";
-var DOCK = "dock";
-var LEFT = "left";
-var TOP = "top";
-exports.specialProperties = [
-    ROW,
-    COL,
-    COL_SPAN,
-    ROW_SPAN,
-    DOCK,
-    LEFT,
-    TOP,
-];
-var eventHandlers = {};
+var CODEFILE = "codeFile";
+var CSSFILE = "cssFile";
 function getComponentModule(elementName, namespace, attributes, exports) {
     var instance;
     var instanceModule;
@@ -58,8 +44,45 @@ function getComponentModule(elementName, namespace, attributes, exports) {
     catch (ex) {
         throw new Error("Cannot create module " + moduleId + ". " + ex + ". StackTrace: " + ex.stack);
     }
+    if (attributes) {
+        if (attributes[CODEFILE]) {
+            if (instance instanceof pages.Page) {
+                var codeFilePath = attributes[CODEFILE].trim();
+                if (codeFilePath.indexOf("~/") === 0) {
+                    codeFilePath = fs.path.join(fs.knownFolders.currentApp().path, codeFilePath.replace("~/", ""));
+                }
+                try {
+                    exports = require(codeFilePath);
+                    instance.exports = exports;
+                }
+                catch (ex) {
+                    throw new Error("Code file with path \"" + codeFilePath + "\" cannot be found!");
+                }
+            }
+            else {
+                throw new Error("Code file atribute is valid only for pages!");
+            }
+        }
+        if (attributes[CSSFILE]) {
+            if (instance instanceof pages.Page) {
+                var cssFilePath = attributes[CSSFILE].trim();
+                if (cssFilePath.indexOf("~/") === 0) {
+                    cssFilePath = fs.path.join(fs.knownFolders.currentApp().path, cssFilePath.replace("~/", ""));
+                }
+                if (fs.File.exists(cssFilePath)) {
+                    instance.addCssFile(cssFilePath);
+                    instance[CSSFILE] = true;
+                }
+                else {
+                    throw new Error("Css file with path \"" + cssFilePath + "\" cannot be found!");
+                }
+            }
+            else {
+                throw new Error("Css file atribute is valid only for pages!");
+            }
+        }
+    }
     if (instance && instanceModule) {
-        var bindings = new Array();
         for (var attr in attributes) {
             var attrValue = attributes[attr];
             if (attr.indexOf(":") !== -1) {
@@ -89,105 +112,58 @@ function getComponentModule(elementName, namespace, attributes, exports) {
                 setPropertyValue(instance, instanceModule, exports, attr, attrValue);
             }
         }
-        eventHandlers = {};
-        componentModule = { component: instance, exports: instanceModule, bindings: bindings };
+        componentModule = { component: instance, exports: instanceModule };
     }
     return componentModule;
 }
 exports.getComponentModule = getComponentModule;
-function setSpecialPropertyValue(instance, propertyName, propertyValue) {
-    if (propertyName === ROW) {
-        gridLayoutModule.GridLayout.setRow(instance, !isNaN(+propertyValue) && +propertyValue);
-    }
-    else if (propertyName === COL) {
-        gridLayoutModule.GridLayout.setColumn(instance, !isNaN(+propertyValue) && +propertyValue);
-    }
-    else if (propertyName === COL_SPAN) {
-        gridLayoutModule.GridLayout.setColumnSpan(instance, !isNaN(+propertyValue) && +propertyValue);
-    }
-    else if (propertyName === ROW_SPAN) {
-        gridLayoutModule.GridLayout.setRowSpan(instance, !isNaN(+propertyValue) && +propertyValue);
-    }
-    else if (propertyName === LEFT) {
-        absoluteLayoutDef.AbsoluteLayout.setLeft(instance, !isNaN(+propertyValue) && +propertyValue);
-    }
-    else if (propertyName === TOP) {
-        absoluteLayoutDef.AbsoluteLayout.setTop(instance, !isNaN(+propertyValue) && +propertyValue);
-    }
-    else if (propertyName === DOCK) {
-        console.log('set dock: ' + propertyName + ' -> ' + propertyValue);
-        dockLayoutDef.DockLayout.setDock(instance, propertyValue);
-    }
-    else {
-        return false;
-    }
-    return true;
-}
-exports.setSpecialPropertyValue = setSpecialPropertyValue;
 function setPropertyValue(instance, instanceModule, exports, propertyName, propertyValue) {
-    var isEventOrGesture = isKnownEventOrGesture(propertyName, instance);
+    // Note: instanceModule can be null if we are loading custom compnenet with no code-behind.
     if (isBinding(propertyValue) && instance.bind) {
-        if (isEventOrGesture) {
-            attachEventBinding(instance, propertyName, propertyValue);
-        }
-        else {
-            var bindOptions = bindingBuilder.getBindingOptions(propertyName, getBindingExpressionFromAttribute(propertyValue));
-            instance.bind({
-                sourceProperty: bindOptions[bindingBuilder.bindingConstants.sourceProperty],
-                targetProperty: bindOptions[bindingBuilder.bindingConstants.targetProperty],
-                expression: bindOptions[bindingBuilder.bindingConstants.expression],
-                twoWay: bindOptions[bindingBuilder.bindingConstants.twoWay]
-            }, bindOptions[bindingBuilder.bindingConstants.source]);
-        }
+        var bindOptions = bindingBuilder.getBindingOptions(propertyName, getBindingExpressionFromAttribute(propertyValue));
+        instance.bind({
+            sourceProperty: bindOptions[bindingBuilder.bindingConstants.sourceProperty],
+            targetProperty: bindOptions[bindingBuilder.bindingConstants.targetProperty],
+            expression: bindOptions[bindingBuilder.bindingConstants.expression],
+            twoWay: bindOptions[bindingBuilder.bindingConstants.twoWay]
+        }, bindOptions[bindingBuilder.bindingConstants.source]);
     }
-    else if (isEventOrGesture) {
+    else if (view.isEventOrGesture(propertyName, instance)) {
         var handler = exports && exports[propertyValue];
         if (types.isFunction(handler)) {
             instance.on(propertyName, handler);
         }
     }
-    else if (setSpecialPropertyValue(instance, propertyName, propertyValue)) {
-    }
     else {
         var attrHandled = false;
-        if (instance._applyXmlAttribute) {
+        var specialSetter = special_properties_1.getSpecialPropertySetter(propertyName);
+        if (!attrHandled && specialSetter) {
+            specialSetter(instance, propertyValue);
+            attrHandled = true;
+        }
+        if (!attrHandled && instance._applyXmlAttribute) {
             attrHandled = instance._applyXmlAttribute(propertyName, propertyValue);
         }
         if (!attrHandled) {
-            var valueAsNumber = +propertyValue;
-            if (!isNaN(valueAsNumber)) {
-                instance[propertyName] = valueAsNumber;
-            }
-            else if (propertyValue && (propertyValue.toLowerCase() === "true" || propertyValue.toLowerCase() === "false")) {
-                instance[propertyName] = propertyValue.toLowerCase() === "true" ? true : false;
+            if (propertyValue.trim() === "") {
+                instance[propertyName] = propertyValue;
             }
             else {
-                instance[propertyName] = propertyValue;
+                var valueAsNumber = +propertyValue;
+                if (!isNaN(valueAsNumber)) {
+                    instance[propertyName] = valueAsNumber;
+                }
+                else if (propertyValue && (propertyValue.toLowerCase() === "true" || propertyValue.toLowerCase() === "false")) {
+                    instance[propertyName] = propertyValue.toLowerCase() === "true" ? true : false;
+                }
+                else {
+                    instance[propertyName] = propertyValue;
+                }
             }
         }
     }
 }
 exports.setPropertyValue = setPropertyValue;
-function attachEventBinding(instance, eventName, value) {
-    eventHandlers[eventName] = function (args) {
-        if (args.propertyName === "bindingContext") {
-            var handler = instance.bindingContext && instance.bindingContext[getBindingExpressionFromAttribute(value)];
-            if (types.isFunction(handler)) {
-                instance.on(eventName, handler, instance.bindingContext);
-            }
-            instance.off(observable.Observable.propertyChangeEvent, eventHandlers[eventName]);
-        }
-    };
-    instance.on(observable.Observable.propertyChangeEvent, eventHandlers[eventName]);
-}
-function isKnownEventOrGesture(name, instance) {
-    if (types.isString(name)) {
-        var evt = name + "Event";
-        return instance.constructor && evt in instance.constructor ||
-            gestures.fromString(name.toLowerCase()) !== undefined;
-    }
-    return false;
-}
 function getBindingExpressionFromAttribute(value) {
     return value.replace("{{", "").replace("}}", "").trim();
 }

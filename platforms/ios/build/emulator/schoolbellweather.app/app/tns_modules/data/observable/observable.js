@@ -40,6 +40,9 @@ var Observable = (function () {
         this.removeEventListener(eventNames, callback, thisArg);
     };
     Observable.prototype.addEventListener = function (eventNames, callback, thisArg) {
+        if (!types.isString(eventNames)) {
+            throw new TypeError("Events name(s) must be string.");
+        }
         types.verifyCallback(callback);
         var events = eventNames.split(",");
         for (var i = 0, l = events.length; i < l; i++) {
@@ -52,6 +55,9 @@ var Observable = (function () {
         }
     };
     Observable.prototype.removeEventListener = function (eventNames, callback, thisArg) {
+        if (!types.isString(eventNames)) {
+            throw new TypeError("Events name(s) must be string.");
+        }
         var events = eventNames.split(",");
         for (var i = 0, l = events.length; i < l; i++) {
             var event = events[i].trim();
@@ -98,7 +104,7 @@ var Observable = (function () {
         var i;
         var entry;
         var observersLength = observers.length;
-        for (i = 0; i < observersLength; i++) {
+        for (i = observersLength - 1; i >= 0; i--) {
             entry = observers[i];
             if (entry.thisArg) {
                 entry.callback.apply(entry.thisArg, [data]);

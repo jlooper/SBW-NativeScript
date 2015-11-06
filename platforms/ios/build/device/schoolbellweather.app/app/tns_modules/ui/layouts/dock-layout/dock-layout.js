@@ -1,7 +1,7 @@
 var utils = require("utils/utils");
 var view = require("ui/core/view");
 var enums = require("ui/enums");
-var common = require("ui/layouts/dock-layout/dock-layout-common");
+var common = require("./dock-layout-common");
 global.moduleMerge(common, exports);
 var DockLayout = (function (_super) {
     __extends(DockLayout, _super);

@@ -1,10 +1,10 @@
 {
   "name": "tns-core-modules",
   "description": "Telerik NativeScript Core Modules",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NativeScript/NativeScript/commit/2c02b356f4e06028be2aeb22eada64d1fad9d9c5"
+    "url": "https://github.com/NativeScript/NativeScript/commit/2647ee894483aed4f8d1e2dfdb1784f66d70f4f9"
   },
   "files": [
     "**/*.*",
@@ -19,29 +19,41 @@
     "grunt-exec": "0.4.6",
     "grunt-multi-dest": "1.0.0",
     "grunt-shell": "1.1.2",
-    "grunt-ts": "4.2.0",
-    "grunt-tslint": "2.4.0",
+    "grunt-ts": "5.0.0-beta.5",
+    "grunt-tslint": "2.5.0",
     "mocha": "2.2.5",
     "grunt-simple-mocha": "0.4.0",
     "grunt-env": "0.4.4",
     "chai": "3.2.0",
-    "typescript": "1.5.3"
+    "typescript": "1.6.2"
   },
-  "_id": "tns-core-modules@1.3.0",
-  "_shasum": "8095b5651444d49ab9a15ee8f21262ecfb6abf44",
-  "_resolved": "https://registry.npmjs.org/tns-core-modules/-/tns-core-modules-1.3.0.tgz",
-  "_from": "tns-core-modules@*",
+  "_id": "tns-core-modules@1.4.0",
+  "_shasum": "90bcb20087993faa1310658803cf3ef7fe5970d5",
+  "_resolved": "https://registry.npmjs.org/tns-core-modules/-/tns-core-modules-1.4.0.tgz",
+  "_from": "tns-core-modules@1.4.0",
   "scripts": {},
-  "_npmVersion": "2.11.3",
-  "_nodeVersion": "0.12.7",
+  "_npmVersion": "2.5.1",
+  "_nodeVersion": "0.12.0",
   "_npmUser": {
-    "name": "erjangavalji",
-    "email": "erjan.gavalji@gmail.com"
+    "name": "enchev",
+    "email": "vladimir.enchev@gmail.com"
+  },
+  "dist": {
+    "shasum": "90bcb20087993faa1310658803cf3ef7fe5970d5",
+    "tarball": "http://registry.npmjs.org/tns-core-modules/-/tns-core-modules-1.4.0.tgz"
   },
   "maintainers": [
     {
+      "name": "enchev",
+      "email": "vladimir.enchev@gmail.com"
+    },
+    {
       "name": "erjangavalji",
       "email": "erjan.gavalji@gmail.com"
+    },
+    {
+      "name": "fatme",
+      "email": "hfatme@gmail.com"
     },
     {
       "name": "hdeshev",
@@ -56,18 +68,10 @@
       "email": "stefan.dobrev@gmail.com"
     },
     {
-      "name": "fatme",
-      "email": "hfatme@gmail.com"
-    },
-    {
       "name": "valio.stoychev",
       "email": "valio.stoychev@gmail.com"
     }
   ],
-  "dist": {
-    "shasum": "8095b5651444d49ab9a15ee8f21262ecfb6abf44",
-    "tarball": "http://registry.npmjs.org/tns-core-modules/-/tns-core-modules-1.3.0.tgz"
-  },
   "directories": {},
   "readme": "ERROR: No README data found!"
 }

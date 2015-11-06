@@ -1,4 +1,4 @@
-var common = require("ui/button/button-common");
+var common = require("./button-common");
 var stateChanged = require("ui/core/control-state-change");
 var TapHandlerImpl = (function (_super) {
     __extends(TapHandlerImpl, _super);

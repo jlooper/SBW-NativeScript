@@ -1,3 +1,2 @@
 #!/bin/sh
-cd "$SRCROOT/metadataGenerator/bin"
-bash metadata-generation-build-step.sh
+"$SRCROOT/internal/nativescript-pre-build"

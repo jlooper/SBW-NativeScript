@@ -1,4 +1,4 @@
-var common = require("ui/editable-text-base/editable-text-base-common");
+var common = require("./editable-text-base-common");
 var enums = require("ui/enums");
 var EditableTextBase = (function (_super) {
     __extends(EditableTextBase, _super);

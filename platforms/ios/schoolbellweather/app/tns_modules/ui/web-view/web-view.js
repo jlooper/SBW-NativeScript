@@ -1,7 +1,5 @@
-var common = require("ui/web-view/web-view-common");
+var common = require("./web-view-common");
 var trace = require("trace");
-var utils = require("utils/utils");
-var fs = require("file-system");
 global.moduleMerge(common, exports);
 var UIWebViewDelegateImpl = (function (_super) {
     __extends(UIWebViewDelegateImpl, _super);
@@ -62,6 +60,9 @@ var WebView = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    WebView.prototype.stopLoading = function () {
+        this._ios.stopLoading();
+    };
     WebView.prototype._loadUrl = function (url) {
         trace.write("WebView._loadUrl(" + url + ")", trace.categories.Debug);
         if (this._ios.loading) {
@@ -69,30 +70,15 @@ var WebView = (function (_super) {
         }
         this._ios.loadRequest(NSURLRequest.requestWithURL(NSURL.URLWithString(url)));
     };
-    WebView.prototype._loadSrc = function (src) {
-        var _this = this;
-        trace.write("WebView._loadSrc(" + src + ")", trace.categories.Debug);
-        if (this._ios.loading) {
-            this._ios.stopLoading();
-        }
-        if (utils.isFileOrResourcePath(src)) {
-            if (src.indexOf("~/") === 0) {
-                src = fs.path.join(fs.knownFolders.currentApp().path, src.replace("~/", ""));
-            }
-            var file = fs.File.fromPath(src);
-            if (file) {
-                var baseURL = NSURL.fileURLWithPath(NSString.stringWithString(src).stringByDeletingLastPathComponent);
-                file.readText().then(function (r) {
-                    _this._ios.loadHTMLStringBaseURL(r, baseURL);
-                });
-            }
-        }
-        else if (src.indexOf("http://") === 0 || src.indexOf("https://") === 0) {
-            this._ios.loadRequest(NSURLRequest.requestWithURL(NSURL.URLWithString(src)));
-        }
-        else {
-            this._ios.loadHTMLStringBaseURL(src, null);
-        }
+    WebView.prototype._loadFileOrResource = function (path, content) {
+        var baseURL = NSURL.fileURLWithPath(NSString.stringWithString(path).stringByDeletingLastPathComponent);
+        this._ios.loadHTMLStringBaseURL(content, baseURL);
+    };
+    WebView.prototype._loadHttp = function (src) {
+        this._ios.loadRequest(NSURLRequest.requestWithURL(NSURL.URLWithString(src)));
+    };
+    WebView.prototype._loadData = function (src) {
+        this._ios.loadHTMLStringBaseURL(src, null);
     };
     Object.defineProperty(WebView.prototype, "canGoBack", {
         get: function () {

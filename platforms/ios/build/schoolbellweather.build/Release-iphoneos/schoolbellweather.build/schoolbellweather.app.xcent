@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>application-identifier</key>
-	<string>JWHXD9EYG5.com.ladeezfirstmedia.sbw</string>
+	<string>JWHXD9EYG5.com.ladeezfirstmedia.schoolbellweather</string>
 	<key>beta-reports-active</key>
 	<true/>
 	<key>com.apple.developer.team-identifier</key>
@@ -12,7 +12,7 @@
 	<false/>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>JWHXD9EYG5.com.ladeezfirstmedia.sbw</string>
+		<string>JWHXD9EYG5.com.ladeezfirstmedia.schoolbellweather</string>
 	</array>
 </dict>
 </plist>

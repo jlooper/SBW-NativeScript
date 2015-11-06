@@ -1,5 +1,5 @@
 var enums = require("ui/enums");
-var common = require("ui/styling/font-common");
+var common = require("./font-common");
 var fs = require("file-system");
 var DEFAULT_SERIF = "Times New Roman";
 var DEFAULT_SANS_SERIF = "Helvetica";

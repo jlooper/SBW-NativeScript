@@ -1,4 +1,4 @@
-var common = require("ui/image-cache/image-cache-common");
+var common = require("./image-cache-common");
 var httpRequest = require("http/http-request");
 var utils = require("utils/utils");
 var trace = require("trace");

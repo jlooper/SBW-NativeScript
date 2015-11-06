@@ -1,4 +1,4 @@
-var common = require("ui/label/label-common");
+var common = require("./label-common");
 var utils = require("utils/utils");
 var viewModule = require("ui/core/view");
 function onTextWrapPropertyChanged(data) {

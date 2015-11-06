@@ -1,9 +1,10 @@
-var frameCommon = require("ui/frame/frame-common");
+var frameCommon = require("./frame-common");
 var trace = require("trace");
 var enums = require("ui/enums");
 var utils = require("utils/utils");
 var view = require("ui/core/view");
 var types = require("utils/types");
+var uiUtils = require("ui/utils");
 global.moduleMerge(frameCommon, exports);
 var ENTRY = "_entry";
 var NAV_DEPTH = "_navDepth";
@@ -44,21 +45,33 @@ var Frame = (function (_super) {
         viewController[ENTRY] = backstackEntry;
         this._navigateToEntry = backstackEntry;
         this._updateActionBar(backstackEntry.resolvedPage);
-        if (this._currentEntry && !this._isEntryBackstackVisible(this._currentEntry)) {
+        if (!this._currentEntry) {
+            this._ios.controller.pushViewControllerAnimated(viewController, animated);
+            trace.write("Frame<" + this._domId + ">.pushViewControllerAnimated(newController) depth = " + navDepth, trace.categories.Navigation);
+            return;
+        }
+        if (backstackEntry.entry.clearHistory) {
+            viewController.navigationItem.hidesBackButton = true;
+            var newControllers = NSMutableArray.alloc().initWithCapacity(1);
+            newControllers.addObject(viewController);
+            this._ios.controller.setViewControllersAnimated(newControllers, animated);
+            trace.write("Frame<" + this._domId + ">.setViewControllersAnimated([newController]) depth = " + navDepth, trace.categories.Navigation);
+            return;
+        }
+        if (!this._isEntryBackstackVisible(this._currentEntry)) {
             var newControllers = NSMutableArray.alloc().initWithArray(this._ios.controller.viewControllers);
             if (newControllers.count === 0) {
                 throw new Error("Wrong controllers count.");
             }
-            var newController = backstackEntry.resolvedPage.ios;
-            newController.navigationItem.hidesBackButton = this.backStack.length === 0;
+            viewController.navigationItem.hidesBackButton = this.backStack.length === 0;
             newControllers.removeLastObject();
-            newControllers.addObject(newController);
+            newControllers.addObject(viewController);
             this._ios.controller.setViewControllersAnimated(newControllers, animated);
+            trace.write("Frame<" + this._domId + ">.setViewControllersAnimated([originalControllers - lastController + newController]) depth = " + navDepth, trace.categories.Navigation);
+            return;
         }
-        else {
-            this._ios.controller.pushViewControllerAnimated(viewController, animated);
-        }
-        trace.write("Frame<" + this._domId + ">.pushViewControllerAnimated depth = " + navDepth, trace.categories.Navigation);
+        this._ios.controller.pushViewControllerAnimated(viewController, animated);
+        trace.write("Frame<" + this._domId + ">.pushViewControllerAnimated(newController) depth = " + navDepth, trace.categories.Navigation);
     };
     Frame.prototype._goBackCore = function (backstackEntry) {
         navDepth = backstackEntry[NAV_DEPTH];
@@ -78,28 +91,22 @@ var Frame = (function (_super) {
         this._ios.showNavigationBar = newValue;
     };
     Frame.prototype._getNavBarVisible = function (page) {
-        if (!page) {
-            return false;
-        }
-        var newValue = false;
         switch (this._ios.navBarVisibility) {
             case enums.NavigationBarVisibility.always:
-                newValue = true;
-                break;
+                return true;
             case enums.NavigationBarVisibility.never:
-                newValue = false;
-                break;
+                return false;
             case enums.NavigationBarVisibility.auto:
+                var newValue;
                 if (page && types.isDefined(page.actionBarHidden)) {
                     newValue = !page.actionBarHidden;
                 }
                 else {
-                    newValue = this.backStack.length > 0 || (page && !page.actionBar._isEmpty());
+                    newValue = this.backStack.length > 0 || (page && page.actionBar && !page.actionBar._isEmpty());
                 }
                 newValue = !!newValue;
-                break;
+                return newValue;
         }
-        return newValue;
     };
     Object.defineProperty(Frame.prototype, "ios", {
         get: function () {
@@ -137,19 +144,31 @@ var Frame = (function (_super) {
         var widthMode = utils.layout.getMeasureSpecMode(widthMeasureSpec);
         var height = utils.layout.getMeasureSpecSize(heightMeasureSpec);
         var heightMode = utils.layout.getMeasureSpecMode(heightMeasureSpec);
-        var result = view.View.measureChild(this, this.currentPage, widthMeasureSpec, utils.layout.makeMeasureSpec(height - this.navigationBarHeight, heightMode));
-        if (this._navigateToEntry) {
-            view.View.measureChild(this, this._navigateToEntry.resolvedPage, widthMeasureSpec, utils.layout.makeMeasureSpec(height - this.navigationBarHeight, heightMode));
-        }
+        this._widthMeasureSpec = widthMeasureSpec;
+        this._heightMeasureSpec = heightMeasureSpec;
+        var result = this.measurePage(this.currentPage);
         var widthAndState = view.View.resolveSizeAndState(result.measuredWidth, width, widthMode, 0);
         var heightAndState = view.View.resolveSizeAndState(result.measuredHeight, height, heightMode, 0);
         this.setMeasuredDimension(widthAndState, heightAndState);
     };
-    Frame.prototype.onLayout = function (left, top, right, bottom) {
-        view.View.layoutChild(this, this.currentPage, 0, this.navigationBarHeight, right - left, bottom - top);
-        if (this._navigateToEntry) {
-            view.View.layoutChild(this, this._navigateToEntry.resolvedPage, 0, this.navigationBarHeight, right - left, bottom - top);
+    Frame.prototype.measurePage = function (page) {
+        var heightSpec = this._heightMeasureSpec;
+        if (page && !page.backgroundSpanUnderStatusBar) {
+            var height = utils.layout.getMeasureSpecSize(this._heightMeasureSpec);
+            var heightMode = utils.layout.getMeasureSpecMode(this._heightMeasureSpec);
+            var statusBarHeight = uiUtils.ios.getStatusBarHeight();
+            heightSpec = utils.layout.makeMeasureSpec(height - statusBarHeight, heightMode);
         }
+        return view.View.measureChild(this, page, this._widthMeasureSpec, heightSpec);
+    };
+    Frame.prototype.onLayout = function (left, top, right, bottom) {
+        this._layoutWidth = right - left;
+        this._layoutheight = bottom - top;
+        this.layoutPage(this.currentPage);
+    };
+    Frame.prototype.layoutPage = function (page) {
+        var statusBarHeight = (page && !page.backgroundSpanUnderStatusBar) ? uiUtils.ios.getStatusBarHeight() : 0;
+        view.View.layoutChild(this, page, 0, statusBarHeight, this._layoutWidth, this._layoutheight);
     };
     Object.defineProperty(Frame.prototype, "navigationBarHeight", {
         get: function () {
@@ -180,8 +199,6 @@ var UINavigationControllerImpl = (function (_super) {
         configurable: true
     });
     UINavigationControllerImpl.prototype.viewDidLoad = function () {
-        this.view.autoresizesSubviews = false;
-        this.view.autoresizingMask = UIViewAutoresizing.UIViewAutoresizingNone;
         this._owner.onLoaded();
     };
     UINavigationControllerImpl.prototype.viewDidLayoutSubviews = function () {
@@ -200,6 +217,8 @@ var UINavigationControllerImpl = (function (_super) {
                 frame._navigateToEntry = newEntry;
             }
             frame._addView(newPage);
+            frame.measurePage(newPage);
+            frame.layoutPage(newPage);
         }
         else if (newPage.parent !== frame) {
             throw new Error("Page is already shown on another frame.");

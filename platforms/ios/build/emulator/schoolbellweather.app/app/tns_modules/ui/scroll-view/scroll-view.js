@@ -1,6 +1,6 @@
 var view = require("ui/core/view");
 var contentView = require("ui/content-view");
-var common = require("ui/scroll-view/scroll-view-common");
+var common = require("./scroll-view-common");
 var enums = require("ui/enums");
 var utils = require("utils/utils");
 global.moduleMerge(common, exports);

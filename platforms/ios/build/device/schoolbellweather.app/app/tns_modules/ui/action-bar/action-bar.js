@@ -1,4 +1,4 @@
-var common = require("ui/action-bar/action-bar-common");
+var common = require("./action-bar-common");
 var imageSource = require("image-source");
 var frameModule = require("ui/frame");
 var enums = require("ui/enums");
@@ -28,6 +28,7 @@ var ActionBar = (function (_super) {
     __extends(ActionBar, _super);
     function ActionBar() {
         _super.apply(this, arguments);
+        this._navigationBarHeight = 0;
     }
     ActionBar.prototype.update = function () {
         if (!(this.page && this.page.parent)) {
@@ -50,7 +51,7 @@ var ActionBar = (function (_super) {
         if (previousController) {
             if (this.navigationButton) {
                 var tapHandler = TapBarItemHandlerImpl.new().initWithOwner(this.navigationButton);
-                var barButtonItem = UIBarButtonItem.alloc().initWithTitleStyleTargetAction(this.navigationButton.text, UIBarButtonItemStyle.UIBarButtonItemStylePlain, tapHandler, "tap");
+                var barButtonItem = UIBarButtonItem.alloc().initWithTitleStyleTargetAction(this.navigationButton.text + "", UIBarButtonItemStyle.UIBarButtonItemStylePlain, tapHandler, "tap");
                 previousController.navigationItem.backBarButtonItem = barButtonItem;
             }
             else {
@@ -105,7 +106,7 @@ var ActionBar = (function (_super) {
             }
         }
         else {
-            barButtonItem = UIBarButtonItem.alloc().initWithTitleStyleTargetAction(item.text, UIBarButtonItemStyle.UIBarButtonItemStylePlain, tapHandler, "tap");
+            barButtonItem = UIBarButtonItem.alloc().initWithTitleStyleTargetAction(item.text + "", UIBarButtonItemStyle.UIBarButtonItemStylePlain, tapHandler, "tap");
         }
         return barButtonItem;
     };
@@ -117,29 +118,31 @@ var ActionBar = (function (_super) {
         navigationItem.title = this.title;
     };
     ActionBar.prototype.onMeasure = function (widthMeasureSpec, heightMeasureSpec) {
-        if (this.titleView) {
-            var width = utils.layout.getMeasureSpecSize(widthMeasureSpec);
-            view.View.measureChild(this, this.titleView, utils.layout.makeMeasureSpec(width, utils.layout.AT_MOST), utils.layout.makeMeasureSpec(this.navigationBarHeight, utils.layout.AT_MOST));
+        var width = utils.layout.getMeasureSpecSize(widthMeasureSpec);
+        var widthMode = utils.layout.getMeasureSpecMode(widthMeasureSpec);
+        var height = utils.layout.getMeasureSpecSize(heightMeasureSpec);
+        var heightMode = utils.layout.getMeasureSpecMode(heightMeasureSpec);
+        var navBarWidth = 0;
+        var navBarHeight = 0;
+        var frame = this.page.frame;
+        if (frame) {
+            var navBar = frame.ios.controller.navigationBar;
+            if (!navBar.hidden) {
+                var navBarSize = navBar.sizeThatFits(CGSizeMake((widthMode === utils.layout.UNSPECIFIED) ? Number.POSITIVE_INFINITY : width, (heightMode === utils.layout.UNSPECIFIED) ? Number.POSITIVE_INFINITY : height));
+                navBarWidth = navBarSize.width;
+                navBarHeight = navBarSize.height;
+            }
         }
-        this.setMeasuredDimension(0, 0);
-        _super.prototype.onMeasure.call(this, widthMeasureSpec, heightMeasureSpec);
+        this._navigationBarHeight = navBarHeight;
+        if (this.titleView) {
+            view.View.measureChild(this, this.titleView, utils.layout.makeMeasureSpec(width, utils.layout.AT_MOST), utils.layout.makeMeasureSpec(navBarHeight, utils.layout.AT_MOST));
+        }
+        this.setMeasuredDimension(navBarWidth, navBarHeight);
     };
     ActionBar.prototype.onLayout = function (left, top, right, bottom) {
-        view.View.layoutChild(this, this.titleView, 0, 0, right - left, this.navigationBarHeight);
+        view.View.layoutChild(this, this.titleView, 0, 0, right - left, this._navigationBarHeight);
         _super.prototype.onLayout.call(this, left, top, right, bottom);
     };
-    Object.defineProperty(ActionBar.prototype, "navigationBarHeight", {
-        get: function () {
-            var navController = frameModule.topmost().ios.controller;
-            if (!navController) {
-                return 0;
-            }
-            var navigationBar = navController.navigationBar;
-            return (navigationBar && !navController.navigationBarHidden) ? navigationBar.frame.size.height : 0;
-        },
-        enumerable: true,
-        configurable: true
-    });
     return ActionBar;
 })(common.ActionBar);
 exports.ActionBar = ActionBar;

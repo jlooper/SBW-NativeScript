@@ -1,4 +1,4 @@
-var common = require("ui/gestures/gestures-common");
+var common = require("./gestures-common");
 var definition = require("ui/gestures");
 var view = require("ui/core/view");
 var trace = require("trace");

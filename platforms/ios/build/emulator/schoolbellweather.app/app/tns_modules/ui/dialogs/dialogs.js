@@ -2,7 +2,7 @@
  * iOS specific dialogs functions implementation.
  */
 var dialogs = require("ui/dialogs");
-var dialogsCommon = require("ui/dialogs/dialogs-common");
+var dialogsCommon = require("./dialogs-common");
 var types = require("utils/types");
 var utils = require("utils/utils");
 var frame = require("ui/frame");

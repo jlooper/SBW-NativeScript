@@ -1,6 +1,6 @@
 var enums = require("ui/enums");
 var locationModule = require("location");
-var common = require("location/location-common");
+var common = require("./location-common");
 global.moduleMerge(common, exports);
 var LocationListenerImpl = (function (_super) {
     __extends(LocationListenerImpl, _super);

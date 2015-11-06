@@ -1,15 +1,16 @@
 var proxy = require("ui/core/proxy");
 var dependencyObservable = require("ui/core/dependency-observable");
 var viewModule = require("ui/core/view");
-var observable = require("data/observable");
 var observableArray = require("data/observable-array");
 var weakEvents = require("ui/core/weak-event-listener");
 var types = require("utils/types");
+var layoutBaseModule = require("ui/layouts/layout-base");
 var stackLayoutModule = require("ui/layouts/stack-layout");
 var builder = require("ui/builder");
 var utils = require("utils/utils");
 var platform = require("platform");
 var labelModule = require("ui/label");
+var trace = require("trace");
 var ITEMS = "items";
 var ITEMTEMPLATE = "itemTemplate";
 var LAYOUT = "layout";
@@ -24,20 +25,21 @@ function onItemsPropertyChanged(data) {
 }
 function onItemTemplatePropertyChanged(data) {
     var repeater = data.object;
-    repeater.refresh();
+    repeater._onItemTemplatePropertyChanged(data);
 }
 function onItemsLayoutPropertyPropertyChanged(data) {
     var repeater = data.object;
-    repeater.refresh();
+    repeater._onItemsLayoutPropertyPropertyChanged(data);
 }
 var Repeater = (function (_super) {
     __extends(Repeater, _super);
     function Repeater() {
         _super.call(this);
-        this.isDirty = true;
+        this._isDirty = false;
         if (platform.device.os === platform.platformNames.ios) {
             this._ios = UIView.new();
         }
+        this.itemsLayout = new stackLayoutModule.StackLayout();
     }
     Object.defineProperty(Repeater.prototype, "items", {
         get: function () {
@@ -69,50 +71,64 @@ var Repeater = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Repeater.prototype.refresh = function () {
-        this.isDirty = true;
-        this._createChildren();
-    };
     Repeater.prototype.onLoaded = function () {
+        trace.write("Repeater.onLoaded()", "Repeater");
+        if (this._isDirty) {
+            this.refresh();
+        }
         _super.prototype.onLoaded.call(this);
-        this._createChildren();
     };
-    Repeater.prototype.onUnloaded = function () {
-        _super.prototype.onUnloaded.call(this);
+    Repeater.prototype._requestRefresh = function () {
+        trace.write("Repeater._requestRefresh()", "Repeater");
+        this._isDirty = true;
+        if (this.isLoaded) {
+            this.refresh();
+        }
+    };
+    Repeater.prototype.refresh = function () {
+        trace.write("Repeater.refresh()", "Repeater");
+        if (this.itemsLayout) {
+            this.itemsLayout.removeChildren();
+        }
+        if (types.isNullOrUndefined(this.items) || !types.isNumber(this.items.length)) {
+            return;
+        }
+        var length = this.items.length;
+        for (var i_1 = 0; i_1 < length; i_1++) {
+            var viewToAdd = !types.isNullOrUndefined(this.itemTemplate) ? builder.parse(this.itemTemplate, this) : this._getDefaultItemContent(i_1);
+            var dataItem = this._getDataItem(i_1);
+            viewToAdd.bindingContext = dataItem;
+            this.itemsLayout.addChild(viewToAdd);
+        }
+        this._isDirty = false;
     };
     Repeater.prototype._onItemsPropertyChanged = function (data) {
-        if (data.oldValue instanceof observable.Observable) {
+        trace.write("Repeater._onItemsPropertyChanged(" + data.oldValue + " => " + data.newValue + ")", "Repeater");
+        if (data.oldValue instanceof observableArray.ObservableArray) {
             weakEvents.removeWeakEventListener(data.oldValue, observableArray.ObservableArray.changeEvent, this._onItemsChanged, this);
         }
-        if (data.newValue instanceof observable.Observable) {
+        if (data.newValue instanceof observableArray.ObservableArray) {
             weakEvents.addWeakEventListener(data.newValue, observableArray.ObservableArray.changeEvent, this._onItemsChanged, this);
         }
-        if (types.isUndefined(this.itemsLayout)) {
-            this.itemsLayout = new stackLayoutModule.StackLayout();
-        }
-        if (this.itemsLayout.parent !== this) {
-            this._addView(this.itemsLayout);
-        }
-        this.refresh();
+        this._requestRefresh();
     };
-    Repeater.prototype._onItemsChanged = function (args) {
-        this.refresh();
+    Repeater.prototype._onItemTemplatePropertyChanged = function (data) {
+        trace.write("Repeater._onItemTemplatePropertyChanged(" + data.oldValue + " => " + data.newValue + ")", "Repeater");
+        this._requestRefresh();
     };
-    Repeater.prototype._createChildren = function () {
-        if (this.isDirty) {
-            clearItemsLayout(this.itemsLayout);
-            if (!types.isNullOrUndefined(this.items) && types.isNumber(this.items.length)) {
-                var i;
-                for (i = 0; i < this.items.length; i++) {
-                    var viewToAdd = !types.isNullOrUndefined(this.itemTemplate) ? builder.parse(this.itemTemplate, this) : this._getDefaultItemContent(i);
-                    if (!types.isNullOrUndefined(viewToAdd)) {
-                        viewToAdd.bindingContext = this._getDataItem(i);
-                        this.itemsLayout.addChild(viewToAdd);
-                    }
-                }
-            }
-            this.isDirty = false;
+    Repeater.prototype._onItemsLayoutPropertyPropertyChanged = function (data) {
+        trace.write("Repeater._onItemsLayoutPropertyPropertyChanged(" + data.oldValue + " => " + data.newValue + ")", "Repeater");
+        if (data.oldValue instanceof layoutBaseModule.LayoutBase) {
+            this._removeView(data.oldValue);
         }
+        if (data.newValue instanceof layoutBaseModule.LayoutBase) {
+            this._addView(data.newValue);
+        }
+        this._requestRefresh();
+    };
+    Repeater.prototype._onItemsChanged = function (data) {
+        trace.write("Repeater._onItemsChanged(" + data + ")", "Repeater");
+        this._requestRefresh();
     };
     Repeater.prototype._getDefaultItemContent = function (index) {
         var lbl = new labelModule.Label();
@@ -167,17 +183,3 @@ var Repeater = (function (_super) {
     return Repeater;
 })(viewModule.CustomLayoutView);
 exports.Repeater = Repeater;
-function clearItemsLayout(itemsLayout) {
-    if (!types.isNullOrUndefined(itemsLayout)) {
-        var i = itemsLayout.getChildrenCount();
-        if (i > 0) {
-            while (i >= 0) {
-                var child = itemsLayout.getChildAt(i);
-                if (!types.isNullOrUndefined(child)) {
-                    itemsLayout.removeChild(child);
-                }
-                i--;
-            }
-        }
-    }
-}

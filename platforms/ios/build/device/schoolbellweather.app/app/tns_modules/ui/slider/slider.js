@@ -1,4 +1,4 @@
-var common = require("ui/slider/slider-common");
+var common = require("./slider-common");
 function onValuePropertyChanged(data) {
     var slider = data.object;
     slider.ios.value = data.newValue;

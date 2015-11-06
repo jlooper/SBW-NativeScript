@@ -1,16 +1,33 @@
 var types = require("utils/types");
 var proxy = require("ui/core/proxy");
-var style = require("ui/styling/style");
+var style = require("../styling/style");
 var styling = require("ui/styling");
 var visualStateConstants = require("ui/styling/visual-state-constants");
 var trace = require("trace");
 var dependencyObservable = require("ui/core/dependency-observable");
 var gestures = require("ui/gestures");
 var bindable = require("ui/core/bindable");
-var styleScope = require("ui/styling/style-scope");
+var styleScope = require("../styling/style-scope");
 var enums = require("ui/enums");
 var utils = require("utils/utils");
 var animationModule = require("ui/animation");
+var special_properties_1 = require("ui/builder/special-properties");
+special_properties_1.registerSpecialProperty("class", function (instance, propertyValue) {
+    instance.className = propertyValue;
+});
+function getEventOrGestureName(name) {
+    return name.indexOf("on") === 0 ? name.substr(2, name.length - 2) : name;
+}
+function isEventOrGesture(name, view) {
+    if (types.isString(name)) {
+        var eventOrGestureName = getEventOrGestureName(name);
+        var evt = eventOrGestureName + "Event";
+        return view.constructor && evt in view.constructor ||
+            gestures.fromString(eventOrGestureName.toLowerCase()) !== undefined;
+    }
+    return false;
+}
+exports.isEventOrGesture = isEventOrGesture;
 function getViewById(view, id) {
     if (!view) {
         return undefined;
@@ -73,6 +90,7 @@ function onCssClassPropertyChanged(data) {
 }
 var idProperty = new dependencyObservable.Property("id", "View", new proxy.PropertyMetadata(undefined, dependencyObservable.PropertyMetadataSettings.AffectsStyle));
 var cssClassProperty = new dependencyObservable.Property("cssClass", "View", new proxy.PropertyMetadata(undefined, dependencyObservable.PropertyMetadataSettings.AffectsStyle, onCssClassPropertyChanged));
+var classNameProperty = new dependencyObservable.Property("className", "View", new proxy.PropertyMetadata(undefined, dependencyObservable.PropertyMetadataSettings.AffectsStyle, onCssClassPropertyChanged));
 var translateXProperty = new dependencyObservable.Property("translateX", "View", new proxy.PropertyMetadata(0));
 var translateYProperty = new dependencyObservable.Property("translateY", "View", new proxy.PropertyMetadata(0));
 var scaleXProperty = new dependencyObservable.Property("scaleX", "View", new proxy.PropertyMetadata(1));
@@ -113,6 +131,7 @@ var View = (function (_super) {
     };
     View.prototype.addEventListener = function (arg, callback, thisArg) {
         if (types.isString(arg)) {
+            arg = getEventOrGestureName(arg);
             var gesture = gestures.fromString(arg);
             if (gesture && !this._isEvent(arg)) {
                 this.observe(gesture, callback, thisArg);
@@ -471,6 +490,16 @@ var View = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(View.prototype, "className", {
+        get: function () {
+            return this._getValue(View.cssClassProperty);
+        },
+        set: function (value) {
+            this._setValue(View.cssClassProperty, value);
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(View.prototype, "style", {
         get: function () {
             return this._style;
@@ -520,9 +549,9 @@ var View = (function (_super) {
         configurable: true
     });
     View.prototype.onLoaded = function () {
+        this._isLoaded = true;
         this._loadEachChildView();
         this._applyStyleFromScope();
-        this._isLoaded = true;
         this._emit("loaded");
     };
     View.prototype._loadEachChildView = function () {
@@ -924,7 +953,7 @@ var View = (function (_super) {
         return undefined;
     };
     View.prototype.animate = function (animation) {
-        return this.createAnimation(animation).play().finished;
+        return this.createAnimation(animation).play();
     };
     View.prototype.createAnimation = function (animation) {
         var that = this;
@@ -935,6 +964,7 @@ var View = (function (_super) {
     View.unloadedEvent = "unloaded";
     View.idProperty = idProperty;
     View.cssClassProperty = cssClassProperty;
+    View.classNameProperty = classNameProperty;
     View.translateXProperty = translateXProperty;
     View.translateYProperty = translateYProperty;
     View.scaleXProperty = scaleXProperty;

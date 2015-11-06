@@ -1,4 +1,4 @@
-var common = require("connectivity/connectivity-common");
+var common = require("./connectivity-common");
 global.moduleMerge(common, exports);
 function _createReachability(host) {
     if (host) {

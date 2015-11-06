@@ -1,6 +1,9 @@
 var view = require("ui/core/view");
 var dependencyObservable = require("ui/core/dependency-observable");
 var proxy = require("ui/core/proxy");
+var utils = require("utils/utils");
+var fs = require("file-system");
+var trace = require("trace");
 var urlProperty = new dependencyObservable.Property("url", "WebView", new proxy.PropertyMetadata(""));
 function onUrlPropertyChanged(data) {
     var webView = data.object;
@@ -16,7 +19,25 @@ function onSrcPropertyChanged(data) {
     if (webView._suspendLoading) {
         return;
     }
-    webView._loadSrc(data.newValue);
+    webView.stopLoading();
+    var src = data.newValue;
+    trace.write("WebView._loadSrc(" + src + ")", trace.categories.Debug);
+    if (utils.isFileOrResourcePath(src)) {
+        if (src.indexOf("~/") === 0) {
+            src = fs.path.join(fs.knownFolders.currentApp().path, src.replace("~/", ""));
+        }
+        if (fs.File.exists(src)) {
+            var file = fs.File.fromPath(src);
+            var content = file.readTextSync();
+            webView._loadFileOrResource(src, content);
+        }
+    }
+    else if (src.toLowerCase().indexOf("http://") === 0 || src.toLowerCase().indexOf("https://") === 0) {
+        webView._loadHttp(src);
+    }
+    else {
+        webView._loadData(src);
+    }
 }
 srcProperty.metadata.onSetNativeValue = onSrcPropertyChanged;
 var WebView = (function (_super) {
@@ -65,12 +86,6 @@ var WebView = (function (_super) {
         };
         this.notify(args);
     };
-    WebView.prototype._loadUrl = function (url) {
-        throw new Error("This member is abstract.");
-    };
-    WebView.prototype._loadSrc = function (src) {
-        throw new Error("This member is abstract.");
-    };
     Object.defineProperty(WebView.prototype, "canGoBack", {
         get: function () {
             throw new Error("This member is abstract.");
@@ -85,15 +100,6 @@ var WebView = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    WebView.prototype.goBack = function () {
-        throw new Error("This member is abstract.");
-    };
-    WebView.prototype.goForward = function () {
-        throw new Error("This member is abstract.");
-    };
-    WebView.prototype.reload = function () {
-        throw new Error("This member is abstract.");
-    };
     WebView.loadStartedEvent = "loadStarted";
     WebView.loadFinishedEvent = "loadFinished";
     WebView.urlProperty = urlProperty;

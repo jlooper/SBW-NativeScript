@@ -24,31 +24,24 @@ var Animation = (function () {
         }
         trace.write("Created " + this._propertyAnimations.length + " individual property animations.", trace.categories.Animation);
         this._playSequentially = playSequentially;
-        var that = this;
-        this._animationFinishedPromise = new Promise(function (resolve, reject) {
-            that._resolve = resolve;
-            that._reject = reject;
-        });
     }
     Animation.prototype.play = function () {
+        var _this = this;
         if (this.isPlaying) {
             throw new Error("Animation is already playing.");
         }
+        var animationFinishedPromise = new Promise(function (resolve, reject) {
+            _this._resolve = resolve;
+            _this._reject = reject;
+        });
         this._isPlaying = true;
-        return this;
+        return animationFinishedPromise;
     };
     Animation.prototype.cancel = function () {
         if (!this.isPlaying) {
             throw new Error("Animation is not currently playing.");
         }
     };
-    Object.defineProperty(Animation.prototype, "finished", {
-        get: function () {
-            return this._animationFinishedPromise;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Object.defineProperty(Animation.prototype, "isPlaying", {
         get: function () {
             return this._isPlaying;

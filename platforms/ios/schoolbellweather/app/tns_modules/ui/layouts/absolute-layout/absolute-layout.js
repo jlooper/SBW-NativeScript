@@ -1,6 +1,6 @@
 var utils = require("utils/utils");
 var view = require("ui/core/view");
-var common = require("ui/layouts/absolute-layout/absolute-layout-common");
+var common = require("./absolute-layout-common");
 global.moduleMerge(common, exports);
 var AbsoluteLayout = (function (_super) {
     __extends(AbsoluteLayout, _super);
