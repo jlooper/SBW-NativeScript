@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/android/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
+        <dex dex="/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/android/build/intermediates/pre-dexed/debug/classes-8277b9c5b2310143c3730a36d0d0cd1190fc737e.jar" />
+    </item>
+    <item
+        jar="/usr/local/Cellar/android-sdk/24.1.2/extras/android/m2repository/com/android/support/support-annotations/23.0.1/support-annotations-23.0.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
+        <dex dex="/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/android/build/intermediates/pre-dexed/debug/support-annotations-23.0.1-e60e8c2940cad75d09a07e2f5b0196534a27b762.jar" />
+    </item>
+    <item
+        jar="/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/android/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/jars/libs/internal_impl-23.0.1.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
+        <dex dex="/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/android/build/intermediates/pre-dexed/debug/internal_impl-23.0.1-260ffe6ab3729d3fcbb4c926950cda20efcce156.jar" />
+    </item>
+    <item
+        jar="/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
+        <dex dex="/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/android/build/intermediates/pre-dexed/debug/classes-de0a4e3029170df65c09e74c96d9dfff01153b4b.jar" />
+    </item>
+    <item
+        jar="/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/android/libs/widgets.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="dab3994e6354b233885a2834673e6fc968347762">
+        <dex dex="/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/android/build/intermediates/pre-dexed/debug/widgets-e5acb55294226159798fe51c26ceaf09de1f63e5.jar" />
+    </item>
+    <item
+        jar="/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/android/libs/nativescript.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="40373005d4576f2e18027bcb2460ba577ae3d4ea">
+        <dex dex="/Users/Looper/Documents/NativeScript/schoolbellweather/platforms/android/build/intermediates/pre-dexed/debug/nativescript-c966fa529aba0504515b1d2169439f3ce309c259.jar" />
+    </item>
+
+</items>
