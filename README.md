@@ -1,4 +1,6 @@
-# School Bell Weather helps kids figure out what to wear to the bus stop! It is integrated with Forecast.io and built with NativeScript.
+# School Bell Weather
+
+The School Bell Weather mobile app helps kids figure out what to wear to the bus stop! It is integrated with Forecast.io and built with NativeScript.
 
 Learn more about Telerik NativeScript here: http://www.nativescript.org
 
