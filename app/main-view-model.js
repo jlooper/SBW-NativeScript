@@ -10,8 +10,6 @@ var locationManager = require("location").LocationManager;
 var appSettings = require("application-settings");
 var frameModule = require("ui/frame");
 
-//console.log(helpers)
-
 var WeatherModel = new observable.Observable();
 
 if (platformModule.device.os == 'iOS'){
@@ -80,7 +78,7 @@ WeatherModel.getLocation = function(){
     
 
     var isEnabled = locationManager.isEnabled();
-    console.log("locationManager is enabled? ",isEnabled)
+        
         if(isEnabled){
 
         locationModule.getLocation({ maximumAge: 30000, timeout: 20000 }).then(function (location) {                     
@@ -92,7 +90,6 @@ WeatherModel.getLocation = function(){
                 WeatherModel.getTodaysWeather(latitude,longitude);
                 WeatherModel.getDepartureWeather();
             }, function (error) {
-                console.log("there was an error ",error)
                 WeatherModel.set("isLoading",false);
                 var message = 'There was an error finding your location. Please check your settings and refresh this page!';
                 dialogs.alert({title: "Sorry!", message: message, okButtonText: "OK!",});
@@ -100,20 +97,13 @@ WeatherModel.getLocation = function(){
             
         }
         else {
+
+            if (platformModule.device.os == 'iOS'){
             
-            dialogs.alert("To get your weather forecast, we need your location!").then(function() {
-                
-                if (platformModule.device.os == 'iOS'){
-
-                    var iosLocationManager = CLLocationManager.alloc().init(); 
-                    iosLocationManager.delegate = locationDelegate;         
-                    iosLocationManager.requestWhenInUseAuthorization();
-                    
-               }
-
-               if (platformModule.device.os == 'Android') {
-                 //(<android.app.Activity>appModule.android.currentContext).startActivityForResult(new android.content.Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
-               }
+                dialogs.alert("To get your weather forecast, we need your location!").then(function() {
+                var iosLocationManager = CLLocationManager.alloc().init(); 
+                iosLocationManager.delegate = locationDelegate;         
+                iosLocationManager.requestWhenInUseAuthorization();                                
 
             });
         }
@@ -263,9 +253,6 @@ WeatherModel.getTodaysWeather = function(latitude,longitude) {
             }
             WeatherModel.set("currentTemp", tmp_split + ' ' + mode);
             WeatherModel.set("nowIcon", nowIcon);
-            
-            
-            //dialogs.alert('We got your weather! You may need to refresh the page.');
             WeatherModel.set("isLoading",false);           
         }, function (e) {
             WeatherModel.set("isLoading",false);
@@ -307,7 +294,6 @@ WeatherModel.getDepartureWeather = function(){
             WeatherModel.set("departureTemp", tmp_split + ' ' + mode);
             WeatherModel.set("departureIcon", depIcon);
 
-           
             //get the departure background
             if(mode == "F"){
                 WeatherModel.getFahrenheitImage(tmp_split,depIcon);
@@ -319,8 +305,6 @@ WeatherModel.getDepartureWeather = function(){
         }, function (e) {
             // if there is a problem
                 WeatherModel.set("isLoading",false);
-                //var message = "There was a problem finding your departure weather forecast. Please make sure you are online and have enabled location services.";
-                //dialogs.alert({title: "Sorry!", message: message, okButtonText: "OK!",});
             
             done(e);
         });
