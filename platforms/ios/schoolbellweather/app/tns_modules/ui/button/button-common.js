@@ -1,8 +1,10 @@
 var dependencyObservable = require("ui/core/dependency-observable");
 var view = require("ui/core/view");
 var proxy = require("ui/core/proxy");
+var formattedString = require("text/formatted-string");
 var observable = require("data/observable");
 var weakEvents = require("ui/core/weak-event-listener");
+var enums = require("ui/enums");
 var textProperty = new dependencyObservable.Property("text", "Button", new proxy.PropertyMetadata("", dependencyObservable.PropertyMetadataSettings.AffectsLayout));
 var formattedTextProperty = new dependencyObservable.Property("formattedText", "Button", new proxy.PropertyMetadata("", dependencyObservable.PropertyMetadataSettings.AffectsLayout));
 function onTextPropertyChanged(data) {
@@ -54,6 +56,16 @@ var Button = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Button.prototype, "textWrap", {
+        get: function () {
+            return this._getValue(Button.textWrapProperty);
+        },
+        set: function (value) {
+            this._setValue(Button.textWrapProperty, value);
+        },
+        enumerable: true,
+        configurable: true
+    });
     Button.prototype.onFormattedTextChanged = function (eventData) {
         this.setFormattedTextPropertyToNative(eventData.value);
     };
@@ -79,9 +91,18 @@ var Button = (function (_super) {
         }
         this.setFormattedTextPropertyToNative(data.newValue);
     };
+    Button.prototype._addChildFromBuilder = function (name, value) {
+        formattedString.FormattedString.addFormattedStringToView(this, name, value);
+    };
     Button.tapEvent = "tap";
     Button.textProperty = textProperty;
     Button.formattedTextProperty = formattedTextProperty;
+    Button.textWrapProperty = new dependencyObservable.Property("textWrap", "Button", new proxy.PropertyMetadata(false, dependencyObservable.PropertyMetadataSettings.AffectsLayout));
     return Button;
 })(view.View);
 exports.Button = Button;
+function onTextWrapPropertyChanged(data) {
+    var v = data.object;
+    v.style.whiteSpace = data.newValue ? enums.WhiteSpace.normal : enums.WhiteSpace.nowrap;
+}
+Button.textWrapProperty.metadata.onSetNativeValue = onTextWrapPropertyChanged;

@@ -17,6 +17,7 @@ var Animation = (function () {
         var i = 0;
         var length = animationDefinitions.length;
         for (; i < length; i++) {
+            animationDefinitions[i].curve = this._resolveAnimationCurve(animationDefinitions[i].curve);
             this._propertyAnimations = this._propertyAnimations.concat(Animation._createPropertyAnimations(animationDefinitions[i]));
         }
         if (this._propertyAnimations.length === 0) {
@@ -56,6 +57,8 @@ var Animation = (function () {
     Animation.prototype._rejectAnimationFinishedPromise = function () {
         this._isPlaying = false;
         this._reject(new Error("Animation cancelled."));
+    };
+    Animation.prototype._resolveAnimationCurve = function (curve) {
     };
     Animation._createPropertyAnimations = function (animationDefinition) {
         if (!animationDefinition.target) {

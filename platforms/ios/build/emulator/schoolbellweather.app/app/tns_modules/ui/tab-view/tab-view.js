@@ -4,24 +4,24 @@ var utils = require("utils/utils");
 var view = require("ui/core/view");
 var imageSource = require("image-source");
 var types = require("utils/types");
+var color = require("color");
 global.moduleMerge(common, exports);
 var UITabBarControllerImpl = (function (_super) {
     __extends(UITabBarControllerImpl, _super);
     function UITabBarControllerImpl() {
         _super.apply(this, arguments);
     }
-    UITabBarControllerImpl.new = function () {
-        return _super.new.call(this);
-    };
-    UITabBarControllerImpl.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        return this;
+    UITabBarControllerImpl.initWithOwner = function (owner) {
+        var handler = UITabBarControllerImpl.new();
+        handler._owner = owner;
+        return handler;
     };
     UITabBarControllerImpl.prototype.viewDidLayoutSubviews = function () {
         trace.write("TabView.UITabBarControllerClass.viewDidLayoutSubviews();", trace.categories.Debug);
         _super.prototype.viewDidLayoutSubviews.call(this);
-        if (this._owner.isLoaded) {
-            this._owner._updateLayout();
+        var owner = this._owner.get();
+        if (owner && owner.isLoaded) {
+            owner._updateLayout();
         }
     };
     return UITabBarControllerImpl;
@@ -31,16 +31,17 @@ var UITabBarControllerDelegateImpl = (function (_super) {
     function UITabBarControllerDelegateImpl() {
         _super.apply(this, arguments);
     }
-    UITabBarControllerDelegateImpl.new = function () {
-        return _super.new.call(this);
-    };
-    UITabBarControllerDelegateImpl.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        return this;
+    UITabBarControllerDelegateImpl.initWithOwner = function (owner) {
+        var delegate = UITabBarControllerDelegateImpl.new();
+        delegate._owner = owner;
+        return delegate;
     };
     UITabBarControllerDelegateImpl.prototype.tabBarControllerDidSelectViewController = function (tabBarController, viewController) {
         trace.write("TabView.UITabBarControllerDelegateClass.tabBarControllerDidSelectViewController(" + tabBarController + ", " + viewController + ");", trace.categories.Debug);
-        this._owner._onViewControllerShown(viewController);
+        var owner = this._owner.get();
+        if (owner) {
+            owner._onViewControllerShown(viewController);
+        }
     };
     UITabBarControllerDelegateImpl.ObjCProtocols = [UITabBarControllerDelegate];
     return UITabBarControllerDelegateImpl;
@@ -50,17 +51,18 @@ var UINavigationControllerDelegateImpl = (function (_super) {
     function UINavigationControllerDelegateImpl() {
         _super.apply(this, arguments);
     }
-    UINavigationControllerDelegateImpl.new = function () {
-        return _super.new.call(this);
-    };
-    UINavigationControllerDelegateImpl.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        return this;
+    UINavigationControllerDelegateImpl.initWithOwner = function (owner) {
+        var delegate = UINavigationControllerDelegateImpl.new();
+        delegate._owner = owner;
+        return delegate;
     };
     UINavigationControllerDelegateImpl.prototype.navigationControllerDidShowViewControllerAnimated = function (navigationController, viewController, animated) {
         trace.write("TabView.UINavigationControllerDelegateClass.navigationControllerDidShowViewControllerAnimated(" + navigationController + ", " + viewController + ", " + animated + ");", trace.categories.Debug);
         navigationController.navigationBar.topItem.rightBarButtonItem = null;
-        this._owner._onViewControllerShown(viewController);
+        var owner = this._owner.get();
+        if (owner) {
+            owner._onViewControllerShown(viewController);
+        }
     };
     UINavigationControllerDelegateImpl.ObjCProtocols = [UINavigationControllerDelegate];
     return UINavigationControllerDelegateImpl;
@@ -82,12 +84,27 @@ var TabViewItem = (function (_super) {
                     tabBarItem.titlePositionAdjustment = { horizontal: 0, vertical: -20 };
                 }
             }
+            var states = getTitleAttributesForStates(this._parent);
+            tabBarItem.setTitleTextAttributesForState(states.normalState, UIControlState.UIControlStateNormal);
+            tabBarItem.setTitleTextAttributesForState(states.selectedState, UIControlState.UIControlStateSelected);
             this._controller.tabBarItem = tabBarItem;
         }
     };
     return TabViewItem;
 })(common.TabViewItem);
 exports.TabViewItem = TabViewItem;
+function selectedColorPropertyChanged(data) {
+    var tabView = data.object;
+    tabView._updateIOSTabBarColors();
+}
+common.TabView.selectedColorProperty.metadata.onSetNativeValue = selectedColorPropertyChanged;
+function tabsBackgroundColorPropertyChanged(data) {
+    var tabView = data.object;
+    if (data.newValue instanceof color.Color) {
+        tabView.ios.tabBar.barTintColor = data.newValue.ios;
+    }
+}
+common.TabView.tabsBackgroundColorProperty.metadata.onSetNativeValue = tabsBackgroundColorPropertyChanged;
 var TabView = (function (_super) {
     __extends(TabView, _super);
     function TabView() {
@@ -95,9 +112,9 @@ var TabView = (function (_super) {
         this._tabBarHeight = 0;
         this._navBarHeight = 0;
         this._iconsCache = {};
-        this._ios = UITabBarControllerImpl.new().initWithOwner(this);
-        this._delegate = UITabBarControllerDelegateImpl.new().initWithOwner(this);
-        this._moreNavigationControllerDelegate = UINavigationControllerDelegateImpl.new().initWithOwner(this);
+        this._ios = UITabBarControllerImpl.initWithOwner(new WeakRef(this));
+        this._delegate = UITabBarControllerDelegateImpl.initWithOwner(new WeakRef(this));
+        this._moreNavigationControllerDelegate = UINavigationControllerDelegateImpl.initWithOwner(new WeakRef(this));
     }
     TabView.prototype.onLoaded = function () {
         _super.prototype.onLoaded.call(this);
@@ -154,6 +171,7 @@ var TabView = (function (_super) {
         var item;
         var newControllers = NSMutableArray.alloc().initWithCapacity(length);
         var newController;
+        var states = getTitleAttributesForStates(this);
         for (i = 0; i < length; i++) {
             item = newItems[i];
             this._addView(item.view);
@@ -176,12 +194,17 @@ var TabView = (function (_super) {
                     tabBarItem.titlePositionAdjustment = { horizontal: 0, vertical: -20 };
                 }
             }
+            tabBarItem.setTitleTextAttributesForState(states.normalState, UIControlState.UIControlStateNormal);
+            tabBarItem.setTitleTextAttributesForState(states.selectedState, UIControlState.UIControlStateSelected);
             newController.tabBarItem = tabBarItem;
             newControllers.addObject(newController);
         }
         this._ios.viewControllers = newControllers;
         this._ios.customizableViewControllers = null;
         this._ios.moreNavigationController.delegate = this._moreNavigationControllerDelegate;
+        if (this._ios.selectedIndex !== this.selectedIndex) {
+            this._ios.selectedIndex = this.selectedIndex;
+        }
     };
     TabView.prototype._getIcon = function (iconSource) {
         if (!iconSource) {
@@ -248,6 +271,36 @@ var TabView = (function (_super) {
     TabView.measureHelper = function (nativeView, width, widthMode, height, heightMode) {
         return nativeView.sizeThatFits(CGSizeMake((widthMode === utils.layout.UNSPECIFIED) ? Number.POSITIVE_INFINITY : width, (heightMode === utils.layout.UNSPECIFIED) ? Number.POSITIVE_INFINITY : height));
     };
+    TabView.prototype._updateIOSTabBarColors = function () {
+        if (!this.items) {
+            return;
+        }
+        var tabBar = this.ios.tabBar;
+        tabBar.tintColor = this.selectedColor ? this.selectedColor.ios : null;
+        var states = getTitleAttributesForStates(this);
+        for (var i = 0; i < this.items.length; i++) {
+            var item = tabBar.items[i];
+            item.setTitleTextAttributesForState(states.normalState, UIControlState.UIControlStateNormal);
+            item.setTitleTextAttributesForState(states.selectedState, UIControlState.UIControlStateSelected);
+        }
+    };
     return TabView;
 })(common.TabView);
 exports.TabView = TabView;
+function getTitleAttributesForStates(tabView) {
+    var normalState = {};
+    if (tabView.color instanceof color.Color) {
+        normalState[UITextAttributeTextColor] = tabView.color.ios;
+    }
+    var selectedState = {};
+    if (tabView.selectedColor instanceof color.Color) {
+        selectedState[UITextAttributeTextColor] = tabView.selectedColor.ios;
+    }
+    else {
+        selectedState[UITextAttributeTextColor] = tabView.ios.tabBar.tintColor;
+    }
+    return {
+        normalState: normalState,
+        selectedState: selectedState
+    };
+}

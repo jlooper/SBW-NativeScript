@@ -1,5 +1,6 @@
 var common = require("./animation-common");
 var trace = require("trace");
+var enums = require("ui/enums");
 global.moduleMerge(common, exports);
 var _transform = "_transform";
 var _skip = "_skip";
@@ -62,10 +63,10 @@ var Animation = (function (_super) {
                 }
                 else if (that._finishedAnimations === that._mergedPropertyAnimations.length) {
                     trace.write(that._finishedAnimations + " animations finished.", trace.categories.Animation);
-                    var i = 0;
+                    var i;
                     var len = that._propertyAnimations.length;
                     var a;
-                    for (; i < len; i++) {
+                    for (i = 0; i < len; i++) {
                         a = that._propertyAnimations[i];
                         switch (a.property) {
                             case common.Properties.translate:
@@ -79,6 +80,13 @@ var Animation = (function (_super) {
                                 a.target.scaleX = a.value.x;
                                 a.target.scaleY = a.value.y;
                                 break;
+                        }
+                    }
+                    for (i = 0; i < len; i++) {
+                        a = that._propertyAnimations[i];
+                        var errorMessage = _getTransformMismatchErrorMessage(a.target);
+                        if (errorMessage) {
+                            throw new Error(errorMessage);
                         }
                     }
                     that._resolveAnimationFinishedPromise();
@@ -105,6 +113,25 @@ var Animation = (function (_super) {
             }
         }
     };
+    Animation.prototype._resolveAnimationCurve = function (curve) {
+        switch (curve) {
+            case enums.AnimationCurve.easeIn:
+                trace.write("Animation curve resolved to UIViewAnimationCurve.UIViewAnimationCurveEaseIn.", trace.categories.Animation);
+                return UIViewAnimationCurve.UIViewAnimationCurveEaseIn;
+            case enums.AnimationCurve.easeOut:
+                trace.write("Animation curve resolved to UIViewAnimationCurve.UIViewAnimationCurveEaseOut.", trace.categories.Animation);
+                return UIViewAnimationCurve.UIViewAnimationCurveEaseOut;
+            case enums.AnimationCurve.easeInOut:
+                trace.write("Animation curve resolved to UIViewAnimationCurve.UIViewAnimationCurveEaseInOut.", trace.categories.Animation);
+                return UIViewAnimationCurve.UIViewAnimationCurveEaseInOut;
+            case enums.AnimationCurve.linear:
+                trace.write("Animation curve resolved to UIViewAnimationCurve.UIViewAnimationCurveLinear.", trace.categories.Animation);
+                return UIViewAnimationCurve.UIViewAnimationCurveLinear;
+            default:
+                trace.write("Animation curve resolved to original: " + curve, trace.categories.Animation);
+                return curve;
+        }
+    };
     Animation._createiOSAnimationFunction = function (propertyAnimations, index, playSequentially, finishedCallback) {
         return function (cancelled) {
             if (cancelled && finishedCallback) {
@@ -124,59 +151,90 @@ var Animation = (function (_super) {
                 animationDelegate = AnimationDelegateImpl.new().initWithFinishedCallback(playSequentially ? nextAnimationCallback : finishedCallback);
             }
             trace.write("UIView.beginAnimationsContext(" + index + "): " + common.Animation._getAnimationInfo(animation), trace.categories.Animation);
-            UIView.beginAnimationsContext(index.toString(), null);
-            if (animationDelegate) {
-                UIView.setAnimationDelegate(animationDelegate);
-                UIView.setAnimationWillStartSelector("animationWillStart");
-                UIView.setAnimationDidStopSelector("animationDidStop");
-            }
-            if (animation.duration !== undefined) {
-                UIView.setAnimationDuration(animation.duration / 1000.0);
-            }
-            else {
-                UIView.setAnimationDuration(0.3);
-            }
-            if (animation.delay !== undefined) {
-                UIView.setAnimationDelay(animation.delay / 1000.0);
-            }
-            if (animation.iterations !== undefined) {
-                if (animation.iterations === Number.POSITIVE_INFINITY) {
-                    UIView.setAnimationRepeatCount(FLT_MAX);
-                }
-                else {
-                    UIView.setAnimationRepeatCount(animation.iterations - 1);
-                }
-            }
-            if (animation.curve !== undefined) {
-                UIView.setAnimationCurve(animation.curve);
-            }
-            var originalValue;
-            switch (animation.property) {
-                case common.Properties.opacity:
-                    originalValue = animation.target.opacity;
-                    animation._propertyResetCallback = function () { animation.target.opacity = originalValue; };
-                    animation.target.opacity = animation.value;
-                    break;
-                case common.Properties.backgroundColor:
-                    originalValue = animation.target.backgroundColor;
-                    animation._propertyResetCallback = function () { animation.target.backgroundColor = originalValue; };
-                    animation.target.backgroundColor = animation.value;
-                    break;
-                case _transform:
-                    originalValue = nativeView.transform;
-                    animation._propertyResetCallback = function () { nativeView.transform = originalValue; };
-                    nativeView.transform = animation.value;
-                    break;
-                default:
-                    throw new Error("Cannot animate " + animation.property);
-                    break;
-            }
+            UIView.animateKeyframesWithDurationDelayOptionsAnimationsCompletion(1, 0, UIViewKeyframeAnimationOptions.UIViewKeyframeAnimationOptionBeginFromCurrentState, function () {
+                UIView.addKeyframeWithRelativeStartTimeRelativeDurationAnimations(0, 1, function () {
+                    if (animationDelegate) {
+                        UIView.setAnimationDelegate(animationDelegate);
+                        UIView.setAnimationWillStartSelector("animationWillStart");
+                        UIView.setAnimationDidStopSelector("animationDidStop");
+                    }
+                    if (animation.duration !== undefined) {
+                        UIView.setAnimationDuration(animation.duration / 1000.0);
+                    }
+                    else {
+                        UIView.setAnimationDuration(0.3);
+                    }
+                    if (animation.delay !== undefined) {
+                        UIView.setAnimationDelay(animation.delay / 1000.0);
+                    }
+                    if (animation.iterations !== undefined) {
+                        if (animation.iterations === Number.POSITIVE_INFINITY) {
+                            UIView.setAnimationRepeatCount(FLT_MAX);
+                        }
+                        else {
+                            UIView.setAnimationRepeatCount(animation.iterations - 1);
+                        }
+                    }
+                    if (animation.curve !== undefined) {
+                        UIView.setAnimationCurve(animation.curve);
+                    }
+                    var originalValue;
+                    switch (animation.property) {
+                        case common.Properties.opacity:
+                            originalValue = animation.target.opacity;
+                            animation._propertyResetCallback = function () { animation.target.opacity = originalValue; };
+                            animation.target.opacity = animation.value;
+                            break;
+                        case common.Properties.backgroundColor:
+                            originalValue = animation.target.backgroundColor;
+                            animation._propertyResetCallback = function () { animation.target.backgroundColor = originalValue; };
+                            animation.target.backgroundColor = animation.value;
+                            break;
+                        case _transform:
+                            originalValue = nativeView.transform;
+                            animation._propertyResetCallback = function () { nativeView.transform = originalValue; };
+                            nativeView.transform = Animation._createNativeAffineTransform(animation);
+                            break;
+                        default:
+                            throw new Error("Cannot animate " + animation.property);
+                            break;
+                    }
+                });
+            }, null);
             trace.write("UIView.commitAnimations " + index, trace.categories.Animation);
-            UIView.commitAnimations();
             if (!playSequentially && nextAnimationCallback) {
                 nextAnimationCallback();
             }
         };
+    };
+    Animation._createNativeAffineTransform = function (animation) {
+        var view = animation.target;
+        var value = animation.value;
+        trace.write("Creating native affine transform. Curent transform is: " + NSStringFromCGAffineTransform(view._nativeView.transform), trace.categories.Animation);
+        var result = CGAffineTransformIdentity;
+        trace.write("Identity: " + NSStringFromCGAffineTransform(result), trace.categories.Animation);
+        if (value[common.Properties.translate] !== undefined) {
+            result = CGAffineTransformTranslate(result, value[common.Properties.translate].x, value[common.Properties.translate].y);
+        }
+        else {
+            result = CGAffineTransformTranslate(result, view.translateX, view.translateY);
+        }
+        trace.write("After translate: " + NSStringFromCGAffineTransform(result), trace.categories.Animation);
+        if (value[common.Properties.rotate] !== undefined) {
+            result = CGAffineTransformRotate(result, value[common.Properties.rotate] * Math.PI / 180);
+        }
+        else {
+            result = CGAffineTransformRotate(result, view.rotate * Math.PI / 180);
+        }
+        trace.write("After rotate: " + NSStringFromCGAffineTransform(result), trace.categories.Animation);
+        if (value[common.Properties.scale] !== undefined) {
+            result = CGAffineTransformScale(result, value[common.Properties.scale].x, value[common.Properties.scale].y);
+        }
+        else {
+            result = CGAffineTransformScale(result, view.scaleX, view.scaleY);
+        }
+        trace.write("After scale: " + NSStringFromCGAffineTransform(result), trace.categories.Animation);
+        return result;
     };
     Animation._isAffineTransform = function (property) {
         return property === _transform
@@ -194,19 +252,6 @@ var Animation = (function (_super) {
             animation1.curve === animation2.curve;
         return result;
     };
-    Animation._affineTransform = function (matrix, property, value) {
-        switch (property) {
-            case common.Properties.translate:
-                return CGAffineTransformTranslate(matrix, value.x, value.y);
-            case common.Properties.rotate:
-                return CGAffineTransformRotate(matrix, value * Math.PI / 180);
-            case common.Properties.scale:
-                return CGAffineTransformScale(matrix, value.x, value.y);
-            default:
-                throw new Error("Cannot create transform for" + property);
-                break;
-        }
-    };
     Animation._mergeAffineTransformAnimations = function (propertyAnimations) {
         var result = new Array();
         var i = 0;
@@ -223,19 +268,19 @@ var Animation = (function (_super) {
                 var newTransformAnimation = {
                     target: propertyAnimations[i].target,
                     property: _transform,
-                    value: Animation._affineTransform(CGAffineTransformIdentity, propertyAnimations[i].property, propertyAnimations[i].value),
+                    value: {},
                     duration: propertyAnimations[i].duration,
                     delay: propertyAnimations[i].delay,
                     iterations: propertyAnimations[i].iterations
                 };
+                newTransformAnimation.value[propertyAnimations[i].property] = propertyAnimations[i].value;
                 trace.write("Created new transform animation: " + common.Animation._getAnimationInfo(newTransformAnimation), trace.categories.Animation);
                 j = i + 1;
                 if (j < length) {
                     for (; j < length; j++) {
                         if (Animation._canBeMerged(propertyAnimations[i], propertyAnimations[j])) {
-                            trace.write("Merging animations: " + common.Animation._getAnimationInfo(newTransformAnimation) + " + " + common.Animation._getAnimationInfo(propertyAnimations[j]) + " = ", trace.categories.Animation);
-                            trace.write("New native transform is: " + NSStringFromCGAffineTransform(newTransformAnimation.value), trace.categories.Animation);
-                            newTransformAnimation.value = Animation._affineTransform(newTransformAnimation.value, propertyAnimations[j].property, propertyAnimations[j].value);
+                            trace.write("Merging animations: " + common.Animation._getAnimationInfo(newTransformAnimation) + " + " + common.Animation._getAnimationInfo(propertyAnimations[j]) + ";", trace.categories.Animation);
+                            newTransformAnimation.value[propertyAnimations[j].property] = propertyAnimations[j].value;
                             propertyAnimations[j][_skip] = true;
                         }
                     }
@@ -248,3 +293,16 @@ var Animation = (function (_super) {
     return Animation;
 })(common.Animation);
 exports.Animation = Animation;
+function _getTransformMismatchErrorMessage(view) {
+    var result = CGAffineTransformIdentity;
+    result = CGAffineTransformTranslate(result, view.translateX, view.translateY);
+    result = CGAffineTransformRotate(result, view.rotate * Math.PI / 180);
+    result = CGAffineTransformScale(result, view.scaleX, view.scaleY);
+    var viewTransform = NSStringFromCGAffineTransform(result);
+    var nativeTransform = NSStringFromCGAffineTransform(view._nativeView.transform);
+    if (viewTransform !== nativeTransform) {
+        return "View and Native transforms do not match. View: " + viewTransform + "; Native: " + nativeTransform;
+    }
+    return undefined;
+}
+exports._getTransformMismatchErrorMessage = _getTransformMismatchErrorMessage;

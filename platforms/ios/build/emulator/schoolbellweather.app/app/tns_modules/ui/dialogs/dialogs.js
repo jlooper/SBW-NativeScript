@@ -5,7 +5,6 @@ var dialogs = require("ui/dialogs");
 var dialogsCommon = require("./dialogs-common");
 var types = require("utils/types");
 var utils = require("utils/utils");
-var frame = require("ui/frame");
 global.moduleMerge(dialogsCommon, exports);
 var UIAlertViewDelegateImpl = (function (_super) {
     __extends(UIAlertViewDelegateImpl, _super);
@@ -47,7 +46,6 @@ function createUIAlertView(options) {
     var alert = new UIAlertView();
     alert.title = options && options.title ? options.title : "";
     alert.message = options && options.message ? options.message : "";
-    ;
     return alert;
 }
 var allertButtons;
@@ -97,30 +95,29 @@ function getDialogResult(buttons, index) {
     }
     return undefined;
 }
-function addButtonsToAlertController(alertController, options, okCallback, cancelCallback, neutralCallback) {
+function addButtonsToAlertController(alertController, options, callback) {
     if (!options) {
         return;
     }
     if (types.isString(options.cancelButtonText)) {
         alertController.addAction(UIAlertAction.actionWithTitleStyleHandler(options.cancelButtonText, UIAlertActionStyle.UIAlertActionStyleDefault, function (arg) {
-            if (types.isFunction(cancelCallback)) {
-                cancelCallback();
-            }
+            raiseCallback(callback, false);
         }));
     }
     if (types.isString(options.neutralButtonText)) {
         alertController.addAction(UIAlertAction.actionWithTitleStyleHandler(options.neutralButtonText, UIAlertActionStyle.UIAlertActionStyleDefault, function (arg) {
-            if (types.isFunction(cancelCallback)) {
-                neutralCallback();
-            }
+            raiseCallback(callback, undefined);
         }));
     }
     if (types.isString(options.okButtonText)) {
         alertController.addAction(UIAlertAction.actionWithTitleStyleHandler(options.okButtonText, UIAlertActionStyle.UIAlertActionStyleDefault, function (arg) {
-            if (types.isFunction(okCallback)) {
-                okCallback();
-            }
+            raiseCallback(callback, true);
         }));
+    }
+}
+function raiseCallback(callback, result) {
+    if (types.isFunction(callback)) {
+        callback(result);
     }
 }
 function alert(arg) {
@@ -167,7 +164,7 @@ function confirm(arg) {
             }
             else {
                 var alertController = UIAlertController.alertControllerWithTitleMessagePreferredStyle(options.title, options.message, UIAlertControllerStyle.UIAlertControllerStyleAlert);
-                addButtonsToAlertController(alertController, options, function () { resolve(true); }, function () { resolve(false); }, function () { resolve(undefined); });
+                addButtonsToAlertController(alertController, options, function (r) { resolve(r); });
                 showUIAlertController(alertController);
             }
         }
@@ -227,9 +224,13 @@ function prompt(arg) {
                 alertController.addTextFieldWithConfigurationHandler(function (arg) {
                     arg.text = types.isString(options.defaultText) ? options.defaultText : "";
                     arg.secureTextEntry = options && options.inputType === dialogs.inputType.password;
+                    var color = dialogsCommon.getTextFieldColor();
+                    if (color) {
+                        arg.textColor = arg.tintColor = color.ios;
+                    }
                 });
                 textField = alertController.textFields.firstObject;
-                addButtonsToAlertController(alertController, options, function () { resolve({ result: true, text: textField.text }); }, function () { resolve({ result: false, text: textField.text }); }, function () { resolve({ result: undefined, text: textField.text }); });
+                addButtonsToAlertController(alertController, options, function (r) { resolve({ result: r, text: textField.text }); });
                 showUIAlertController(alertController);
             }
         }
@@ -290,15 +291,29 @@ function login(arg) {
                 alertController.addTextFieldWithConfigurationHandler(function (arg) {
                     arg.placeholder = "Login";
                     arg.text = types.isString(options.userName) ? options.userName : "";
+                    var color = dialogsCommon.getTextFieldColor();
+                    if (color) {
+                        arg.textColor = arg.tintColor = color.ios;
+                    }
                 });
                 alertController.addTextFieldWithConfigurationHandler(function (arg) {
                     arg.placeholder = "Password";
                     arg.secureTextEntry = true;
                     arg.text = types.isString(options.password) ? options.password : "";
+                    var color = dialogsCommon.getTextFieldColor();
+                    if (color) {
+                        arg.textColor = arg.tintColor = color.ios;
+                    }
                 });
                 userNameTextField = alertController.textFields.firstObject;
                 passwordTextField = alertController.textFields.lastObject;
-                addButtonsToAlertController(alertController, options, function () { resolve({ result: true, userName: userNameTextField.text, password: passwordTextField.text }); }, function () { resolve({ result: false, userName: userNameTextField.text, password: passwordTextField.text }); }, function () { resolve({ result: undefined, userName: userNameTextField.text, password: passwordTextField.text }); });
+                addButtonsToAlertController(alertController, options, function (r) {
+                    resolve({
+                        result: r,
+                        userName: userNameTextField.text,
+                        password: passwordTextField.text
+                    });
+                });
                 showUIAlertController(alertController);
             }
         }
@@ -309,18 +324,30 @@ function login(arg) {
 }
 exports.login = login;
 function showUIAlertController(alertController) {
-    var topMostFrame = frame.topmost();
-    if (topMostFrame) {
-        var viewController = topMostFrame.currentPage && topMostFrame.currentPage.ios;
+    var currentPage = dialogsCommon.getCurrentPage();
+    if (currentPage) {
+        var viewController = currentPage.ios;
         if (viewController) {
             if (alertController.popoverPresentationController) {
                 alertController.popoverPresentationController.sourceView = viewController.view;
                 alertController.popoverPresentationController.sourceRect = CGRectMake(viewController.view.bounds.size.width / 2.0, viewController.view.bounds.size.height / 2.0, 1.0, 1.0);
                 alertController.popoverPresentationController.permittedArrowDirections = 0;
             }
+            var color = dialogsCommon.getButtonColor();
+            if (color) {
+                alertController.view.tintColor = color.ios;
+            }
+            var lblColor = dialogsCommon.getLabelColor();
+            if (lblColor) {
+                var title = NSAttributedString.alloc().initWithStringAttributes(alertController.title, (_a = {}, _a[NSForegroundColorAttributeName] = lblColor.ios, _a));
+                alertController.setValueForKey(title, "attributedTitle");
+                var message = NSAttributedString.alloc().initWithStringAttributes(alertController.message, (_b = {}, _b[NSForegroundColorAttributeName] = lblColor.ios, _b));
+                alertController.setValueForKey(message, "attributedMessage");
+            }
             viewController.presentModalViewControllerAnimated(alertController, true);
         }
     }
+    var _a, _b;
 }
 function action(arg) {
     var options;

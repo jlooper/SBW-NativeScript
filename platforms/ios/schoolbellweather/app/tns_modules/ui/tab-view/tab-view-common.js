@@ -4,6 +4,7 @@ var proxy = require("ui/core/proxy");
 var types = require("utils/types");
 var trace = require("trace");
 var bindable = require("ui/core/bindable");
+var color = require("color");
 exports.traceCategory = "TabView";
 var TabViewItem = (function (_super) {
     __extends(TabViewItem, _super);
@@ -60,12 +61,16 @@ exports.TabViewItem = TabViewItem;
 var TAB_VIEW = "TabView";
 var ITEMS = "items";
 var SELECTED_INDEX = "selectedIndex";
+var SELECTED_COLOR = "selectedColor";
+var TABS_BACKGROUND_COLOR = "tabsBackgroundColor";
 var knownCollections;
 (function (knownCollections) {
     knownCollections.items = "items";
 })(knownCollections = exports.knownCollections || (exports.knownCollections = {}));
 var itemsProperty = new dependencyObservable.Property(ITEMS, TAB_VIEW, new proxy.PropertyMetadata(undefined, dependencyObservable.PropertyMetadataSettings.AffectsLayout));
 var selectedIndexProperty = new dependencyObservable.Property(SELECTED_INDEX, TAB_VIEW, new proxy.PropertyMetadata(undefined, dependencyObservable.PropertyMetadataSettings.AffectsLayout));
+var selectedColorProperty = new dependencyObservable.Property(SELECTED_COLOR, TAB_VIEW, new proxy.PropertyMetadata(undefined, dependencyObservable.PropertyMetadataSettings.None));
+var tabsBackgroundColorProperty = new dependencyObservable.Property(TABS_BACKGROUND_COLOR, TAB_VIEW, new proxy.PropertyMetadata(undefined, dependencyObservable.PropertyMetadataSettings.None));
 selectedIndexProperty.metadata.onSetNativeValue = function (data) {
     var tabView = data.object;
     tabView._onSelectedIndexPropertyChangedSetNativeValue(data);
@@ -143,6 +148,26 @@ var TabView = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(TabView.prototype, "selectedColor", {
+        get: function () {
+            return this._getValue(TabView.selectedColorProperty);
+        },
+        set: function (value) {
+            this._setValue(TabView.selectedColorProperty, value instanceof color.Color ? value : new color.Color(value));
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(TabView.prototype, "tabsBackgroundColor", {
+        get: function () {
+            return this._getValue(TabView.tabsBackgroundColorProperty);
+        },
+        set: function (value) {
+            this._setValue(TabView.tabsBackgroundColorProperty, value instanceof color.Color ? value : new color.Color(value));
+        },
+        enumerable: true,
+        configurable: true
+    });
     TabView.prototype._onSelectedIndexPropertyChangedSetNativeValue = function (data) {
         var index = this.selectedIndex;
         if (types.isUndefined(index)) {
@@ -212,8 +237,15 @@ var TabView = (function (_super) {
             }
         }
     };
+    TabView.prototype._getAndroidTabView = function () {
+        return undefined;
+    };
+    TabView.prototype._updateIOSTabBarColors = function () {
+    };
     TabView.itemsProperty = itemsProperty;
     TabView.selectedIndexProperty = selectedIndexProperty;
+    TabView.selectedColorProperty = selectedColorProperty;
+    TabView.tabsBackgroundColorProperty = tabsBackgroundColorProperty;
     TabView.selectedIndexChangedEvent = "selectedIndexChanged";
     return TabView;
 })(view.View);

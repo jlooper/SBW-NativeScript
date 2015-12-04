@@ -24,7 +24,7 @@ var TimePicker = (function (_super) {
         _super.call(this);
         this._ios = new UIDatePicker();
         this._ios.datePickerMode = UIDatePickerMode.UIDatePickerModeTime;
-        this._changeHandler = UITimePickerChangeHandlerImpl.new().initWithOwner(this);
+        this._changeHandler = UITimePickerChangeHandlerImpl.initWithOwner(new WeakRef(this));
         this._ios.addTargetActionForControlEvents(this._changeHandler, "valueChanged", UIControlEvents.UIControlEventValueChanged);
     }
     Object.defineProperty(TimePicker.prototype, "ios", {
@@ -42,20 +42,22 @@ var UITimePickerChangeHandlerImpl = (function (_super) {
     function UITimePickerChangeHandlerImpl() {
         _super.apply(this, arguments);
     }
-    UITimePickerChangeHandlerImpl.new = function () {
-        return _super.new.call(this);
-    };
-    UITimePickerChangeHandlerImpl.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        return this;
+    UITimePickerChangeHandlerImpl.initWithOwner = function (owner) {
+        var handler = UITimePickerChangeHandlerImpl.new();
+        handler._owner = owner;
+        return handler;
     };
     UITimePickerChangeHandlerImpl.prototype.valueChanged = function (sender) {
-        var comps = NSCalendar.currentCalendar().componentsFromDate(NSCalendarUnit.NSCalendarUnitHour | NSCalendarUnit.NSCalendarUnitMinute, sender.date);
-        if (comps.hour !== this._owner.hour) {
-            this._owner._onPropertyChangedFromNative(common.TimePicker.hourProperty, comps.hour);
+        var owner = this._owner.get();
+        if (!owner) {
+            return;
         }
-        if (comps.minute !== this._owner.minute) {
-            this._owner._onPropertyChangedFromNative(common.TimePicker.minuteProperty, comps.minute);
+        var comps = NSCalendar.currentCalendar().componentsFromDate(NSCalendarUnit.NSCalendarUnitHour | NSCalendarUnit.NSCalendarUnitMinute, sender.date);
+        if (comps.hour !== owner.hour) {
+            owner._onPropertyChangedFromNative(common.TimePicker.hourProperty, comps.hour);
+        }
+        if (comps.minute !== owner.minute) {
+            owner._onPropertyChangedFromNative(common.TimePicker.minuteProperty, comps.minute);
         }
     };
     UITimePickerChangeHandlerImpl.ObjCExposedMethods = {

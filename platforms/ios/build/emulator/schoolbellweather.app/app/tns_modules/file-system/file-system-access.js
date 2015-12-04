@@ -250,7 +250,7 @@ var FileSystemAccess = (function () {
                     path: this.concatPath(path, file),
                     name: file
                 };
-                if (!this.folderExists(file)) {
+                if (!this.folderExists(this.joinPath(path, file))) {
                     info.extension = this.getFileExtension(info.path);
                 }
                 retVal = callback(info);

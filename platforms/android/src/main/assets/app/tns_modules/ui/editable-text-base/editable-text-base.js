@@ -1,6 +1,7 @@
 var common = require("./editable-text-base-common");
 var textBase = require("ui/text-base");
 var enums = require("ui/enums");
+var utils = require("utils/utils");
 var EditableTextBase = (function (_super) {
     __extends(EditableTextBase, _super);
     function EditableTextBase(options) {
@@ -14,7 +15,6 @@ var EditableTextBase = (function (_super) {
         configurable: true
     });
     EditableTextBase.prototype._createUI = function () {
-        this._imm = this._context.getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
         this._android = new android.widget.EditText(this._context);
         this._configureEditText();
         this.android.setTag(this.android.getKeyListener());
@@ -82,19 +82,16 @@ var EditableTextBase = (function (_super) {
     EditableTextBase.prototype._onReturnPress = function () {
     };
     EditableTextBase.prototype._onDetached = function (force) {
-        this._imm = undefined;
         this._android = undefined;
         _super.prototype._onDetached.call(this, force);
     };
     EditableTextBase.prototype.dismissSoftInput = function () {
-        if (this._imm) {
-            this._imm.hideSoftInputFromWindow(this._android.getWindowToken(), 0);
-        }
+        utils.ad.dismissSoftInput(this._nativeView);
     };
     EditableTextBase.prototype.focus = function () {
         var result = _super.prototype.focus.call(this);
-        if (result && this._nativeView) {
-            this._imm.showSoftInput(this._nativeView, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);
+        if (result) {
+            utils.ad.showSoftInput(this._nativeView);
         }
         return result;
     };

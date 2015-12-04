@@ -12,6 +12,7 @@ var ITEMTEMPLATE = "itemTemplate";
 var ISSCROLLING = "isScrolling";
 var LISTVIEW = "ListView";
 var SEPARATORCOLOR = "separatorColor";
+var ROWHEIGHT = "rowHeight";
 var knownTemplates;
 (function (knownTemplates) {
     knownTemplates.itemTemplate = "itemTemplate";
@@ -23,6 +24,10 @@ function onItemsPropertyChanged(data) {
 function onItemTemplatePropertyChanged(data) {
     var listView = data.object;
     listView.refresh();
+}
+function onRowHeightPropertyChanged(data) {
+    var listView = data.object;
+    listView._onRowHeightPropertyChanged(data);
 }
 var ListView = (function (_super) {
     __extends(ListView, _super);
@@ -69,6 +74,16 @@ var ListView = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(ListView.prototype, "rowHeight", {
+        get: function () {
+            return this._getValue(ListView.rowHeightProperty);
+        },
+        set: function (value) {
+            this._setValue(ListView.rowHeightProperty, value);
+        },
+        enumerable: true,
+        configurable: true
+    });
     ListView.prototype.refresh = function () {
     };
     ListView.prototype.scrollToIndex = function (index) {
@@ -82,7 +97,11 @@ var ListView = (function (_super) {
     };
     ListView.prototype._prepareItem = function (item, index) {
         if (item) {
-            item.bindingContext = this._getDataItem(index);
+            var dataItem = this._getDataItem(index);
+            if (!(dataItem instanceof observable.Observable)) {
+                item.bindingContext = null;
+            }
+            item.bindingContext = dataItem;
             item._inheritProperties(this);
         }
     };
@@ -109,6 +128,9 @@ var ListView = (function (_super) {
     ListView.prototype._onItemsChanged = function (args) {
         this.refresh();
     };
+    ListView.prototype._onRowHeightPropertyChanged = function (data) {
+        this.refresh();
+    };
     ListView.prototype._propagateInheritableProperties = function (view) {
     };
     ListView.itemLoadingEvent = "itemLoading";
@@ -118,6 +140,7 @@ var ListView = (function (_super) {
     ListView.itemsProperty = new dependencyObservable.Property(ITEMS, LISTVIEW, new proxy.PropertyMetadata(undefined, dependencyObservable.PropertyMetadataSettings.AffectsLayout, onItemsPropertyChanged));
     ListView.itemTemplateProperty = new dependencyObservable.Property(ITEMTEMPLATE, LISTVIEW, new proxy.PropertyMetadata(undefined, dependencyObservable.PropertyMetadataSettings.AffectsLayout, onItemTemplatePropertyChanged));
     ListView.isScrollingProperty = new dependencyObservable.Property(ISSCROLLING, LISTVIEW, new proxy.PropertyMetadata(false, dependencyObservable.PropertyMetadataSettings.None));
+    ListView.rowHeightProperty = new dependencyObservable.Property(ROWHEIGHT, LISTVIEW, new proxy.PropertyMetadata(-1, dependencyObservable.PropertyMetadataSettings.AffectsLayout, onRowHeightPropertyChanged));
     return ListView;
 })(view.View);
 exports.ListView = ListView;

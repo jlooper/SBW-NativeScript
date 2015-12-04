@@ -4,6 +4,7 @@ var frame = require("ui/frame");
 var types = require("utils/types");
 var observable = require("data/observable");
 var enums = require("ui/enums");
+var fileResolverModule = require("file-system/file-name-resolver");
 global.moduleMerge(appModule, exports);
 var initEvents = function () {
     var androidApp = exports.android;
@@ -48,6 +49,7 @@ var initEvents = function () {
             if (!(activity instanceof com.tns.NativeScriptActivity)) {
                 return;
             }
+            androidApp.paused = true;
             if (activity === androidApp.foregroundActivity) {
                 if (exports.onSuspend) {
                     exports.onSuspend();
@@ -63,6 +65,7 @@ var initEvents = function () {
             if (!(activity instanceof com.tns.NativeScriptActivity)) {
                 return;
             }
+            androidApp.paused = false;
             if (activity === androidApp.foregroundActivity) {
                 if (exports.onResume) {
                     exports.onResume();
@@ -213,16 +216,10 @@ var BroadcastReceiver = (function (_super) {
     return BroadcastReceiver;
 })(android.content.BroadcastReceiver);
 global.__onUncaughtError = function (error) {
-    if (!types.isFunction(exports.onUncaughtError)) {
-        return;
+    if (types.isFunction(exports.onUncaughtError)) {
+        exports.onUncaughtError(error);
     }
-    var nsError = {
-        message: error.message,
-        name: error.name,
-        nativeError: error.nativeException
-    };
-    exports.onUncaughtError(nsError);
-    exports.notify({ eventName: dts.uncaughtErrorEvent, object: appModule.android, android: nsError });
+    exports.notify({ eventName: dts.uncaughtErrorEvent, object: appModule.android, android: error });
 };
 exports.start = function () {
     dts.loadCss();
@@ -257,3 +254,11 @@ function onConfigurationChanged(context, intent) {
         });
     }
 }
+global.__onLiveSync = function () {
+    if (exports.android && exports.android.paused) {
+        return;
+    }
+    fileResolverModule.clearCache();
+    appModule.loadCss();
+    frame.reloadPage();
+};

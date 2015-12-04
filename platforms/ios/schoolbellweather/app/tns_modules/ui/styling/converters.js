@@ -15,13 +15,31 @@ function textAlignConverter(value) {
         case enums.TextAlignment.center:
         case enums.TextAlignment.right:
             return value;
-            break;
         default:
             throw new Error("CSS text-align \"" + value + "\" is not supported.");
-            break;
     }
 }
 exports.textAlignConverter = textAlignConverter;
+function textDecorationConverter(value) {
+    var values = (value + "").split(" ");
+    if (values.indexOf(enums.TextDecoration.none) !== -1 || values.indexOf(enums.TextDecoration.underline) !== -1 || values.indexOf(enums.TextDecoration.lineThrough) !== -1) {
+        return value;
+    }
+    else {
+        throw new Error("CSS text-decoration \"" + value + "\" is not supported.");
+    }
+}
+exports.textDecorationConverter = textDecorationConverter;
+function whiteSpaceConverter(value) {
+    switch (value) {
+        case enums.WhiteSpace.normal:
+        case enums.WhiteSpace.nowrap:
+            return value;
+        default:
+            throw new Error("CSS white-space \"" + value + "\" is not supported.");
+    }
+}
+exports.whiteSpaceConverter = whiteSpaceConverter;
 exports.numberConverter = parseFloat;
 function visibilityConverter(value) {
     if (value.toLowerCase() === enums.Visibility.collapsed) {

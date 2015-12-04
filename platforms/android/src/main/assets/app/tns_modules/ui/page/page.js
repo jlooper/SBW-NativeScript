@@ -17,7 +17,10 @@ var DialogFragmentClass = (function (_super) {
     DialogFragmentClass.prototype.onCreateDialog = function (savedInstanceState) {
         var dialog = new android.app.Dialog(this._owner._context);
         dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
-        dialog.setContentView(this._owner._nativeView);
+        this._owner.horizontalAlignment = this._fullscreen ? enums.HorizontalAlignment.stretch : enums.HorizontalAlignment.center;
+        this._owner.verticalAlignment = this._fullscreen ? enums.VerticalAlignment.stretch : enums.VerticalAlignment.center;
+        this._owner.actionBarHidden = true;
+        dialog.setContentView(this._owner._nativeView, this._owner._nativeView.getLayoutParams());
         var window = dialog.getWindow();
         window.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
         if (this._fullscreen) {
@@ -56,11 +59,7 @@ var Page = (function (_super) {
     Page.prototype._createUI = function () {
         this._grid = new org.nativescript.widgets.GridLayout(this._context);
         this._grid.addRow(new org.nativescript.widgets.ItemSpec(1, org.nativescript.widgets.GridUnitType.auto));
-        var gridUnitType = org.nativescript.widgets.GridUnitType.star;
-        if (this._closeModalCallback) {
-            gridUnitType = org.nativescript.widgets.GridUnitType.auto;
-        }
-        this._grid.addRow(new org.nativescript.widgets.ItemSpec(1, gridUnitType));
+        this._grid.addRow(new org.nativescript.widgets.ItemSpec(1, org.nativescript.widgets.GridUnitType.star));
     };
     Page.prototype._addViewToNativeVisualTree = function (child, atIndex) {
         if (this._nativeView && child._nativeView) {
@@ -109,6 +108,7 @@ var Page = (function (_super) {
         this.onUnloaded();
         this._isAddedToNativeVisualTree = false;
         this._onDetached(true);
+        _super.prototype._hideNativeModalView.call(this, parent);
     };
     Page.prototype._updateActionBar = function (hidden) {
         this.actionBar.update();

@@ -1,11 +1,15 @@
 var observable = require("data/observable");
 var observableArray = require("data/observable-array");
+var definition = require("text/formatted-string");
 var types = require("utils/types");
 var colorModule = require("color");
 var knownCollections;
 (function (knownCollections) {
     knownCollections.spans = "spans";
 })(knownCollections = exports.knownCollections || (exports.knownCollections = {}));
+var CHILD_SPAN = "Span";
+var CHILD_FORMATTED_TEXT = "formattedText";
+var CHILD_FORMATTED_STRING = "FormattedString";
 var FormattedString = (function (_super) {
     __extends(FormattedString, _super);
     function FormattedString() {
@@ -209,6 +213,22 @@ var FormattedString = (function (_super) {
         for (i = 0; i < this.spans.length; i++) {
             var span = this.spans.getItem(i);
             span.bindingContext = newBindingContext;
+        }
+    };
+    FormattedString.prototype._addChildFromBuilder = function (name, value) {
+        if (name === CHILD_SPAN) {
+            this.spans.push(value);
+        }
+    };
+    FormattedString.addFormattedStringToView = function (view, name, value) {
+        if (name === CHILD_SPAN) {
+            if (!view.formattedText) {
+                view.formattedText = new definition.FormattedString();
+            }
+            view.formattedText.spans.push(value);
+        }
+        else if (name === CHILD_FORMATTED_TEXT || name === CHILD_FORMATTED_STRING) {
+            view.formattedText = value;
         }
     };
     return FormattedString;

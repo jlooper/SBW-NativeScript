@@ -1,5 +1,7 @@
 var vmModule = require("./main-view-model");
 var dialogs = require("ui/dialogs");
+var helpers = require('./helper');
+var appModule = require("application");
 var imageModule = require("ui/image");
 var gesturesModule = require("ui/gestures");
 var view = require("ui/core/view");
@@ -10,27 +12,36 @@ var observable = require("data/observable");
 var page;
 var hour;
 var minute;
-var lat;
-var long;
+var latitude;
+var longitude;
 var mode;
 var transportation;
 
 function pageLoaded(args) {
     page = args.object; 
-    page.bindingContext = vmModule.mainViewModel;
-    getSettings();               
+
+    var toIcon = {
+        toView: function (value) {
+            return helpers.toIcon(value);
+        }
+    }
+    
+    appModule.resources["toIcon"] = toIcon;
+    
+    page.bindingContext = vmModule.mainViewModel;    
+    getSettings();                  
 }
 
 function getSettings(){
 
     hour = appSettings.getString("hour"); 
     minute = appSettings.getString("minute");
-    lat = parseFloat(appSettings.getNumber("lat"));
-    long = parseFloat(appSettings.getNumber("long"));
+    latitude = parseFloat(appSettings.getNumber("latitude"));
+    longitude = parseFloat(appSettings.getNumber("longitude"));
     mode = appSettings.getString("mode");
     transportation = appSettings.getString("transportation");
 
-    console.log("presets" + hour,minute,lat,long,mode,transportation)
+    console.log("settings" + hour,minute,latitude,longitude,mode,transportation)
  
     
     if(!hour){
@@ -46,9 +57,6 @@ function getSettings(){
         transportation = appSettings.setString("transportation","res://walk");
     }
     
-    
-
-console.log("defaults are" + lat,long,mode,hour,minute)
 }
 
 function navigatedTo(args){
@@ -56,10 +64,13 @@ function navigatedTo(args){
     
     vmModule.mainViewModel.getLocation();
 
+    
+
     //listen for changed segmentedBar
 
     var sBar = page.getViewById("sBar");
     var mode = appSettings.getString("mode");
+
     if(mode == 'C'){
         sBar.selectedIndex = 0;
     }
@@ -71,13 +82,14 @@ function navigatedTo(args){
 
         if(e.value == 1){
             appSettings.setString("mode","F");
-            vmModule.mainViewModel.getLocation();
             
         }
         else{
             appSettings.setString("mode","C");
-            vmModule.mainViewModel.getLocation(); 
         } 
+
+        vmModule.mainViewModel.getLocation(); 
+
                    
     });
 

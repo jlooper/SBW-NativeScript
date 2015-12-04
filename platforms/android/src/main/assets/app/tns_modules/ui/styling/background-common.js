@@ -52,7 +52,7 @@ var Background = (function () {
         var imageWidth = this.image.width;
         var imageHeight = this.image.height;
         if (this.size) {
-            var values = cssValue.parse(this.size);
+            var values = cssValue(this.size);
             if (values.length === 2) {
                 var vx = values[0];
                 var vy = values[1];
@@ -87,7 +87,7 @@ var Background = (function () {
             }
         }
         if (this.position) {
-            var values = cssValue.parse(this.position);
+            var values = cssValue(this.position);
             var spaceX = width - imageWidth;
             var spaceY = height - imageHeight;
             if (values.length === 2) {

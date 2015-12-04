@@ -1,22 +1,22 @@
 var common = require("./web-view-common");
 var trace = require("trace");
+var fs = require("file-system");
 global.moduleMerge(common, exports);
 var UIWebViewDelegateImpl = (function (_super) {
     __extends(UIWebViewDelegateImpl, _super);
     function UIWebViewDelegateImpl() {
         _super.apply(this, arguments);
     }
-    UIWebViewDelegateImpl.new = function () {
-        return _super.new.call(this);
-    };
-    UIWebViewDelegateImpl.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        return this;
+    UIWebViewDelegateImpl.initWithOwner = function (owner) {
+        var delegate = UIWebViewDelegateImpl.new();
+        delegate._owner = owner;
+        return delegate;
     };
     UIWebViewDelegateImpl.prototype.webViewShouldStartLoadWithRequestNavigationType = function (webView, request, navigationType) {
-        if (request.URL) {
+        var owner = this._owner.get();
+        if (owner && request.URL) {
             trace.write("UIWebViewDelegateClass.webViewShouldStartLoadWithRequestNavigationType(" + request.URL.absoluteString + ", " + navigationType + ")", trace.categories.Debug);
-            this._owner._onLoadStarted(request.URL.absoluteString);
+            owner._onLoadStarted(request.URL.absoluteString);
         }
         return true;
     };
@@ -25,15 +25,23 @@ var UIWebViewDelegateImpl = (function (_super) {
     };
     UIWebViewDelegateImpl.prototype.webViewDidFinishLoad = function (webView) {
         trace.write("UIWebViewDelegateClass.webViewDidFinishLoad(" + webView.request.URL + ")", trace.categories.Debug);
-        this._owner._onLoadFinished(webView.request.URL.absoluteString);
+        var owner = this._owner.get();
+        if (owner) {
+            owner._onLoadFinished(webView.request.URL.absoluteString);
+        }
     };
     UIWebViewDelegateImpl.prototype.webViewDidFailLoadWithError = function (webView, error) {
-        var url = this._owner.url;
-        if (webView.request && webView.request.URL) {
-            url = webView.request.URL.absoluteString;
+        var owner = this._owner.get();
+        if (owner) {
+            var url = owner.url;
+            if (webView.request && webView.request.URL) {
+                url = webView.request.URL.absoluteString;
+            }
+            trace.write("UIWebViewDelegateClass.webViewDidFailLoadWithError(" + error.localizedDescription + ")", trace.categories.Debug);
+            if (owner) {
+                owner._onLoadFinished(url, error.localizedDescription);
+            }
         }
-        trace.write("UIWebViewDelegateClass.webViewDidFailLoadWithError(" + error.localizedDescription + ")", trace.categories.Debug);
-        this._owner._onLoadFinished(url, error.localizedDescription);
     };
     UIWebViewDelegateImpl.ObjCProtocols = [UIWebViewDelegate];
     return UIWebViewDelegateImpl;
@@ -43,7 +51,7 @@ var WebView = (function (_super) {
     function WebView() {
         _super.call(this);
         this._ios = new UIWebView();
-        this._delegate = UIWebViewDelegateImpl.new().initWithOwner(this);
+        this._delegate = UIWebViewDelegateImpl.initWithOwner(new WeakRef(this));
     }
     WebView.prototype.onLoaded = function () {
         _super.prototype.onLoaded.call(this);
@@ -77,8 +85,8 @@ var WebView = (function (_super) {
     WebView.prototype._loadHttp = function (src) {
         this._ios.loadRequest(NSURLRequest.requestWithURL(NSURL.URLWithString(src)));
     };
-    WebView.prototype._loadData = function (src) {
-        this._ios.loadHTMLStringBaseURL(src, null);
+    WebView.prototype._loadData = function (content) {
+        this._ios.loadHTMLStringBaseURL(content, NSURL.alloc().initWithString("file:///" + fs.knownFolders.currentApp().path + "/"));
     };
     Object.defineProperty(WebView.prototype, "canGoBack", {
         get: function () {

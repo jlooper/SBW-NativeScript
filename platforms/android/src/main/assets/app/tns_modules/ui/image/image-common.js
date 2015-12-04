@@ -4,12 +4,13 @@ var proxy = require("ui/core/proxy");
 var imageSource = require("image-source");
 var enums = require("ui/enums");
 var types = require("utils/types");
+var platform = require("platform");
 var SRC = "src";
 var IMAGE_SOURCE = "imageSource";
 var IMAGE = "Image";
 var ISLOADING = "isLoading";
 var STRETCH = "stretch";
-var AffectsLayout = global.android ? dependencyObservable.PropertyMetadataSettings.None : dependencyObservable.PropertyMetadataSettings.AffectsLayout;
+var AffectsLayout = platform.device.os === platform.platformNames.android ? dependencyObservable.PropertyMetadataSettings.None : dependencyObservable.PropertyMetadataSettings.AffectsLayout;
 function onSrcPropertyChanged(data) {
     var image = data.object;
     var value = data.newValue;

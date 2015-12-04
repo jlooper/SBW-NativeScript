@@ -4,6 +4,7 @@ var types = require("utils/types");
 var definition = require("application");
 var enums = require("ui/enums");
 var uiUtils = require("ui/utils");
+var fileResolverModule = require("file-system/file-name-resolver");
 global.moduleMerge(appModule, exports);
 var Responder = (function (_super) {
     __extends(Responder, _super);
@@ -185,16 +186,28 @@ var IOSApplication = (function () {
 })();
 var iosApp = new IOSApplication();
 exports.ios = iosApp;
+global.__onUncaughtError = function (error) {
+    if (types.isFunction(exports.onUncaughtError)) {
+        exports.onUncaughtError(error);
+    }
+    definition.notify({ eventName: definition.uncaughtErrorEvent, object: definition.ios, ios: error });
+};
+var started = false;
 exports.start = function () {
-    appModule.loadCss();
-    try {
+    if (!started) {
+        started = true;
+        appModule.loadCss();
         UIApplicationMain(0, null, null, exports.ios && exports.ios.delegate ? NSStringFromClass(exports.ios.delegate) : NSStringFromClass(Responder));
     }
-    catch (error) {
-        if (!types.isFunction(exports.onUncaughtError)) {
-            return;
-        }
-        exports.onUncaughtError(error);
-        definition.notify({ eventName: definition.uncaughtErrorEvent, object: definition.ios, ios: error });
+    else {
+        throw new Error("iOS Application already started!");
     }
+};
+global.__onLiveSync = function () {
+    if (!started) {
+        return;
+    }
+    fileResolverModule.clearCache();
+    appModule.loadCss();
+    frame.reloadPage();
 };

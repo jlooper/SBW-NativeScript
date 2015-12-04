@@ -16,25 +16,28 @@ var layout;
         return 1;
     }
     layout.getDisplayDensity = getDisplayDensity;
+    function toDevicePixels(value) {
+        return value * getDisplayDensity();
+    }
+    layout.toDevicePixels = toDevicePixels;
+    function toDeviceIndependentPixels(value) {
+        return value / getDisplayDensity();
+    }
+    layout.toDeviceIndependentPixels = toDeviceIndependentPixels;
 })(layout = exports.layout || (exports.layout = {}));
 var ios;
 (function (ios) {
     var collections;
     (function (collections) {
         function jsArrayToNSArray(str) {
-            var arr = new NSMutableArray();
-            if ("undefined" !== typeof str) {
-                for (var element in str) {
-                    arr.addObject(str[element]);
-                }
-            }
-            return arr;
+            return NSArray.arrayWithArray(str);
         }
         collections.jsArrayToNSArray = jsArrayToNSArray;
         function nsArrayToJSArray(a) {
             var arr = [];
             if ("undefined" !== typeof a) {
-                for (var i = 0; i < a.count; i++) {
+                var count = a.count;
+                for (var i = 0; i < count; i++) {
                     arr.push(a.objectAtIndex(i));
                 }
             }

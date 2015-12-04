@@ -1,5 +1,6 @@
 var common = require("./web-view-common");
 var trace = require("trace");
+var fs = require("file-system");
 global.moduleMerge(common, exports);
 var WebViewClientClass = (function (_super) {
     __extends(WebViewClientClass, _super);
@@ -26,11 +27,26 @@ var WebViewClientClass = (function (_super) {
             this._view._onLoadFinished(url, undefined);
         }
     };
-    WebViewClientClass.prototype.onReceivedError = function (view, errorCode, description, failingUrl) {
-        _super.prototype.onReceivedError.call(this, view, errorCode, description, failingUrl);
-        if (this._view) {
-            trace.write("WebViewClientClass.onReceivedError(" + errorCode + ", " + description + ", " + failingUrl + ")", trace.categories.Debug);
-            this._view._onLoadFinished(failingUrl, description + "(" + errorCode + ")");
+    WebViewClientClass.prototype.onReceivedError = function () {
+        var view = arguments[0];
+        if (arguments.length === 4) {
+            var errorCode = arguments[1];
+            var description = arguments[2];
+            var failingUrl = arguments[3];
+            _super.prototype.onReceivedError.call(this, view, errorCode, description, failingUrl);
+            if (this._view) {
+                trace.write("WebViewClientClass.onReceivedError(" + errorCode + ", " + description + ", " + failingUrl + ")", trace.categories.Debug);
+                this._view._onLoadFinished(failingUrl, description + "(" + errorCode + ")");
+            }
+        }
+        else {
+            var request = arguments[1];
+            var error = arguments[2];
+            _super.prototype.onReceivedError.call(this, view, request, error);
+            if (this._view) {
+                trace.write("WebViewClientClass.onReceivedError(" + error.getErrorCode() + ", " + error.getDescription() + ", " + (error.getUrl && error.getUrl()) + ")", trace.categories.Debug);
+                this._view._onLoadFinished(error.getUrl && error.getUrl(), error.getDescription() + "(" + error.getErrorCode() + ")");
+            }
         }
     };
     return WebViewClientClass;
@@ -68,7 +84,7 @@ var WebView = (function (_super) {
             return;
         }
         var baseUrl = "file:///" + path.substring(0, path.lastIndexOf('/') + 1);
-        this._android.loadDataWithBaseURL(baseUrl, content, "text/html; charset=utf-8", "utf-8", null);
+        this._android.loadDataWithBaseURL(baseUrl, content, "text/html", "utf-8", null);
     };
     WebView.prototype._loadHttp = function (src) {
         if (!this._android) {
@@ -80,7 +96,8 @@ var WebView = (function (_super) {
         if (!this._android) {
             return;
         }
-        this._android.loadData(src, "text/html; charset=utf-8", "utf-8");
+        var baseUrl = "file:///" + fs.knownFolders.currentApp().path + "/";
+        this._android.loadDataWithBaseURL(baseUrl, src, "text/html", "utf-8", null);
     };
     Object.defineProperty(WebView.prototype, "canGoBack", {
         get: function () {

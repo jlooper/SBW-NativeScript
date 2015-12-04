@@ -86,7 +86,10 @@ var GesturesObserver = (function (_super) {
                 view: this.target,
                 android: motionEvent,
                 rotation: degrees,
-                ios: null
+                ios: undefined,
+                object: this.target,
+                eventName: definition.toString(definition.GestureTypes.rotation),
+                state: getState(motionEvent)
             };
             if (this.callback) {
                 this.callback.call(this.context, args);
@@ -96,6 +99,20 @@ var GesturesObserver = (function (_super) {
     return GesturesObserver;
 })(common.GesturesObserver);
 exports.GesturesObserver = GesturesObserver;
+function getState(e) {
+    if (e.getAction() === android.view.MotionEvent.ACTION_DOWN) {
+        return common.GestureStateTypes.began;
+    }
+    else if (e.getAction() === android.view.MotionEvent.ACTION_CANCEL) {
+        return common.GestureStateTypes.cancelled;
+    }
+    else if (e.getAction() === android.view.MotionEvent.ACTION_MOVE) {
+        return common.GestureStateTypes.changed;
+    }
+    else if (e.getAction() === android.view.MotionEvent.ACTION_UP) {
+        return common.GestureStateTypes.ended;
+    }
+}
 function _getArgs(type, view, e) {
     return {
         type: type,
@@ -115,6 +132,7 @@ function _getSwipeArgs(direction, view, initialEvent, currentEvent) {
         ios: undefined,
         object: view,
         eventName: definition.toString(definition.GestureTypes.swipe),
+        state: getState(currentEvent)
     };
 }
 function _getPanArgs(deltaX, deltaY, view, initialEvent, currentEvent) {
@@ -127,6 +145,7 @@ function _getPanArgs(deltaX, deltaY, view, initialEvent, currentEvent) {
         ios: undefined,
         object: view,
         eventName: definition.toString(definition.GestureTypes.pan),
+        state: getState(currentEvent)
     };
 }
 function _executeCallback(observer, args) {
@@ -143,7 +162,7 @@ var TapAndDoubleTapGestureListener = (function (_super) {
         this._type = type;
         return global.__native(this);
     }
-    TapAndDoubleTapGestureListener.prototype.onSingleTapConfirmed = function (motionEvent) {
+    TapAndDoubleTapGestureListener.prototype.onSingleTapUp = function (motionEvent) {
         if (this._type & definition.GestureTypes.tap) {
             var args = _getArgs(definition.GestureTypes.tap, this._target, motionEvent);
             _executeCallback(this._observer, args);
@@ -181,10 +200,41 @@ var PinchGestureListener = (function (_super) {
             type: definition.GestureTypes.pinch,
             view: this._target,
             android: detector,
-            scale: detector.getScaleFactor()
+            scale: detector.getScaleFactor(),
+            object: this._target,
+            eventName: definition.toString(definition.GestureTypes.pinch),
+            ios: undefined,
+            state: common.GestureStateTypes.changed
         };
         _executeCallback(this._observer, args);
         return true;
+    };
+    PinchGestureListener.prototype.onScaleBegin = function (detector) {
+        var args = {
+            type: definition.GestureTypes.pinch,
+            view: this._target,
+            android: detector,
+            scale: detector.getScaleFactor(),
+            object: this._target,
+            eventName: definition.toString(definition.GestureTypes.pinch),
+            ios: undefined,
+            state: common.GestureStateTypes.began
+        };
+        _executeCallback(this._observer, args);
+        return true;
+    };
+    PinchGestureListener.prototype.onScaleEnd = function (detector) {
+        var args = {
+            type: definition.GestureTypes.pinch,
+            view: this._target,
+            android: detector,
+            scale: detector.getScaleFactor(),
+            object: this._target,
+            eventName: definition.toString(definition.GestureTypes.pinch),
+            ios: undefined,
+            state: common.GestureStateTypes.ended
+        };
+        _executeCallback(this._observer, args);
     };
     return PinchGestureListener;
 })(android.view.ScaleGestureDetector.SimpleOnScaleGestureListener);

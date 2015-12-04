@@ -2,7 +2,8 @@ var layouts = require("ui/layouts/layout-base");
 var dependencyObservable = require("ui/core/dependency-observable");
 var enums = require("ui/enums");
 var proxy = require("ui/core/proxy");
-var AffectsLayout = global.android ? dependencyObservable.PropertyMetadataSettings.None : dependencyObservable.PropertyMetadataSettings.AffectsLayout;
+var platform = require("platform");
+var AffectsLayout = platform.device.os === platform.platformNames.android ? dependencyObservable.PropertyMetadataSettings.None : dependencyObservable.PropertyMetadataSettings.AffectsLayout;
 function isWidthHeightValid(value) {
     return (value >= 0.0 && value !== Number.POSITIVE_INFINITY);
 }

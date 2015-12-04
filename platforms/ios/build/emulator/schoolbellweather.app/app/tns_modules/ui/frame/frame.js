@@ -89,6 +89,9 @@ var Frame = (function (_super) {
         var page = page || this.currentPage;
         var newValue = this._getNavBarVisible(page);
         this._ios.showNavigationBar = newValue;
+        if (this._ios.controller.navigationBar) {
+            this._ios.controller.navigationBar.userInteractionEnabled = this.navigationQueueIsEmpty();
+        }
     };
     Frame.prototype._getNavBarVisible = function (page) {
         switch (this._ios.navBarVisibility) {
@@ -178,6 +181,12 @@ var Frame = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Frame.prototype._setNativeViewFrame = function (nativeView, frame) {
+        if (nativeView.frame.size.width === frame.size.width && nativeView.frame.size.height === frame.size.height) {
+            return;
+        }
+        _super.prototype._setNativeViewFrame.call(this, nativeView, frame);
+    };
     return Frame;
 })(frameCommon.Frame);
 exports.Frame = Frame;
@@ -193,20 +202,29 @@ var UINavigationControllerImpl = (function (_super) {
     };
     Object.defineProperty(UINavigationControllerImpl.prototype, "owner", {
         get: function () {
-            return this._owner;
+            return this._owner.get();
         },
         enumerable: true,
         configurable: true
     });
     UINavigationControllerImpl.prototype.viewDidLoad = function () {
-        this._owner.onLoaded();
+        var owner = this._owner.get();
+        if (owner) {
+            owner.onLoaded();
+        }
     };
     UINavigationControllerImpl.prototype.viewDidLayoutSubviews = function () {
-        trace.write(this._owner + " viewDidLayoutSubviews, isLoaded = " + this._owner.isLoaded, trace.categories.ViewHierarchy);
-        this._owner._updateLayout();
+        var owner = this._owner.get();
+        if (owner) {
+            trace.write(this._owner + " viewDidLayoutSubviews, isLoaded = " + owner.isLoaded, trace.categories.ViewHierarchy);
+            owner._updateLayout();
+        }
     };
     UINavigationControllerImpl.prototype.navigationControllerWillShowViewControllerAnimated = function (navigationController, viewController, animated) {
-        var frame = this._owner;
+        var frame = this._owner.get();
+        if (!frame) {
+            return;
+        }
         var newEntry = viewController[ENTRY];
         var newPage = newEntry.resolvedPage;
         if (!newPage.parent) {
@@ -226,11 +244,27 @@ var UINavigationControllerImpl = (function (_super) {
         newPage.actionBar.update();
     };
     UINavigationControllerImpl.prototype.navigationControllerDidShowViewControllerAnimated = function (navigationController, viewController, animated) {
-        var frame = this._owner;
+        var frame = this._owner.get();
+        if (!frame) {
+            return;
+        }
+        var newEntry = viewController[ENTRY];
+        var newPage = newEntry.resolvedPage;
+        if (!newPage._delayLoadedEvent) {
+            return;
+        }
         var backStack = frame.backStack;
         var currentEntry = backStack.length > 0 ? backStack[backStack.length - 1] : null;
-        var newEntry = viewController[ENTRY];
         var isBack = currentEntry && newEntry === currentEntry;
+        var currentNavigationContext;
+        var navigationQueue = frame._navigationQueue;
+        for (var i = 0; i < navigationQueue.length; i++) {
+            if (navigationQueue[i].entry === newEntry) {
+                currentNavigationContext = navigationQueue[i];
+                break;
+            }
+        }
+        var isBackNavigation = currentNavigationContext ? currentNavigationContext.isBackNavigation : false;
         if (isBack) {
             try {
                 frame._shouldSkipNativePop = true;
@@ -246,9 +280,12 @@ var UINavigationControllerImpl = (function (_super) {
         }
         frame._navigateToEntry = null;
         frame._currentEntry = newEntry;
-        var newPage = newEntry.resolvedPage;
+        frame.measurePage(newPage);
+        frame.layoutPage(newPage);
+        newPage._delayLoadedEvent = false;
+        newPage._emit(view.View.loadedEvent);
         frame._updateActionBar(newPage);
-        newPage.onNavigatedTo();
+        newPage.onNavigatedTo(isBack || isBackNavigation);
         frame._processNavigationQueue(newPage);
     };
     UINavigationControllerImpl.prototype.supportedInterfaceOrientation = function () {
@@ -259,7 +296,7 @@ var UINavigationControllerImpl = (function (_super) {
 })(UINavigationController);
 var iOSFrame = (function () {
     function iOSFrame(owner) {
-        this._controller = UINavigationControllerImpl.initWithOwner(owner);
+        this._controller = UINavigationControllerImpl.initWithOwner(new WeakRef(owner));
         this._controller.delegate = this._controller;
         this._controller.automaticallyAdjustsScrollViewInsets = false;
         this._navBarVisibility = enums.NavigationBarVisibility.auto;
@@ -279,8 +316,9 @@ var iOSFrame = (function () {
             var change = this._showNavigationBar !== value;
             this._showNavigationBar = value;
             this._controller.navigationBarHidden = !value;
-            if (change) {
-                this._controller.owner.requestLayout();
+            var owner = this._controller.owner;
+            if (owner && change) {
+                owner.requestLayout();
             }
         },
         enumerable: true,

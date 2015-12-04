@@ -1,7 +1,6 @@
 var viewCommon = require("./view-common");
 var trace = require("trace");
 var utils = require("utils/utils");
-var background = require("ui/styling/background");
 var types = require("utils/types");
 global.moduleMerge(viewCommon, exports);
 function onIdPropertyChanged(data) {
@@ -183,11 +182,18 @@ var View = (function (_super) {
     };
     View.prototype.onLayout = function (left, top, right, bottom) {
     };
+    View.prototype._setNativeViewFrame = function (nativeView, frame) {
+        if (!CGRectEqualToRect(nativeView.frame, frame)) {
+            trace.write(this + ", Native setFrame: = " + NSStringFromCGRect(frame), trace.categories.Layout);
+            nativeView.frame = frame;
+            var boundsOrigin = nativeView.bounds.origin;
+            nativeView.bounds = CGRectMake(boundsOrigin.x, boundsOrigin.y, frame.size.width, frame.size.height);
+        }
+    };
     View.prototype.layoutNativeView = function (left, top, right, bottom) {
         if (!this._nativeView) {
             return;
         }
-        var frame = CGRectMake(left, top, right - left, bottom - top);
         var nativeView;
         if (!this.parent && this._nativeView.subviews.count > 0 && utils.ios.MajorVersion < 8) {
             trace.write(this + " has no parent. Setting frame to first child instead.", trace.categories.Layout);
@@ -196,12 +202,8 @@ var View = (function (_super) {
         else {
             nativeView = this._nativeView;
         }
-        if (!CGRectEqualToRect(nativeView.frame, frame)) {
-            trace.write(this + ", Native setFrame: = " + NSStringFromCGRect(frame), trace.categories.Layout);
-            nativeView.frame = frame;
-            var boundsOrigin = nativeView.bounds.origin;
-            nativeView.bounds = CGRectMake(boundsOrigin.x, boundsOrigin.y, frame.size.width, frame.size.height);
-        }
+        var frame = CGRectMake(left, top, right - left, bottom - top);
+        this._setNativeViewFrame(nativeView, frame);
     };
     View.prototype._updateLayout = function () {
         var oldBounds = this._getCurrentLayoutBounds();
@@ -214,10 +216,7 @@ var View = (function (_super) {
         return false;
     };
     View.prototype._onBoundsChanged = function () {
-        var bgColor = background.ios.createBackgroundUIColor(this);
-        if (bgColor) {
-            this._nativeView.backgroundColor = bgColor;
-        }
+        this.style._boundsChanged();
     };
     return View;
 })(viewCommon.View);

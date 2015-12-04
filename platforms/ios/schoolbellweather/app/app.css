@@ -1,6 +1,6 @@
 ﻿Page{
 	background-color: #3C9DFE;
-	color: #FFFFFF;
+	/*color: #FFFFFF;*/
 }
 button{
 	background-color:#DF3E33;
@@ -16,6 +16,7 @@ button{
 .header-container{
 	background-color: #FFA72B;
 	padding:2;
+	color:white;
 }
 .message-container{
 	background-color: #FFFF00;
@@ -26,16 +27,18 @@ button{
 	font-weight:bold;
 	margin-top:10;
 	margin-bottom:10;
+	color:white;
+}
+.top {
+	margin-top:15;
 }
 .medium-text{
-	font-size:15;
+	font-size:20;
 	font-weight:bold;
 	margin:10;
+	color:white;
 }
 .top-icon{
-	margin:5;
-}
-.icon{
 	margin:5;
 }
 .panel{
@@ -64,16 +67,31 @@ button{
 }
 .blue1-container{
 	background-color: #2F86E7;
+	color:white;
 }
 /*tomorrow and fiveday*/
 .blue2-container{
 	background-color: #145699;
 	margin:10;
 	padding:5;
+	color:white;
 }
 .blue3-container{
 	background-color: #0096FF;
+	color:white;
 }
 .blue4-container{
 	background-color: #264059;
+	color:white;
+}
+/*icons*/
+.weather-icon {
+   font-family: 'icomoon';
+   color:white;
+}
+.large-icon{
+	font-size:100;
+}
+.small-icon {
+   font-size:30;
 }

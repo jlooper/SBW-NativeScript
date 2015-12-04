@@ -94,9 +94,9 @@ var Repeater = (function (_super) {
             return;
         }
         var length = this.items.length;
-        for (var i_1 = 0; i_1 < length; i_1++) {
-            var viewToAdd = !types.isNullOrUndefined(this.itemTemplate) ? builder.parse(this.itemTemplate, this) : this._getDefaultItemContent(i_1);
-            var dataItem = this._getDataItem(i_1);
+        for (var i = 0; i < length; i++) {
+            var viewToAdd = !types.isNullOrUndefined(this.itemTemplate) ? builder.parse(this.itemTemplate, this) : this._getDefaultItemContent(i);
+            var dataItem = this._getDataItem(i);
             viewToAdd.bindingContext = dataItem;
             this.itemsLayout.addChild(viewToAdd);
         }

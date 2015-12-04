@@ -20,6 +20,17 @@ var TextAlignment;
     TextAlignment.center = "center";
     TextAlignment.right = "right";
 })(TextAlignment = exports.TextAlignment || (exports.TextAlignment = {}));
+var TextDecoration;
+(function (TextDecoration) {
+    TextDecoration.none = "none";
+    TextDecoration.underline = "underline";
+    TextDecoration.lineThrough = "line-through";
+})(TextDecoration = exports.TextDecoration || (exports.TextDecoration = {}));
+var WhiteSpace;
+(function (WhiteSpace) {
+    WhiteSpace.normal = "normal";
+    WhiteSpace.nowrap = "nowrap";
+})(WhiteSpace = exports.WhiteSpace || (exports.WhiteSpace = {}));
 var Orientation;
 (function (Orientation) {
     Orientation.horizontal = "horizontal";
@@ -42,6 +53,7 @@ var VerticalAlignment;
 (function (VerticalAlignment) {
     VerticalAlignment.top = "top";
     VerticalAlignment.center = "center";
+    VerticalAlignment.middle = "middle";
     VerticalAlignment.bottom = "bottom";
     VerticalAlignment.stretch = "stretch";
 })(VerticalAlignment = exports.VerticalAlignment || (exports.VerticalAlignment = {}));
@@ -138,3 +150,10 @@ var BackgroundRepeat;
     BackgroundRepeat.repeatY = "repeat-y";
     BackgroundRepeat.noRepeat = "no-repeat";
 })(BackgroundRepeat = exports.BackgroundRepeat || (exports.BackgroundRepeat = {}));
+var AnimationCurve;
+(function (AnimationCurve) {
+    AnimationCurve.easeIn = "easeIn";
+    AnimationCurve.easeOut = "easeOut";
+    AnimationCurve.easeInOut = "easeInOut";
+    AnimationCurve.linear = "linear";
+})(AnimationCurve = exports.AnimationCurve || (exports.AnimationCurve = {}));

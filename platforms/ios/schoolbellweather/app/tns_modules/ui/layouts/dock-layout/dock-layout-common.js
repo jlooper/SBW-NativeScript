@@ -4,7 +4,8 @@ var view = require("ui/core/view");
 var enums = require("ui/enums");
 var proxy = require("ui/core/proxy");
 var special_properties_1 = require("ui/builder/special-properties");
-var AffectsLayout = global.android ? dependencyObservable.PropertyMetadataSettings.None : dependencyObservable.PropertyMetadataSettings.AffectsLayout;
+var platform = require("platform");
+var AffectsLayout = platform.device.os === platform.platformNames.android ? dependencyObservable.PropertyMetadataSettings.None : dependencyObservable.PropertyMetadataSettings.AffectsLayout;
 function isDockValid(value) {
     return value === enums.Dock.left || value === enums.Dock.top || value === enums.Dock.right || value === enums.Dock.bottom;
 }

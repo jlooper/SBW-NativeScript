@@ -20,15 +20,16 @@ var SliderChangeHandlerImpl = (function (_super) {
     function SliderChangeHandlerImpl() {
         _super.apply(this, arguments);
     }
-    SliderChangeHandlerImpl.new = function () {
-        return _super.new.call(this);
-    };
-    SliderChangeHandlerImpl.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        return this;
+    SliderChangeHandlerImpl.initWithOwner = function (owner) {
+        var handler = SliderChangeHandlerImpl.new();
+        handler._owner = owner;
+        return handler;
     };
     SliderChangeHandlerImpl.prototype.sliderValueChanged = function (sender) {
-        this._owner._onPropertyChangedFromNative(common.Slider.valueProperty, sender.value);
+        var owner = this._owner.get();
+        if (owner) {
+            owner._onPropertyChangedFromNative(common.Slider.valueProperty, sender.value);
+        }
     };
     SliderChangeHandlerImpl.ObjCExposedMethods = {
         'sliderValueChanged': { returns: interop.types.void, params: [UISlider] }
@@ -42,7 +43,7 @@ var Slider = (function (_super) {
         this._ios = new UISlider();
         this._ios.minimumValue = 0;
         this._ios.maximumValue = this.maxValue;
-        this._changeHandler = SliderChangeHandlerImpl.new().initWithOwner(this);
+        this._changeHandler = SliderChangeHandlerImpl.initWithOwner(new WeakRef(this));
         this._ios.addTargetActionForControlEvents(this._changeHandler, "sliderValueChanged", UIControlEvents.UIControlEventValueChanged);
     }
     Object.defineProperty(Slider.prototype, "ios", {

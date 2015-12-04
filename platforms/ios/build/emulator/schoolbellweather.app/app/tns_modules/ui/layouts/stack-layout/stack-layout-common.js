@@ -2,7 +2,8 @@ var layouts = require("ui/layouts/layout-base");
 var dependencyObservable = require("ui/core/dependency-observable");
 var enums = require("ui/enums");
 var proxy = require("ui/core/proxy");
-var AffectsLayout = global.android ? dependencyObservable.PropertyMetadataSettings.None : dependencyObservable.PropertyMetadataSettings.AffectsLayout;
+var platform = require("platform");
+var AffectsLayout = platform.device.os === platform.platformNames.android ? dependencyObservable.PropertyMetadataSettings.None : dependencyObservable.PropertyMetadataSettings.AffectsLayout;
 function validateOrientation(value) {
     return value === enums.Orientation.vertical || value === enums.Orientation.horizontal;
 }

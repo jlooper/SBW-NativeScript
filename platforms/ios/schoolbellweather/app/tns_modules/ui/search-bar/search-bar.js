@@ -40,27 +40,37 @@ var UISearchBarDelegateImpl = (function (_super) {
     function UISearchBarDelegateImpl() {
         _super.apply(this, arguments);
     }
-    UISearchBarDelegateImpl.new = function () {
-        return _super.new.call(this);
-    };
-    UISearchBarDelegateImpl.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        return this;
+    UISearchBarDelegateImpl.initWithOwner = function (owner) {
+        var delegate = UISearchBarDelegateImpl.new();
+        delegate._owner = owner;
+        return delegate;
     };
     UISearchBarDelegateImpl.prototype.searchBarTextDidChange = function (searchBar, searchText) {
-        this._owner._onPropertyChangedFromNative(common.SearchBar.textProperty, searchText);
+        var owner = this._owner.get();
+        if (!owner) {
+            return;
+        }
+        owner._onPropertyChangedFromNative(common.SearchBar.textProperty, searchText);
         if (searchText === "" && this._searchText !== searchText) {
-            this._owner._emit(common.SearchBar.clearEvent);
+            owner._emit(common.SearchBar.clearEvent);
         }
         this._searchText = searchText;
     };
     UISearchBarDelegateImpl.prototype.searchBarCancelButtonClicked = function (searchBar) {
         searchBar.resignFirstResponder();
-        this._owner._emit(common.SearchBar.clearEvent);
+        var owner = this._owner.get();
+        if (!owner) {
+            return;
+        }
+        owner._emit(common.SearchBar.clearEvent);
     };
     UISearchBarDelegateImpl.prototype.searchBarSearchButtonClicked = function (searchBar) {
         searchBar.resignFirstResponder();
-        this._owner._emit(common.SearchBar.submitEvent);
+        var owner = this._owner.get();
+        if (!owner) {
+            return;
+        }
+        owner._emit(common.SearchBar.submitEvent);
     };
     UISearchBarDelegateImpl.ObjCProtocols = [UISearchBarDelegate];
     return UISearchBarDelegateImpl;
@@ -70,16 +80,18 @@ var SearchBar = (function (_super) {
     function SearchBar() {
         _super.call(this);
         this._ios = new UISearchBar();
-        this._delegate = UISearchBarDelegateImpl.new().initWithOwner(this);
+        this._delegate = UISearchBarDelegateImpl.initWithOwner(new WeakRef(this));
     }
     SearchBar.prototype.onLoaded = function () {
         _super.prototype.onLoaded.call(this);
         this._ios.delegate = this._delegate;
-        this._textField = SearchBar.findTextField(this.ios);
     };
     SearchBar.prototype.onUnloaded = function () {
         this._ios.delegate = null;
         _super.prototype.onUnloaded.call(this);
+    };
+    SearchBar.prototype.dismissSoftInput = function () {
+        this.ios.resignFirstResponder();
     };
     Object.defineProperty(SearchBar.prototype, "ios", {
         get: function () {
@@ -88,18 +100,16 @@ var SearchBar = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    SearchBar.findTextField = function (view) {
-        for (var i_1 = 0, l = view.subviews.count; i_1 < l; i_1++) {
-            var v = view.subviews[i_1];
-            if (v instanceof UITextField) {
-                return v;
+    Object.defineProperty(SearchBar.prototype, "_textField", {
+        get: function () {
+            if (!this.__textField) {
+                this.__textField = this.ios.valueForKey("searchField");
             }
-            else if (v.subviews.count > 0) {
-                return SearchBar.findTextField(v);
-            }
-        }
-        return undefined;
-    };
+            return this.__textField;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return SearchBar;
 })(common.SearchBar);
 exports.SearchBar = SearchBar;

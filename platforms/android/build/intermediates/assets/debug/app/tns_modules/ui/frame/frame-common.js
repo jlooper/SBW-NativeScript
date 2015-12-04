@@ -26,6 +26,22 @@ function buildEntryFromArgs(arg) {
     }
     return entry;
 }
+function reloadPage() {
+    var frame = exports.topmost();
+    if (frame) {
+        var currentEntry = frame._currentEntry.entry;
+        var newEntry = {
+            animated: false,
+            clearHistory: true,
+            context: currentEntry.context,
+            create: currentEntry.create,
+            moduleName: currentEntry.moduleName,
+            backstackVisible: currentEntry.backstackVisible
+        };
+        frame.navigate(newEntry);
+    }
+}
+exports.reloadPage = reloadPage;
 function resolvePageFromEntry(entry) {
     var page;
     if (entry.create) {
@@ -139,6 +155,10 @@ var Frame = (function (_super) {
             var navigationContext = this._navigationQueue[0];
             this._processNavigationContext(navigationContext);
         }
+        this._updateActionBar();
+    };
+    Frame.prototype.navigationQueueIsEmpty = function () {
+        return this._navigationQueue.length === 0;
     };
     Frame.prototype._isEntryBackstackVisible = function (entry) {
         if (!entry) {
@@ -161,7 +181,7 @@ var Frame = (function (_super) {
     };
     Frame.prototype.performNavigation = function (navigationContext) {
         var navContext = navigationContext.entry;
-        this._onNavigatingTo(navContext);
+        this._onNavigatingTo(navContext, navigationContext.isBackNavigation);
         if (navigationContext.entry.entry.clearHistory) {
             this._backStack.length = 0;
         }
@@ -173,7 +193,7 @@ var Frame = (function (_super) {
     };
     Frame.prototype.performGoBack = function (navigationContext) {
         var navContext = navigationContext.entry;
-        this._onNavigatingTo(navContext);
+        this._onNavigatingTo(navContext, navigationContext.isBackNavigation);
         this._goBackCore(navContext);
         this._onNavigatedTo(navContext, true);
     };
@@ -181,11 +201,11 @@ var Frame = (function (_super) {
     };
     Frame.prototype._navigateCore = function (backstackEntry) {
     };
-    Frame.prototype._onNavigatingTo = function (backstackEntry) {
+    Frame.prototype._onNavigatingTo = function (backstackEntry, isBack) {
         if (this.currentPage) {
-            this.currentPage.onNavigatingFrom();
+            this.currentPage.onNavigatingFrom(isBack);
         }
-        backstackEntry.resolvedPage.onNavigatingTo(backstackEntry.entry.context);
+        backstackEntry.resolvedPage.onNavigatingTo(backstackEntry.entry.context, isBack);
     };
     Frame.prototype._onNavigatedTo = function (backstackEntry, isBack) {
         if (this.currentPage) {

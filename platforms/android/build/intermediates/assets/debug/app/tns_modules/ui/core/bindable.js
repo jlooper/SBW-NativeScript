@@ -1,12 +1,19 @@
 var observable = require("data/observable");
 var dependencyObservable = require("ui/core/dependency-observable");
 var weakEvents = require("ui/core/weak-event-listener");
-var appModule = require("application");
 var types = require("utils/types");
 var trace = require("trace");
 var polymerExpressions = require("js-libs/polymer-expressions");
 var bindingBuilder = require("../builder/binding-builder");
 var viewModule = require("ui/core/view");
+var special_properties_1 = require("ui/builder/special-properties");
+var _appModule = null;
+function appModule() {
+    if (!_appModule) {
+        _appModule = require("application");
+    }
+    return _appModule;
+}
 var bindingContextProperty = new dependencyObservable.Property("bindingContext", "Bindable", new dependencyObservable.PropertyMetadata(undefined, dependencyObservable.PropertyMetadataSettings.Inheritable, onBindingContextChanged));
 function onBindingContextChanged(data) {
     var bindable = data.object;
@@ -156,8 +163,22 @@ var Binding = (function () {
         return this.sourcePropertiesArray;
     };
     Binding.getProperties = function (property) {
+        var result;
         if (property) {
-            return property.split(".");
+            var parentsMatches = property.match(bindingBuilder.parentsRegex);
+            result = property.replace(bindingBuilder.parentsRegex, "parentsMatch")
+                .replace(/\]/g, "")
+                .split(/\.|\[/);
+            var i;
+            var resultLength = result.length;
+            var parentsMatchesCounter = 0;
+            for (i = 0; i < resultLength; i++) {
+                if (result[i] === "parentsMatch") {
+                    result[i] = parentsMatches[parentsMatchesCounter];
+                    parentsMatchesCounter++;
+                }
+            }
+            return result;
         }
         else {
             return [];
@@ -279,9 +300,9 @@ var Binding = (function () {
             if (exp) {
                 var context = this.source && this.source.get && this.source.get() || global;
                 var model = {};
-                for (var prop in appModule.resources) {
-                    if (appModule.resources.hasOwnProperty(prop) && !context.hasOwnProperty(prop)) {
-                        context[prop] = appModule.resources[prop];
+                for (var prop in appModule().resources) {
+                    if (appModule().resources.hasOwnProperty(prop) && !context.hasOwnProperty(prop)) {
+                        context[prop] = appModule().resources[prop];
                     }
                 }
                 this.prepareContextForExpression(context, expression);
@@ -463,17 +484,24 @@ var Binding = (function () {
         }
         this.updating = true;
         try {
-            if (optionsInstance instanceof viewModule.View &&
+            if (optionsInstance instanceof Bindable &&
                 viewModule.isEventOrGesture(options.property, optionsInstance) &&
                 types.isFunction(value)) {
+                optionsInstance.off(options.property, null, optionsInstance.bindingContext);
                 optionsInstance.on(options.property, value, optionsInstance.bindingContext);
             }
             else {
-                if (optionsInstance instanceof observable.Observable) {
-                    optionsInstance.set(options.property, value);
+                var specialSetter = special_properties_1.getSpecialPropertySetter(options.property);
+                if (specialSetter) {
+                    specialSetter(optionsInstance, value);
                 }
                 else {
-                    optionsInstance[options.property] = value;
+                    if (optionsInstance instanceof observable.Observable) {
+                        optionsInstance.set(options.property, value);
+                    }
+                    else {
+                        optionsInstance[options.property] = value;
+                    }
                 }
             }
         }

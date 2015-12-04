@@ -1,4 +1,4 @@
-var contentView = require("ui/content-view");
+var definition = require("ui/scroll-view");
 var common = require("./scroll-view-common");
 var utils = require("utils/utils");
 var enums = require("ui/enums");
@@ -21,16 +21,6 @@ var ScrollView = (function (_super) {
     Object.defineProperty(ScrollView.prototype, "_nativeView", {
         get: function () {
             return this._android;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(ScrollView.prototype, "orientation", {
-        get: function () {
-            return this._getValue(common.orientationProperty);
-        },
-        set: function (value) {
-            this._setValue(common.orientationProperty, value);
         },
         enumerable: true,
         configurable: true
@@ -120,6 +110,27 @@ var ScrollView = (function (_super) {
             }
         }
     };
+    ScrollView.prototype.attachNative = function () {
+        var that = new WeakRef(this);
+        this.handler = new android.view.ViewTreeObserver.OnScrollChangedListener({
+            onScrollChanged: function () {
+                var rootScrollView = that.get();
+                if (rootScrollView && rootScrollView.android) {
+                    rootScrollView.notify({
+                        object: rootScrollView,
+                        eventName: definition.ScrollView.scrollEvent,
+                        scrollX: rootScrollView.android.getScrollX() / utils.layout.getDisplayDensity(),
+                        scrollY: rootScrollView.android.getScrollY() / utils.layout.getDisplayDensity()
+                    });
+                }
+            }
+        });
+        this._android.getViewTreeObserver().addOnScrollChangedListener(this.handler);
+    };
+    ScrollView.prototype.dettachNative = function () {
+        this._android.getViewTreeObserver().removeOnScrollChangedListener(this.handler);
+        this.handler = null;
+    };
     return ScrollView;
-})(contentView.ContentView);
+})(common.ScrollView);
 exports.ScrollView = ScrollView;

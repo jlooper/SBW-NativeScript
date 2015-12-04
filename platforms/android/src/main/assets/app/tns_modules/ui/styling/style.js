@@ -10,10 +10,11 @@ var imageSource = require("image-source");
 var utils = require("utils/utils");
 var font = require("ui/styling/font");
 var background = require("ui/styling/background");
+var platform = require("platform");
 var _registeredHandlers = Array();
 var _handlersCache = {};
 var noStylingClasses = {};
-var AffectsLayout = global.android ? dependency_observable_1.PropertyMetadataSettings.None : dependency_observable_1.PropertyMetadataSettings.AffectsLayout;
+var AffectsLayout = platform.device.os === platform.platformNames.android ? dependency_observable_1.PropertyMetadataSettings.None : dependency_observable_1.PropertyMetadataSettings.AffectsLayout;
 function parseThickness(value) {
     var result = { top: 0, right: 0, bottom: 0, left: 0 };
     if (types.isString(value)) {
@@ -175,6 +176,13 @@ function getHandlerInternal(propertyId, classInfo) {
 }
 function isVisibilityValid(value) {
     return value === enums.Visibility.visible || value === enums.Visibility.collapse || value === enums.Visibility.collapsed;
+}
+function isTextDecorationValid(value) {
+    var values = (value + "").split(" ");
+    return values.indexOf(enums.TextDecoration.none) !== -1 || values.indexOf(enums.TextDecoration.underline) !== -1 || values.indexOf(enums.TextDecoration.lineThrough) !== -1;
+}
+function isWhiteSpaceValid(value) {
+    return value === enums.WhiteSpace.nowrap || value === enums.WhiteSpace.normal;
 }
 function onVisibilityChanged(data) {
     data.object._view._isVisibleCache = data.newValue === enums.Visibility.visible;
@@ -561,6 +569,31 @@ var Style = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Style.prototype, "textDecoration", {
+        get: function () {
+            return this._getValue(exports.textDecorationProperty);
+        },
+        set: function (value) {
+            this._setValue(exports.textDecorationProperty, value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Style.prototype, "whiteSpace", {
+        get: function () {
+            return this._getValue(exports.whiteSpaceProperty);
+        },
+        set: function (value) {
+            this._setValue(exports.whiteSpaceProperty, value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Style.prototype._updateTextDecoration = function () {
+        if (this._getValue(exports.textDecorationProperty) !== enums.TextDecoration.none) {
+            this._applyProperty(exports.textDecorationProperty, this._getValue(exports.textDecorationProperty));
+        }
+    };
     Style.prototype._beginUpdate = function () {
         this._updateCounter++;
     };
@@ -602,10 +635,16 @@ var Style = (function (_super) {
         var that = this;
         styleProperty.eachProperty(function (p) {
             var value = that._getValue(p);
-            if (types.isDefined(value)) {
+            var valueSource = that._getValueSource(p);
+            if (valueSource !== dependency_observable_1.ValueSource.Default && types.isDefined(value)) {
                 that._applyProperty(p, value);
             }
         });
+    };
+    Style.prototype._boundsChanged = function () {
+        if (!this._getValue(exports.backgroundInternalProperty).isEmpty()) {
+            this._applyProperty(exports.backgroundInternalProperty, this._getValue(exports.backgroundInternalProperty));
+        }
     };
     Style.prototype._applyProperty = function (property, newValue) {
         this._applyStyleProperty(property, newValue);
@@ -619,7 +658,7 @@ var Style = (function (_super) {
         this._view._eachChildView(eachChild);
     };
     Style.prototype._applyStyleProperty = function (property, newValue) {
-        if (!this._view._nativeView) {
+        if (!this._view._shouldApplyStyleHandlers()) {
             return;
         }
         if (this._updateCounter > 0) {
@@ -732,6 +771,8 @@ exports.minWidthProperty = new styleProperty.Property("minWidth", "min-width", n
 exports.minHeightProperty = new styleProperty.Property("minHeight", "min-height", new dependency_observable_1.PropertyMetadata(0, AffectsLayout, null, isMinWidthHeightValid), converters.numberConverter);
 exports.visibilityProperty = new styleProperty.Property("visibility", "visibility", new dependency_observable_1.PropertyMetadata(enums.Visibility.visible, AffectsLayout, onVisibilityChanged, isVisibilityValid), converters.visibilityConverter);
 exports.opacityProperty = new styleProperty.Property("opacity", "opacity", new dependency_observable_1.PropertyMetadata(1.0, dependency_observable_1.PropertyMetadataSettings.None, undefined, isOpacityValid), converters.opacityConverter);
+exports.textDecorationProperty = new styleProperty.Property("textDecoration", "text-decoration", new dependency_observable_1.PropertyMetadata(enums.TextDecoration.none, dependency_observable_1.PropertyMetadataSettings.None, undefined, isTextDecorationValid), converters.textDecorationConverter);
+exports.whiteSpaceProperty = new styleProperty.Property("whiteSpace", "white-space", new dependency_observable_1.PropertyMetadata(undefined, AffectsLayout, undefined, isWhiteSpaceValid), converters.whiteSpaceConverter);
 exports.nativeLayoutParamsProperty = new styleProperty.Property("nativeLayoutParams", "nativeLayoutParams", new dependency_observable_1.PropertyMetadata({
     width: -1,
     height: -1,
@@ -773,12 +814,12 @@ function getNativePaddingBottom(instance) {
     return getNativePadding(nativeView, function (view) { return view.getPaddingBottom(); });
 }
 exports.nativePaddingsProperty = new styleProperty.Property("paddingNative", "paddingNative", new dependency_observable_1.PropertyMetadata(undefined, null, null, null, thicknessComparer));
-var defaultPadding = global.android ? undefined : 0;
+var defaultPadding = platform.device.os === platform.platformNames.android ? undefined : 0;
 exports.paddingLeftProperty = new styleProperty.Property("paddingLeft", "padding-left", new dependency_observable_1.PropertyMetadata(defaultPadding, AffectsLayout, onPaddingValueChanged, isPaddingValid), converters.numberConverter);
 exports.paddingRightProperty = new styleProperty.Property("paddingRight", "padding-right", new dependency_observable_1.PropertyMetadata(defaultPadding, AffectsLayout, onPaddingValueChanged, isPaddingValid), converters.numberConverter);
 exports.paddingTopProperty = new styleProperty.Property("paddingTop", "padding-top", new dependency_observable_1.PropertyMetadata(defaultPadding, AffectsLayout, onPaddingValueChanged, isPaddingValid), converters.numberConverter);
 exports.paddingBottomProperty = new styleProperty.Property("paddingBottom", "padding-bottom", new dependency_observable_1.PropertyMetadata(defaultPadding, AffectsLayout, onPaddingValueChanged, isPaddingValid), converters.numberConverter);
-if (global.android) {
+if (platform.device.os === platform.platformNames.android) {
     exports.paddingTopProperty.defaultValueGetter = getNativePaddingTop;
     exports.paddingLeftProperty.defaultValueGetter = getNativePaddingLeft;
     exports.paddingRightProperty.defaultValueGetter = getNativePaddingRight;

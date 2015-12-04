@@ -6,13 +6,17 @@ var utils = require("utils/utils");
 var imageSource = require("image-source");
 var enums = require("ui/enums");
 var application = require("application");
+var R_ID_HOME = 0x0102002c;
 var ACTION_ITEM_ID_OFFSET = 1000;
 global.moduleMerge(common, exports);
 var ActionItem = (function (_super) {
     __extends(ActionItem, _super);
     function ActionItem() {
         _super.apply(this, arguments);
-        this._androidPosition = { position: enums.AndroidActionItemPosition.actionBar };
+        this._androidPosition = {
+            position: enums.AndroidActionItemPosition.actionBar,
+            systemIcon: undefined
+        };
     }
     Object.defineProperty(ActionItem.prototype, "android", {
         get: function () {
@@ -100,7 +104,7 @@ var ActionBar = (function (_super) {
         if (!this._toolbar) {
             return;
         }
-        if (this.page.actionBarHidden) {
+        if (!this.page.frame || !this.page.frame._getNavBarVisible(this.page)) {
             this._toolbar.setVisibility(android.view.View.GONE);
             return;
         }
@@ -116,7 +120,7 @@ var ActionBar = (function (_super) {
             menuItem._raiseTap();
             return true;
         }
-        if (this.navigationButton && itemId === android.R.id.home) {
+        if (this.navigationButton && itemId === R_ID_HOME) {
             this.navigationButton._raiseTap();
             return true;
         }
@@ -181,10 +185,19 @@ var ActionBar = (function (_super) {
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
             var menuItem = menu.add(android.view.Menu.NONE, i + ACTION_ITEM_ID_OFFSET, android.view.Menu.NONE, item.text + "");
-            if (item.icon) {
+            if (item.android.systemIcon) {
+                var systemResourceId = android.content.res.Resources.getSystem().getIdentifier(item.android.systemIcon, "drawable", "android");
+                if (systemResourceId) {
+                    menuItem.setIcon(systemResourceId);
+                }
+            }
+            else if (item.icon) {
                 var drawableOrId = getDrawableOrResourceId(item.icon, this._appResources);
                 if (drawableOrId) {
                     menuItem.setIcon(drawableOrId);
+                }
+                else {
+                    throw new Error("Error loading icon from " + item.icon);
                 }
             }
             var showAsAction = getShowAsAction(item);

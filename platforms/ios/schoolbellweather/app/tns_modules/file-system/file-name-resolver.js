@@ -95,6 +95,9 @@ var FileNameResolver = (function () {
         }
         return result;
     };
+    FileNameResolver.prototype.clearCache = function () {
+        this._cache = {};
+    };
     FileNameResolver.prototype.resolveFileNameImpl = function (path, ext) {
         var result = null;
         path = fs.path.normalize(path);
@@ -189,3 +192,9 @@ function resolveFileName(path, ext) {
     return resolverInstance.resolveFileName(path, ext);
 }
 exports.resolveFileName = resolveFileName;
+function clearCache() {
+    if (resolverInstance) {
+        resolverInstance.clearCache();
+    }
+}
+exports.clearCache = clearCache;

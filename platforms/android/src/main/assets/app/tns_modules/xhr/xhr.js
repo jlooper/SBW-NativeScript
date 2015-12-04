@@ -14,6 +14,7 @@ var XMLHttpRequest = (function () {
         this.LOADING = 3;
         this.DONE = 4;
         this._responseType = "";
+        this._listeners = new Map();
         this._readyState = this.UNSENT;
     }
     XMLHttpRequest.prototype.open = function (method, url, async, user, password) {
@@ -50,7 +51,7 @@ var XMLHttpRequest = (function () {
         this._headers = null;
         this._status = null;
         if (types.isDefined(this._options)) {
-            if (types.isString(data)) {
+            if (types.isString(data) && this._options.method !== 'GET') {
                 this._options.content = data;
             }
             else if (data instanceof FormData) {
@@ -72,9 +73,32 @@ var XMLHttpRequest = (function () {
                 }
             }).catch(function (e) {
                 _this._errorFlag = true;
-                _this._setReadyState(_this.DONE);
+                _this._setReadyState(_this.DONE, e);
             });
         }
+    };
+    XMLHttpRequest.prototype.addEventListener = function (eventName, handler) {
+        if (eventName !== 'load' && eventName !== 'error') {
+            throw new Error('Event not supported: ' + eventName);
+        }
+        var handlers = this._listeners.get(eventName) || [];
+        handlers.push(handler);
+        this._listeners.set(eventName, handlers);
+    };
+    XMLHttpRequest.prototype.removeEventListener = function (eventName, toDetach) {
+        var handlers = this._listeners.get(eventName) || [];
+        handlers = handlers.filter(function (handler) { return handler !== toDetach; });
+        this._listeners.set(eventName, handlers);
+    };
+    XMLHttpRequest.prototype.emitEvent = function (eventName) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        var handlers = this._listeners.get(eventName) || [];
+        handlers.forEach(function (handler) {
+            handler.apply(void 0, args);
+        });
     };
     XMLHttpRequest.prototype.setRequestHeader = function (header, value) {
         if (types.isDefined(this._options) && types.isString(header) && types.isString(value)) {
@@ -126,7 +150,7 @@ var XMLHttpRequest = (function () {
         enumerable: true,
         configurable: true
     });
-    XMLHttpRequest.prototype._setReadyState = function (value) {
+    XMLHttpRequest.prototype._setReadyState = function (value, error) {
         if (this._readyState !== value) {
             this._readyState = value;
             if (types.isFunction(this.onreadystatechange)) {
@@ -134,11 +158,17 @@ var XMLHttpRequest = (function () {
             }
         }
         if (this._readyState === this.DONE) {
-            if (this._errorFlag && types.isFunction(this.onerror)) {
-                this.onerror();
+            if (this._errorFlag) {
+                if (types.isFunction(this.onerror)) {
+                    this.onerror(error);
+                }
+                this.emitEvent('error', error);
             }
-            if (!this._errorFlag && types.isFunction(this.onload)) {
-                this.onload();
+            else {
+                if (types.isFunction(this.onload)) {
+                    this.onload();
+                }
+                this.emitEvent('load');
             }
         }
     };

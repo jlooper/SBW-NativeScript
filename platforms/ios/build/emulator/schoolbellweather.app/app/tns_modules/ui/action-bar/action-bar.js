@@ -4,12 +4,16 @@ var frameModule = require("ui/frame");
 var enums = require("ui/enums");
 var view = require("ui/core/view");
 var utils = require("utils/utils");
+var types = require("utils/types");
 global.moduleMerge(common, exports);
 var ActionItem = (function (_super) {
     __extends(ActionItem, _super);
     function ActionItem() {
         _super.apply(this, arguments);
-        this._ios = { position: enums.IOSActionItemPosition.left };
+        this._ios = {
+            position: enums.IOSActionItemPosition.left,
+            systemIcon: undefined
+        };
     }
     Object.defineProperty(ActionItem.prototype, "ios", {
         get: function () {
@@ -41,7 +45,6 @@ var ActionBar = (function (_super) {
         var previousController;
         navigationItem.title = this.title;
         if (this.titleView && this.titleView.ios) {
-            console.log("setting center view: " + this.titleView.ios);
             navigationItem.titleView = this.titleView.ios;
         }
         var indexOfViewController = navController.viewControllers.indexOfObject(viewController);
@@ -50,7 +53,7 @@ var ActionBar = (function (_super) {
         }
         if (previousController) {
             if (this.navigationButton) {
-                var tapHandler = TapBarItemHandlerImpl.new().initWithOwner(this.navigationButton);
+                var tapHandler = TapBarItemHandlerImpl.initWithOwner(new WeakRef(this.navigationButton));
                 var barButtonItem = UIBarButtonItem.alloc().initWithTitleStyleTargetAction(this.navigationButton.text + "", UIBarButtonItemStyle.UIBarButtonItemStylePlain, tapHandler, "tap");
                 previousController.navigationItem.backBarButtonItem = barButtonItem;
             }
@@ -72,6 +75,7 @@ var ActionBar = (function (_super) {
             navigationBar.backIndicatorTransitionMaskImage = null;
         }
         this.populateMenuItems(navigationItem);
+        this.updateColors(navigationBar);
     };
     ActionBar.prototype.populateMenuItems = function (navigationItem) {
         var items = this.actionItems.getItems();
@@ -96,19 +100,39 @@ var ActionBar = (function (_super) {
         navigationItem.setRightBarButtonItemsAnimated(rightArray, true);
     };
     ActionBar.prototype.createBarButtonItem = function (item) {
-        var tapHandler = TapBarItemHandlerImpl.new().initWithOwner(item);
+        var tapHandler = TapBarItemHandlerImpl.initWithOwner(new WeakRef(item));
         item.handler = tapHandler;
         var barButtonItem;
-        if (item.icon) {
+        if (types.isNumber(item.ios.systemIcon)) {
+            barButtonItem = UIBarButtonItem.alloc().initWithBarButtonSystemItemTargetAction(item.ios.systemIcon, tapHandler, "tap");
+        }
+        else if (item.icon) {
             var img = imageSource.fromFileOrResource(item.icon);
             if (img && img.ios) {
                 barButtonItem = UIBarButtonItem.alloc().initWithImageStyleTargetAction(img.ios, UIBarButtonItemStyle.UIBarButtonItemStylePlain, tapHandler, "tap");
+            }
+            else {
+                throw new Error("Error loading icon from " + item.icon);
             }
         }
         else {
             barButtonItem = UIBarButtonItem.alloc().initWithTitleStyleTargetAction(item.text + "", UIBarButtonItemStyle.UIBarButtonItemStylePlain, tapHandler, "tap");
         }
         return barButtonItem;
+    };
+    ActionBar.prototype.updateColors = function (navBar) {
+        var color = this.color;
+        if (color) {
+            navBar.titleTextAttributes = (_a = {}, _a[NSForegroundColorAttributeName] = color.ios, _a);
+            navBar.tintColor = color.ios;
+        }
+        else {
+            navBar.titleTextAttributes = null;
+            navBar.tintColor = null;
+        }
+        var bgColor = this.backgroundColor;
+        navBar.barTintColor = bgColor ? bgColor.ios : null;
+        var _a;
     };
     ActionBar.prototype._onTitlePropertyChanged = function () {
         if (!this.page) {
@@ -143,6 +167,10 @@ var ActionBar = (function (_super) {
         view.View.layoutChild(this, this.titleView, 0, 0, right - left, this._navigationBarHeight);
         _super.prototype.onLayout.call(this, left, top, right, bottom);
     };
+    ActionBar.prototype._shouldApplyStyleHandlers = function () {
+        var topFrame = frameModule.topmost();
+        return !!topFrame;
+    };
     return ActionBar;
 })(common.ActionBar);
 exports.ActionBar = ActionBar;
@@ -151,15 +179,16 @@ var TapBarItemHandlerImpl = (function (_super) {
     function TapBarItemHandlerImpl() {
         _super.apply(this, arguments);
     }
-    TapBarItemHandlerImpl.new = function () {
-        return _super.new.call(this);
-    };
-    TapBarItemHandlerImpl.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        return this;
+    TapBarItemHandlerImpl.initWithOwner = function (owner) {
+        var handler = TapBarItemHandlerImpl.new();
+        handler._owner = owner;
+        return handler;
     };
     TapBarItemHandlerImpl.prototype.tap = function (args) {
-        this._owner._raiseTap();
+        var owner = this._owner.get();
+        if (owner) {
+            owner._raiseTap();
+        }
     };
     TapBarItemHandlerImpl.ObjCExposedMethods = {
         "tap": { returns: interop.types.void, params: [interop.types.id] }

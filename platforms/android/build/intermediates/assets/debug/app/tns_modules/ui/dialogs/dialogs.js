@@ -12,6 +12,26 @@ function createAlertDialog(options) {
     alert.setMessage(options && types.isString(options.message) ? options.message : "");
     return alert;
 }
+function showDialog(builder) {
+    var dlg = builder.show();
+    var labelColor = dialogsCommon.getLabelColor();
+    if (labelColor) {
+        var textViewId = dlg.getContext().getResources().getIdentifier("android:id/alertTitle", null, null);
+        if (textViewId) {
+            var tv = dlg.findViewById(textViewId);
+            if (tv) {
+                tv.setTextColor(labelColor.android);
+            }
+        }
+        var messageTextViewId = dlg.getContext().getResources().getIdentifier("android:id/message", null, null);
+        if (messageTextViewId) {
+            var messageTextView = dlg.findViewById(messageTextViewId);
+            if (messageTextView) {
+                messageTextView.setTextColor(labelColor.android);
+            }
+        }
+    }
+}
 function addButtonsToAlertDialog(alert, options, callback) {
     if (!options) {
         return;
@@ -52,7 +72,7 @@ function alert(arg) {
                     resolve();
                 }
             }));
-            alert.show();
+            showDialog(alert);
         }
         catch (ex) {
             reject(ex);
@@ -66,7 +86,7 @@ function confirm(arg) {
             var options = types.isString(arg) ? { title: dialogsCommon.CONFIRM, okButtonText: dialogsCommon.OK, cancelButtonText: dialogsCommon.CANCEL, message: arg } : arg;
             var alert = createAlertDialog(options);
             addButtonsToAlertDialog(alert, options, function (result) { resolve(result); });
-            alert.show();
+            showDialog(alert);
         }
         catch (ex) {
             reject(ex);
@@ -109,7 +129,7 @@ function prompt(arg) {
             alert.setView(input);
             var getText = function () { return input.getText().toString(); };
             addButtonsToAlertDialog(alert, options, function (r) { resolve({ result: r, text: getText() }); });
-            alert.show();
+            showDialog(alert);
         }
         catch (ex) {
             reject(ex);
@@ -165,7 +185,7 @@ function login(arg) {
                     password: passwordInput.getText().toString()
                 });
             });
-            alert.show();
+            showDialog(alert);
         }
         catch (ex) {
             reject(ex);
@@ -230,7 +250,7 @@ function action(arg) {
                     }
                 }));
             }
-            alert.show();
+            showDialog(alert);
         }
         catch (ex) {
             reject(ex);

@@ -47,6 +47,8 @@ var SearchBar = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    SearchBar.prototype.dismissSoftInput = function () {
+    };
     SearchBar.submitEvent = "submit";
     SearchBar.clearEvent = "clear";
     SearchBar.textFieldBackgroundColorProperty = new dependencyObservable.Property("textFieldBackgroundColor", "SearchBar", new proxy.PropertyMetadata(undefined));

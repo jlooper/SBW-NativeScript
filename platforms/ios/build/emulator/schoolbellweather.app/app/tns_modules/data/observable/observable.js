@@ -2,30 +2,30 @@ var types = require("utils/types");
 var Observable = (function () {
     function Observable(json) {
         this._observers = {};
+        this.disableNotifications = false;
         if (json) {
             this._map = new Map();
-            var that = this;
-            var definePropertyFunc = function definePropertyFunc(propertyName) {
-                Object.defineProperty(Observable.prototype, propertyName, {
-                    get: function () {
-                        return that._map.get(propertyName);
-                    },
-                    set: function (value) {
-                        that._map.set(propertyName, value);
-                        that.notify(that._createPropertyChangeData(propertyName, value));
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
-            };
             for (var prop in json) {
                 if (json.hasOwnProperty(prop)) {
-                    definePropertyFunc(prop);
+                    this._defineNewProperty(prop);
                     this.set(prop, json[prop]);
                 }
             }
         }
     }
+    Observable.prototype._defineNewProperty = function (propertyName) {
+        Object.defineProperty(this, propertyName, {
+            get: function () {
+                return this._map.get(propertyName);
+            },
+            set: function (value) {
+                this._map.set(propertyName, value);
+                this.notify(this._createPropertyChangeData(propertyName, value));
+            },
+            enumerable: true,
+            configurable: true
+        });
+    };
     Object.defineProperty(Observable.prototype, "typeName", {
         get: function () {
             return types.getClass(this);
@@ -94,9 +94,14 @@ var Observable = (function () {
         return this[name];
     };
     Observable.prototype._setCore = function (data) {
+        this.disableNotifications = true;
         this[data.propertyName] = data.value;
+        this.disableNotifications = false;
     };
     Observable.prototype.notify = function (data) {
+        if (this.disableNotifications) {
+            return;
+        }
         var observers = this._getEventList(data.eventName);
         if (!observers) {
             return;

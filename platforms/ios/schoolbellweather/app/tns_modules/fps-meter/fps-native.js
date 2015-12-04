@@ -3,15 +3,16 @@ var FrameHandlerImpl = (function (_super) {
     function FrameHandlerImpl() {
         _super.apply(this, arguments);
     }
-    FrameHandlerImpl.new = function () {
-        return _super.new.call(this);
-    };
-    FrameHandlerImpl.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        return this;
+    FrameHandlerImpl.initWithOwner = function (owner) {
+        var handler = FrameHandlerImpl.new();
+        handler._owner = owner;
+        return handler;
     };
     FrameHandlerImpl.prototype.handleFrame = function (sender) {
-        this._owner._handleFrame(sender);
+        var owner = this._owner.get();
+        if (owner) {
+            owner._handleFrame(sender);
+        }
     };
     FrameHandlerImpl.ObjCExposedMethods = {
         "handleFrame": { returns: interop.types.void, params: [CADisplayLink] }
@@ -21,7 +22,7 @@ var FrameHandlerImpl = (function (_super) {
 var FPSCallback = (function () {
     function FPSCallback(onFrame) {
         this.onFrame = onFrame;
-        this.impl = FrameHandlerImpl.new().initWithOwner(this);
+        this.impl = FrameHandlerImpl.initWithOwner(new WeakRef(this));
         this.displayLink = CADisplayLink.displayLinkWithTargetSelector(this.impl, "handleFrame");
         this.displayLink.paused = true;
         this.displayLink.addToRunLoopForMode(NSRunLoop.currentRunLoop(), NSDefaultRunLoopMode);

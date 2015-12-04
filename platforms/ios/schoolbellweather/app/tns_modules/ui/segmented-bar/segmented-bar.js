@@ -75,7 +75,7 @@ var SegmentedBar = (function (_super) {
     function SegmentedBar() {
         _super.call(this);
         this._ios = UISegmentedControl.new();
-        this._selectionHandler = SelectionHandlerImpl.new().initWithOwner(this);
+        this._selectionHandler = SelectionHandlerImpl.initWithOwner(new WeakRef(this));
         this._ios.addTargetActionForControlEvents(this._selectionHandler, "selected", UIControlEvents.UIControlEventValueChanged);
     }
     Object.defineProperty(SegmentedBar.prototype, "ios", {
@@ -93,15 +93,16 @@ var SelectionHandlerImpl = (function (_super) {
     function SelectionHandlerImpl() {
         _super.apply(this, arguments);
     }
-    SelectionHandlerImpl.new = function () {
-        return _super.new.call(this);
-    };
-    SelectionHandlerImpl.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        return this;
+    SelectionHandlerImpl.initWithOwner = function (owner) {
+        var handler = SelectionHandlerImpl.new();
+        handler._owner = owner;
+        return handler;
     };
     SelectionHandlerImpl.prototype.selected = function (sender) {
-        this._owner.selectedIndex = sender.selectedSegmentIndex;
+        var owner = this._owner.get();
+        if (owner) {
+            owner.selectedIndex = sender.selectedSegmentIndex;
+        }
     };
     SelectionHandlerImpl.ObjCExposedMethods = {
         "selected": { returns: interop.types.void, params: [UISegmentedControl] }

@@ -1,8 +1,18 @@
-var view = require("ui/core/view");
 var layoutBase = require("ui/layouts/layout-base");
 var trace = require("trace");
 var utils = require("utils/utils");
 var OWNER = "_owner";
+var NativeViewGroup = android.view.ViewGroup.extend({
+    onMeasure: function (widthMeasureSpec, heightMeasureSpec) {
+        var owner = this[OWNER];
+        owner.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        this.setMeasuredDimension(owner.getMeasuredWidth(), owner.getMeasuredHeight());
+    },
+    onLayout: function (changed, left, top, right, bottom) {
+        var owner = this[OWNER];
+        owner.onLayout(left, top, right, bottom);
+    }
+});
 var Layout = (function (_super) {
     __extends(Layout, _super);
     function Layout() {
@@ -23,7 +33,7 @@ var Layout = (function (_super) {
         configurable: true
     });
     Layout.prototype._createUI = function () {
-        this._viewGroup = new view.NativeViewGroup(this._context);
+        this._viewGroup = new NativeViewGroup(this._context);
         this._viewGroup[OWNER] = this;
     };
     Layout.prototype._onDetached = function (force) {

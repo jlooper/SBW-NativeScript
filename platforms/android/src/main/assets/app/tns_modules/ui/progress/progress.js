@@ -1,4 +1,5 @@
 var common = require("./progress-common");
+var R_ATTR_PROGRESS_BAR_STYLE_HORIZONTAL = 0x01010078;
 function onValuePropertyChanged(data) {
     var progress = data.object;
     if (!progress.android) {
@@ -22,7 +23,7 @@ var Progress = (function (_super) {
         _super.apply(this, arguments);
     }
     Progress.prototype._createUI = function () {
-        this._android = new android.widget.ProgressBar(this._context, null, android.R.attr.progressBarStyleHorizontal);
+        this._android = new android.widget.ProgressBar(this._context, null, R_ATTR_PROGRESS_BAR_STYLE_HORIZONTAL);
     };
     Object.defineProperty(Progress.prototype, "android", {
         get: function () {

@@ -1,9 +1,36 @@
 var view = require("ui/core/view");
-var contentView = require("ui/content-view");
+var definition = require("ui/scroll-view");
 var common = require("./scroll-view-common");
 var enums = require("ui/enums");
 var utils = require("utils/utils");
 global.moduleMerge(common, exports);
+var UIScrollViewDelegateImpl = (function (_super) {
+    __extends(UIScrollViewDelegateImpl, _super);
+    function UIScrollViewDelegateImpl() {
+        _super.apply(this, arguments);
+    }
+    UIScrollViewDelegateImpl.initWithOwner = function (owner) {
+        var impl = UIScrollViewDelegateImpl.new();
+        impl._owner = owner;
+        return impl;
+    };
+    UIScrollViewDelegateImpl.prototype.scrollViewDidScroll = function (sv) {
+        var owner = this._owner.get();
+        if (!owner) {
+            return;
+        }
+        if (owner) {
+            owner.notify({
+                object: owner,
+                eventName: definition.ScrollView.scrollEvent,
+                scrollX: owner.horizontalOffset,
+                scrollY: owner.verticalOffset
+            });
+        }
+    };
+    UIScrollViewDelegateImpl.ObjCProtocols = [UIScrollViewDelegate];
+    return UIScrollViewDelegateImpl;
+})(NSObject);
 var ScrollView = (function (_super) {
     __extends(ScrollView, _super);
     function ScrollView() {
@@ -12,16 +39,13 @@ var ScrollView = (function (_super) {
         this._contentMeasuredHeight = 0;
         this._scroll = new UIScrollView();
     }
-    Object.defineProperty(ScrollView.prototype, "orientation", {
-        get: function () {
-            return this._getValue(common.orientationProperty);
-        },
-        set: function (value) {
-            this._setValue(common.orientationProperty, value);
-        },
-        enumerable: true,
-        configurable: true
-    });
+    ScrollView.prototype.attachNative = function () {
+        this._delegate = UIScrollViewDelegateImpl.initWithOwner(new WeakRef(this));
+        this._scroll.delegate = this._delegate;
+    };
+    ScrollView.prototype.dettachNative = function () {
+        this._scroll.delegate = null;
+    };
     Object.defineProperty(ScrollView.prototype, "horizontalOffset", {
         get: function () {
             return this._scroll.contentOffset.x;
@@ -120,5 +144,5 @@ var ScrollView = (function (_super) {
         }
     };
     return ScrollView;
-})(contentView.ContentView);
+})(common.ScrollView);
 exports.ScrollView = ScrollView;

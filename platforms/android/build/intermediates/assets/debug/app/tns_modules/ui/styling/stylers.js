@@ -7,6 +7,10 @@ var styleModule = require("./style");
 var background = require("ui/styling/background");
 var btn;
 global.moduleMerge(stylersCommon, exports);
+var SDK = android.os.Build.VERSION.SDK_INT;
+var ignorePropertyHandler = new stylersCommon.StylePropertyChangedHandler(function (view, val) {
+}, function (view, val) {
+});
 var _defaultBackgrounds = new Map();
 function onBackgroundOrBorderPropertyChanged(v) {
     var nativeView = v._nativeView;
@@ -32,6 +36,9 @@ function onBackgroundOrBorderPropertyChanged(v) {
         bkg.cornerRadius = v.borderRadius;
         bkg.borderColor = v.borderColor ? v.borderColor.android : android.graphics.Color.TRANSPARENT;
         bkg.background = backgroundValue;
+        if (SDK < 18) {
+            nativeView.setLayerType(android.view.View.LAYER_TYPE_SOFTWARE, null);
+        }
     }
     else {
         if (v instanceof btn.Button) {
@@ -43,6 +50,9 @@ function onBackgroundOrBorderPropertyChanged(v) {
             if (_defaultBackgrounds.has(viewClass)) {
                 nativeView.setBackground(_defaultBackgrounds.get(viewClass));
             }
+        }
+        if (SDK < 18) {
+            nativeView.setLayerType(android.view.View.LAYER_TYPE_HARDWARE, null);
         }
     }
     var density = utils.layout.getDisplayDensity();
@@ -128,7 +138,7 @@ var DefaultStyler = (function () {
             case enums.VerticalAlignment.top:
                 gravity |= android.view.Gravity.TOP;
                 break;
-            case enums.VerticalAlignment.center:
+            case enums.VerticalAlignment.center || enums.VerticalAlignment.middle:
                 gravity |= android.view.Gravity.CENTER_VERTICAL;
                 break;
             case enums.VerticalAlignment.bottom:
@@ -299,20 +309,64 @@ var TextViewStyler = (function () {
     TextViewStyler.getNativeTextAlignmentValue = function (view) {
         return view._nativeView.getGravity();
     };
+    TextViewStyler.setTextDecorationProperty = function (view, newValue) {
+        setTextDecoration(view._nativeView, newValue);
+    };
+    TextViewStyler.resetTextDecorationProperty = function (view, nativeValue) {
+        setTextDecoration(view._nativeView, enums.TextDecoration.none);
+    };
+    TextViewStyler.setWhiteSpaceProperty = function (view, newValue) {
+        setWhiteSpace(view._nativeView, newValue);
+    };
+    TextViewStyler.resetWhiteSpaceProperty = function (view, nativeValue) {
+        setWhiteSpace(view._nativeView, enums.WhiteSpace.normal);
+    };
     TextViewStyler.registerHandlers = function () {
         style.registerHandler(style.colorProperty, new stylersCommon.StylePropertyChangedHandler(TextViewStyler.setColorProperty, TextViewStyler.resetColorProperty, TextViewStyler.getNativeColorValue), "TextBase");
         style.registerHandler(style.fontInternalProperty, new stylersCommon.StylePropertyChangedHandler(TextViewStyler.setFontInternalProperty, TextViewStyler.resetFontInternalProperty, TextViewStyler.getNativeFontInternalValue), "TextBase");
         style.registerHandler(style.textAlignmentProperty, new stylersCommon.StylePropertyChangedHandler(TextViewStyler.setTextAlignmentProperty, TextViewStyler.resetTextAlignmentProperty, TextViewStyler.getNativeTextAlignmentValue), "TextBase");
+        style.registerHandler(style.textDecorationProperty, new stylersCommon.StylePropertyChangedHandler(TextViewStyler.setTextDecorationProperty, TextViewStyler.resetTextDecorationProperty), "TextBase");
+        style.registerHandler(style.whiteSpaceProperty, new stylersCommon.StylePropertyChangedHandler(TextViewStyler.setWhiteSpaceProperty, TextViewStyler.resetWhiteSpaceProperty), "TextBase");
         style.registerHandler(style.colorProperty, new stylersCommon.StylePropertyChangedHandler(TextViewStyler.setColorProperty, TextViewStyler.resetColorProperty, TextViewStyler.getNativeColorValue), "Button");
         style.registerHandler(style.fontInternalProperty, new stylersCommon.StylePropertyChangedHandler(TextViewStyler.setFontInternalProperty, TextViewStyler.resetFontInternalProperty, TextViewStyler.getNativeFontInternalValue), "Button");
         style.registerHandler(style.textAlignmentProperty, new stylersCommon.StylePropertyChangedHandler(TextViewStyler.setTextAlignmentProperty, TextViewStyler.resetTextAlignmentProperty, TextViewStyler.getNativeTextAlignmentValue), "Button");
+        style.registerHandler(style.textDecorationProperty, new stylersCommon.StylePropertyChangedHandler(TextViewStyler.setTextDecorationProperty, TextViewStyler.resetTextDecorationProperty), "Button");
+        style.registerHandler(style.whiteSpaceProperty, new stylersCommon.StylePropertyChangedHandler(TextViewStyler.setWhiteSpaceProperty, TextViewStyler.resetWhiteSpaceProperty), "Button");
     };
     return TextViewStyler;
 })();
 exports.TextViewStyler = TextViewStyler;
+function setTextDecoration(view, value) {
+    var flags = 0;
+    var values = (value + "").split(" ");
+    if (values.indexOf(enums.TextDecoration.underline) !== -1) {
+        flags = flags | android.graphics.Paint.UNDERLINE_TEXT_FLAG;
+    }
+    if (values.indexOf(enums.TextDecoration.lineThrough) !== -1) {
+        flags = flags | android.graphics.Paint.STRIKE_THRU_TEXT_FLAG;
+    }
+    if (values.indexOf(enums.TextDecoration.none) === -1) {
+        view.setPaintFlags(flags);
+    }
+    else {
+        view.setPaintFlags(0);
+    }
+}
+function setWhiteSpace(view, value) {
+    view.setSingleLine(value === enums.WhiteSpace.nowrap);
+    view.setEllipsize(value === enums.WhiteSpace.nowrap ? android.text.TextUtils.TruncateAt.END : null);
+}
 var ActivityIndicatorStyler = (function () {
     function ActivityIndicatorStyler() {
     }
+    ActivityIndicatorStyler.setColorProperty = function (view, newValue) {
+        var bar = view._nativeView;
+        bar.getIndeterminateDrawable().setColorFilter(newValue, android.graphics.PorterDuff.Mode.SRC_IN);
+    };
+    ActivityIndicatorStyler.resetColorProperty = function (view, nativeValue) {
+        var bar = view._nativeView;
+        bar.getIndeterminateDrawable().clearColorFilter();
+    };
     ActivityIndicatorStyler.setActivityIndicatorVisibilityProperty = function (view, newValue) {
         ActivityIndicatorStyler.setIndicatorVisibility(view.busy, newValue, view._nativeView);
     };
@@ -328,6 +382,7 @@ var ActivityIndicatorStyler = (function () {
         }
     };
     ActivityIndicatorStyler.registerHandlers = function () {
+        style.registerHandler(style.colorProperty, new stylersCommon.StylePropertyChangedHandler(ActivityIndicatorStyler.setColorProperty, ActivityIndicatorStyler.resetColorProperty), "ActivityIndicator");
         style.registerHandler(style.visibilityProperty, new stylersCommon.StylePropertyChangedHandler(ActivityIndicatorStyler.setActivityIndicatorVisibilityProperty, ActivityIndicatorStyler.resetActivityIndicatorVisibilityProperty), "ActivityIndicator");
     };
     return ActivityIndicatorStyler;
@@ -357,12 +412,149 @@ var SegmentedBarStyler = (function () {
         var textView = new android.widget.TextView(tabHost.getContext());
         return textView.getCurrentTextColor();
     };
+    SegmentedBarStyler.setFontInternalProperty = function (view, newValue, nativeValue) {
+        var tabHost = view._nativeView;
+        var fontValue = newValue;
+        for (var tabIndex = 0; tabIndex < tabHost.getTabWidget().getTabCount(); tabIndex++) {
+            var tab = tabHost.getTabWidget().getChildTabViewAt(tabIndex);
+            var t = tab.getChildAt(1);
+            var typeface = fontValue.getAndroidTypeface();
+            if (typeface) {
+                t.setTypeface(typeface);
+            }
+            else {
+                t.setTypeface(nativeValue.typeface);
+            }
+            if (fontValue.fontSize) {
+                t.setTextSize(fontValue.fontSize);
+            }
+            else {
+                t.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, nativeValue.size);
+            }
+        }
+    };
+    SegmentedBarStyler.resetFontInternalProperty = function (view, nativeValue) {
+        var tabHost = view._nativeView;
+        for (var tabIndex = 0; tabIndex < tabHost.getTabWidget().getTabCount(); tabIndex++) {
+            var tab = tabHost.getTabWidget().getChildTabViewAt(tabIndex);
+            var t = tab.getChildAt(1);
+            t.setTypeface(nativeValue.typeface);
+            t.setTextSize(nativeValue.size);
+        }
+    };
+    SegmentedBarStyler.getFontInternalProperty = function (view) {
+        var tabHost = view._nativeView;
+        var textView = new android.widget.TextView(tabHost.getContext());
+        return {
+            typeface: textView.getTypeface(),
+            size: textView.getTextSize()
+        };
+    };
     SegmentedBarStyler.registerHandlers = function () {
         style.registerHandler(style.colorProperty, new stylersCommon.StylePropertyChangedHandler(SegmentedBarStyler.setColorProperty, SegmentedBarStyler.resetColorProperty, SegmentedBarStyler.getColorProperty), "SegmentedBar");
+        style.registerHandler(style.fontInternalProperty, new stylersCommon.StylePropertyChangedHandler(SegmentedBarStyler.setFontInternalProperty, SegmentedBarStyler.resetFontInternalProperty, SegmentedBarStyler.getFontInternalProperty), "SegmentedBar");
     };
     return SegmentedBarStyler;
 })();
 exports.SegmentedBarStyler = SegmentedBarStyler;
+var ProgressStyler = (function () {
+    function ProgressStyler() {
+    }
+    ProgressStyler.setColorProperty = function (view, newValue) {
+        var bar = view._nativeView;
+        bar.getProgressDrawable().setColorFilter(newValue, android.graphics.PorterDuff.Mode.SRC_IN);
+    };
+    ProgressStyler.resetColorProperty = function (view, nativeValue) {
+        var bar = view._nativeView;
+        bar.getProgressDrawable().clearColorFilter();
+    };
+    ProgressStyler.setBackgroundAndBorderProperty = function (view, newValue) {
+        var bar = view._nativeView;
+        var progressDrawable = bar.getProgressDrawable();
+        if (progressDrawable.getNumberOfLayers && progressDrawable.getNumberOfLayers() > 0) {
+            var backgroundDrawable = progressDrawable.getDrawable(0);
+            if (backgroundDrawable) {
+                backgroundDrawable.setColorFilter(newValue, android.graphics.PorterDuff.Mode.SRC_IN);
+            }
+        }
+    };
+    ProgressStyler.resetBackgroundAndBorderProperty = function (view, nativeValue) {
+        var bar = view._nativeView;
+    };
+    ProgressStyler.registerHandlers = function () {
+        style.registerHandler(style.colorProperty, new stylersCommon.StylePropertyChangedHandler(ProgressStyler.setColorProperty, ProgressStyler.resetColorProperty), "Progress");
+        style.registerHandler(style.backgroundColorProperty, new stylersCommon.StylePropertyChangedHandler(ProgressStyler.setBackgroundAndBorderProperty, ProgressStyler.resetBackgroundAndBorderProperty), "Progress");
+        style.registerHandler(style.borderWidthProperty, ignorePropertyHandler, "Progress");
+        style.registerHandler(style.borderColorProperty, ignorePropertyHandler, "Progress");
+        style.registerHandler(style.borderRadiusProperty, ignorePropertyHandler, "Progress");
+        style.registerHandler(style.backgroundInternalProperty, ignorePropertyHandler, "Progress");
+    };
+    return ProgressStyler;
+})();
+exports.ProgressStyler = ProgressStyler;
+var SliderStyler = (function () {
+    function SliderStyler() {
+    }
+    SliderStyler.setColorProperty = function (view, newValue) {
+        var bar = view._nativeView;
+        bar.getThumb().setColorFilter(newValue, android.graphics.PorterDuff.Mode.SRC_IN);
+    };
+    SliderStyler.resetColorProperty = function (view, nativeValue) {
+        var bar = view._nativeView;
+        bar.getThumb().clearColorFilter();
+    };
+    SliderStyler.setBackgroundAndBorderProperty = function (view, newValue) {
+        var bar = view._nativeView;
+        bar.getProgressDrawable().setColorFilter(newValue, android.graphics.PorterDuff.Mode.SRC_IN);
+    };
+    SliderStyler.resetBackgroundAndBorderProperty = function (view, nativeValue) {
+        var bar = view._nativeView;
+    };
+    SliderStyler.registerHandlers = function () {
+        style.registerHandler(style.colorProperty, new stylersCommon.StylePropertyChangedHandler(SliderStyler.setColorProperty, SliderStyler.resetColorProperty), "Slider");
+        style.registerHandler(style.backgroundColorProperty, new stylersCommon.StylePropertyChangedHandler(SliderStyler.setBackgroundAndBorderProperty, SliderStyler.resetBackgroundAndBorderProperty), "Slider");
+        style.registerHandler(style.borderWidthProperty, ignorePropertyHandler, "Slider");
+        style.registerHandler(style.borderColorProperty, ignorePropertyHandler, "Slider");
+        style.registerHandler(style.borderRadiusProperty, ignorePropertyHandler, "Slider");
+        style.registerHandler(style.backgroundInternalProperty, ignorePropertyHandler, "Slider");
+    };
+    return SliderStyler;
+})();
+exports.SliderStyler = SliderStyler;
+var SwitchStyler = (function () {
+    function SwitchStyler() {
+    }
+    SwitchStyler.setColorProperty = function (view, newValue) {
+        var sw = view._nativeView;
+        var drawable = sw.getThumbDrawable();
+        if (drawable) {
+            drawable.setColorFilter(newValue, android.graphics.PorterDuff.Mode.SRC_IN);
+        }
+    };
+    SwitchStyler.resetColorProperty = function (view, nativeValue) {
+        var sw = view._nativeView;
+    };
+    SwitchStyler.setBackgroundAndBorderProperty = function (view, newValue) {
+        var sw = view._nativeView;
+        var drawable = sw.getTrackDrawable();
+        if (drawable) {
+            drawable.setColorFilter(newValue, android.graphics.PorterDuff.Mode.SRC_IN);
+        }
+    };
+    SwitchStyler.resetBackgroundAndBorderProperty = function (view, nativeValue) {
+        var sw = view._nativeView;
+    };
+    SwitchStyler.registerHandlers = function () {
+        style.registerHandler(style.colorProperty, new stylersCommon.StylePropertyChangedHandler(SwitchStyler.setColorProperty, SwitchStyler.resetColorProperty), "Switch");
+        style.registerHandler(style.backgroundColorProperty, new stylersCommon.StylePropertyChangedHandler(SwitchStyler.setBackgroundAndBorderProperty, SwitchStyler.resetBackgroundAndBorderProperty), "Switch");
+        style.registerHandler(style.borderWidthProperty, ignorePropertyHandler, "Switch");
+        style.registerHandler(style.borderColorProperty, ignorePropertyHandler, "Switch");
+        style.registerHandler(style.borderRadiusProperty, ignorePropertyHandler, "Switch");
+        style.registerHandler(style.backgroundInternalProperty, ignorePropertyHandler, "Switch");
+    };
+    return SwitchStyler;
+})();
+exports.SwitchStyler = SwitchStyler;
 var SearchBarStyler = (function () {
     function SearchBarStyler() {
     }
@@ -453,6 +645,65 @@ var SearchBarStyler = (function () {
     return SearchBarStyler;
 })();
 exports.SearchBarStyler = SearchBarStyler;
+var ActionBarStyler = (function () {
+    function ActionBarStyler() {
+    }
+    ActionBarStyler.setColorProperty = function (view, newValue) {
+        var toolbar = view._nativeView;
+        toolbar.setTitleTextColor(newValue);
+    };
+    ActionBarStyler.resetColorProperty = function (view, nativeValue) {
+        if (types.isNullOrUndefined(nativeValue)) {
+            nativeValue = android.graphics.Color.BLACK;
+        }
+        view._nativeView.setTitleTextColor(nativeValue);
+    };
+    ActionBarStyler.registerHandlers = function () {
+        style.registerHandler(style.colorProperty, new stylersCommon.StylePropertyChangedHandler(ActionBarStyler.setColorProperty, ActionBarStyler.resetColorProperty), "ActionBar");
+    };
+    return ActionBarStyler;
+})();
+exports.ActionBarStyler = ActionBarStyler;
+var TabViewStyler = (function () {
+    function TabViewStyler() {
+    }
+    TabViewStyler.setColorProperty = function (view, newValue) {
+        var tab = view;
+        if (tab.items && tab.items.length > 0) {
+            var tabLayout = tab._getAndroidTabView();
+            for (var i = 0; i < tab.items.length; i++) {
+                tabLayout.getTextViewForItemAt(i).setTextColor(newValue);
+            }
+        }
+    };
+    TabViewStyler.resetColorProperty = function (view, nativeValue) {
+        if (types.isNullOrUndefined(nativeValue)) {
+            return;
+        }
+        var tab = view;
+        if (tab.items && tab.items.length > 0) {
+            var tabLayout = tab._getAndroidTabView();
+            for (var i = 0; i < tab.items.length; i++) {
+                tabLayout.getTextViewForItemAt(i).setTextColor(nativeValue);
+            }
+        }
+    };
+    TabViewStyler.getColorProperty = function (view) {
+        var tab = view;
+        var tv = tab._getAndroidTabView().getTextViewForItemAt(0);
+        if (tv) {
+            return tv.getTextColors().getDefaultColor();
+        }
+        else {
+            return null;
+        }
+    };
+    TabViewStyler.registerHandlers = function () {
+        style.registerHandler(style.colorProperty, new stylersCommon.StylePropertyChangedHandler(TabViewStyler.setColorProperty, TabViewStyler.resetColorProperty, TabViewStyler.getColorProperty), "TabView");
+    };
+    return TabViewStyler;
+})();
+exports.TabViewStyler = TabViewStyler;
 function _registerDefaultStylers() {
     style.registerNoStylingClass("Frame");
     DefaultStyler.registerHandlers();
@@ -461,5 +712,10 @@ function _registerDefaultStylers() {
     ActivityIndicatorStyler.registerHandlers();
     SegmentedBarStyler.registerHandlers();
     SearchBarStyler.registerHandlers();
+    ActionBarStyler.registerHandlers();
+    TabViewStyler.registerHandlers();
+    ProgressStyler.registerHandlers();
+    SwitchStyler.registerHandlers();
+    SliderStyler.registerHandlers();
 }
 exports._registerDefaultStylers = _registerDefaultStylers;

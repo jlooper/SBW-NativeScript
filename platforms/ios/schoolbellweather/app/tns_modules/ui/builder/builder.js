@@ -103,6 +103,9 @@ function parseInternal(value, context) {
                         else if (complexProperty) {
                             addToComplexProperty(parent, complexProperty, componentModule);
                         }
+                        else if (parent.component._addChildFromBuilder) {
+                            parent.component._addChildFromBuilder(args.elementName, componentModule.component);
+                        }
                     }
                     else if (parents.length === 0) {
                         rootComponentModule = componentModule;
@@ -132,7 +135,7 @@ function parseInternal(value, context) {
         throw new Error("XML parse error: " + e.message);
     }, true);
     if (types.isString(value)) {
-        value = value.replace(/xmlns=("|')http:\/\/www.nativescript.org\/tns.xsd\1/, "");
+        value = value.replace(/xmlns=("|')http:\/\/((www)|(schemas))\.nativescript\.org\/tns\.xsd\1/, "");
         xmlParser.parse(value);
     }
     return rootComponentModule;
@@ -231,7 +234,7 @@ function addToComplexProperty(parent, complexProperty, elementModule) {
         complexProperty.items.push(elementModule.component);
     }
     else if (parentComponent._addChildFromBuilder) {
-        parentComponent._addChildFromBuilder("", elementModule.component);
+        parentComponent._addChildFromBuilder(complexProperty.name, elementModule.component);
     }
     else {
         parentComponent[complexProperty.name] = elementModule.component;

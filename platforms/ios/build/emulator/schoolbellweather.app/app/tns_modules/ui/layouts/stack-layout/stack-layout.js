@@ -93,7 +93,7 @@ var StackLayout = (function (_super) {
         var childLeft = paddingLeft;
         var childRight = right - left - paddingRight;
         switch (this.verticalAlignment) {
-            case enums.VerticalAlignment.center:
+            case enums.VerticalAlignment.center || enums.VerticalAlignment.middle:
                 childTop = (bottom - top - this._totalLength) / 2 + paddingTop - paddingBottom;
                 break;
             case enums.VerticalAlignment.bottom:

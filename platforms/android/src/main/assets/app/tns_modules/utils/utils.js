@@ -20,6 +20,13 @@ var layout;
         return (size & ~MODE_MASK) | (mode & MODE_MASK);
     }
     layout.makeMeasureSpec = makeMeasureSpec;
+    function getDisplayMetrics() {
+        if (!metrics) {
+            metrics = ad.getApplicationContext().getResources().getDisplayMetrics();
+        }
+        return metrics;
+    }
+    layout.getDisplayMetrics = getDisplayMetrics;
     function getDisplayDensity() {
         if (density === -1) {
             density = getDisplayMetrics().density;
@@ -27,12 +34,14 @@ var layout;
         return density;
     }
     layout.getDisplayDensity = getDisplayDensity;
-    function getDisplayMetrics() {
-        if (!metrics) {
-            metrics = ad.getApplicationContext().getResources().getDisplayMetrics();
-        }
-        return metrics;
+    function toDevicePixels(value) {
+        return value * getDisplayDensity();
     }
+    layout.toDevicePixels = toDevicePixels;
+    function toDeviceIndependentPixels(value) {
+        return value / getDisplayDensity();
+    }
+    layout.toDeviceIndependentPixels = toDeviceIndependentPixels;
 })(layout = exports.layout || (exports.layout = {}));
 var ad;
 (function (ad) {
@@ -40,6 +49,28 @@ var ad;
     ad.getApplication = getApplication;
     function getApplicationContext() { return getApplication().getApplicationContext(); }
     ad.getApplicationContext = getApplicationContext;
+    var inputMethodManager;
+    function getInputMethodManager() {
+        if (!inputMethodManager) {
+            inputMethodManager = getApplicationContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+        }
+        return inputMethodManager;
+    }
+    ad.getInputMethodManager = getInputMethodManager;
+    function showSoftInput(nativeView) {
+        var imm = getInputMethodManager();
+        if (imm && nativeView instanceof android.view.View) {
+            imm.showSoftInput(nativeView, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+    ad.showSoftInput = showSoftInput;
+    function dismissSoftInput(nativeView) {
+        var imm = getInputMethodManager();
+        if (imm && nativeView instanceof android.view.View) {
+            imm.hideSoftInputFromWindow(nativeView.getWindowToken(), 0);
+        }
+    }
+    ad.dismissSoftInput = dismissSoftInput;
     var collections;
     (function (collections) {
         function stringArrayToStringSet(str) {

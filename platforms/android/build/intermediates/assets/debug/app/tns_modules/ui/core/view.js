@@ -47,17 +47,6 @@ function onIsUserInteractionEnabledPropertyChanged(data) {
     view._updateOnTouchListener(data.newValue);
 }
 viewCommon.View.isUserInteractionEnabledProperty.metadata.onSetNativeValue = onIsUserInteractionEnabledPropertyChanged;
-exports.NativeViewGroup = android.view.ViewGroup.extend({
-    onMeasure: function (widthMeasureSpec, heightMeasureSpec) {
-        var owner = this[OWNER];
-        owner.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        this.setMeasuredDimension(owner.getMeasuredWidth(), owner.getMeasuredHeight());
-    },
-    onLayout: function (changed, left, top, right, bottom) {
-        var owner = this[OWNER];
-        owner.onLayout(left, top, right, bottom);
-    }
-});
 var View = (function (_super) {
     __extends(View, _super);
     function View() {
@@ -122,9 +111,12 @@ var View = (function (_super) {
                     }
                     for (var type in owner._gestureObservers) {
                         var list = owner._gestureObservers[type];
-                        for (var i_1 = 0; i_1 < list.length; i_1++) {
-                            list[i_1].androidOnTouchEvent(motionEvent);
+                        for (var i = 0; i < list.length; i++) {
+                            list[i].androidOnTouchEvent(motionEvent);
                         }
+                    }
+                    if (!owner._nativeView || !owner._nativeView.onTouchEvent) {
+                        return false;
                     }
                     return owner._nativeView.onTouchEvent(motionEvent);
                 }
@@ -196,6 +188,9 @@ var View = (function (_super) {
     View.prototype._onContextChanged = function () {
         trace.write("calling _onContextChanged on view " + this._domId, trace.categories.VisualTreeEvents);
         this._createUI();
+        if (this._nativeView && !(this._nativeView.getLayoutParams() instanceof org.nativescript.widgets.CommonLayoutParams)) {
+            this._nativeView.setLayoutParams(new org.nativescript.widgets.CommonLayoutParams());
+        }
         utils.copyFrom(this._options, this);
         delete this._options;
         this._syncNativeProperties();

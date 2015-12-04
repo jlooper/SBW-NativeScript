@@ -49,6 +49,17 @@ function request(options) {
                                 return utils.parseJSON(NSDataToString(data));
                             },
                             toImage: function () {
+                                if (UIImage.imageWithData["async"]) {
+                                    return UIImage.imageWithData["async"](UIImage, [data])
+                                        .then(function (image) {
+                                        if (!image) {
+                                            throw new Error("Response content may not be converted to an Image");
+                                        }
+                                        var source = new imageSource.ImageSource();
+                                        source.setNativeSource(image);
+                                        return source;
+                                    });
+                                }
                                 return new Promise(function (resolveImage, rejectImage) {
                                     var img = imageSource.fromData(data);
                                     if (img instanceof imageSource.ImageSource) {

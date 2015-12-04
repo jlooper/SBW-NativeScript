@@ -1,6 +1,7 @@
 var common = require("./search-bar-common");
 var color = require("color");
 var types = require("utils/types");
+var utils = require("utils/utils");
 var SEARCHTEXT = "searchText";
 var QUERY = "query";
 var EMPTY = "";
@@ -70,6 +71,16 @@ var SearchBar = (function (_super) {
     function SearchBar() {
         _super.apply(this, arguments);
     }
+    SearchBar.prototype.dismissSoftInput = function () {
+        utils.ad.dismissSoftInput(this._nativeView);
+    };
+    SearchBar.prototype.focus = function () {
+        var result = _super.prototype.focus.call(this);
+        if (result) {
+            utils.ad.showSoftInput(this._nativeView);
+        }
+        return result;
+    };
     SearchBar.prototype._createUI = function () {
         this._android = new android.widget.SearchView(this._context);
         this._android.setIconified(false);

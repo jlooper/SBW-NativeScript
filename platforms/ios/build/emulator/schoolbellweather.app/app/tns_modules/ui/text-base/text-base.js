@@ -2,6 +2,7 @@ var view = require("ui/core/view");
 var observable = require("data/observable");
 var dependencyObservable = require("ui/core/dependency-observable");
 var proxy = require("ui/core/proxy");
+var formattedString = require("text/formatted-string");
 var weakEvents = require("ui/core/weak-event-listener");
 var textProperty = new dependencyObservable.Property("text", "TextBase", new proxy.PropertyMetadata("", dependencyObservable.PropertyMetadataSettings.AffectsLayout));
 var formattedTextProperty = new dependencyObservable.Property("formattedText", "TextBase", new proxy.PropertyMetadata("", dependencyObservable.PropertyMetadataSettings.AffectsLayout));
@@ -83,6 +84,7 @@ var TextBase = (function (_super) {
         }
         else if (this.ios) {
             this.ios.text = data.newValue + "";
+            this.style._updateTextDecoration();
         }
     };
     TextBase.prototype.setFormattedTextPropertyToNative = function (value) {
@@ -91,6 +93,7 @@ var TextBase = (function (_super) {
         }
         else if (this.ios) {
             this.ios.attributedText = value._formattedText;
+            this.style._updateTextDecoration();
             this.requestLayout();
         }
     };
@@ -99,6 +102,9 @@ var TextBase = (function (_super) {
             data.newValue.parent = this;
         }
         this.setFormattedTextPropertyToNative(data.newValue);
+    };
+    TextBase.prototype._addChildFromBuilder = function (name, value) {
+        formattedString.FormattedString.addFormattedStringToView(this, name, value);
     };
     TextBase.textProperty = textProperty;
     TextBase.formattedTextProperty = formattedTextProperty;

@@ -44,8 +44,8 @@ var CssSelector = (function () {
         });
     };
     CssSelector.prototype.eachSetter = function (callback) {
-        for (var i_1 = 0; i_1 < this._declarations.length; i_1++) {
-            var declaration = this._declarations[i_1];
+        for (var i = 0; i < this._declarations.length; i++) {
+            var declaration = this._declarations[i];
             var name_1 = declaration.property;
             var resolvedValue = declaration.value;
             var property = styleProperty.getPropertyByCssName(name_1);
@@ -79,10 +79,14 @@ var CssTypeSelector = (function (_super) {
         configurable: true
     });
     CssTypeSelector.prototype.matches = function (view) {
-        return this.expression.toLowerCase() === view.typeName.toLowerCase();
+        return matchesType(this.expression, view);
     };
     return CssTypeSelector;
 })(CssSelector);
+function matchesType(expression, view) {
+    return expression.toLowerCase() === view.typeName.toLowerCase() ||
+        expression.toLowerCase() === view.typeName.split(/(?=[A-Z])/).join("-").toLowerCase();
+}
 var CssIdSelector = (function (_super) {
     __extends(CssIdSelector, _super);
     function CssIdSelector() {
@@ -171,7 +175,7 @@ var CssVisualStateSelector = (function (_super) {
             matches = view._cssClasses.some(function (cssClass, i, arr) { return cssClass === expectedClass; });
         }
         if (this._isByType) {
-            matches = this._match === view.cssType.toLowerCase();
+            matches = matchesType(this._match, view);
         }
         return matches;
     };

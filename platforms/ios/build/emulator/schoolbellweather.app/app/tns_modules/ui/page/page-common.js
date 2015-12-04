@@ -1,5 +1,6 @@
 var content_view_1 = require("ui/content-view");
 var view = require("ui/core/view");
+var frame = require("ui/frame");
 var styleModule = require("../styling/style");
 var styleScope = require("../styling/style-scope");
 var fs = require("file-system");
@@ -142,45 +143,53 @@ var Page = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    Page.prototype.onNavigatingTo = function (context) {
+    Page.prototype.createNavigatedData = function (eventName, isBackNavigation) {
+        return {
+            eventName: eventName,
+            object: this,
+            context: this.navigationContext,
+            isBackNavigation: isBackNavigation
+        };
+    };
+    Page.prototype.onNavigatingTo = function (context, isBackNavigation) {
         this._navigationContext = context;
-        this.notify({
-            eventName: Page.navigatingToEvent,
-            object: this,
-            context: this.navigationContext
-        });
+        this.notify(this.createNavigatedData(Page.navigatingToEvent, isBackNavigation));
     };
-    Page.prototype.onNavigatedTo = function () {
-        this.notify({
-            eventName: Page.navigatedToEvent,
-            object: this,
-            context: this.navigationContext
-        });
+    Page.prototype.onNavigatedTo = function (isBackNavigation) {
+        this.notify(this.createNavigatedData(Page.navigatedToEvent, isBackNavigation));
     };
-    Page.prototype.onNavigatingFrom = function () {
-        this.notify({
-            eventName: Page.navigatingFromEvent,
-            object: this,
-            context: this.navigationContext
-        });
+    Page.prototype.onNavigatingFrom = function (isBackNavigation) {
+        this.notify(this.createNavigatedData(Page.navigatingFromEvent, isBackNavigation));
     };
     Page.prototype.onNavigatedFrom = function (isBackNavigation) {
-        this.notify({
-            eventName: Page.navigatedFromEvent,
-            object: this,
-            context: this.navigationContext
-        });
+        this.notify(this.createNavigatedData(Page.navigatedFromEvent, isBackNavigation));
         this._navigationContext = undefined;
     };
-    Page.prototype.showModal = function (moduleName, context, closeCallback, fullscreen) {
-        var page = frameCommon.resolvePageFromEntry({ moduleName: moduleName });
-        page._showNativeModalView(this, context, closeCallback, fullscreen);
+    Page.prototype.showModal = function () {
+        if (arguments.length === 0) {
+            this._showNativeModalView(frame.topmost().currentPage, undefined, undefined, true);
+        }
+        else {
+            var moduleName = arguments[0];
+            var context = arguments[1];
+            var closeCallback = arguments[2];
+            var fullscreen = arguments[3];
+            var page = frameCommon.resolvePageFromEntry({ moduleName: moduleName });
+            page._showNativeModalView(this, context, closeCallback, fullscreen);
+        }
     };
     Page.prototype.closeModal = function () {
         if (this._closeModalCallback) {
             this._closeModalCallback.apply(undefined, arguments);
         }
     };
+    Object.defineProperty(Page.prototype, "modal", {
+        get: function () {
+            return this._modal;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Page.prototype._addChildFromBuilder = function (name, value) {
         if (value instanceof action_bar_1.ActionBar) {
             this.actionBar = value;
@@ -190,6 +199,7 @@ var Page = (function (_super) {
         }
     };
     Page.prototype._showNativeModalView = function (parent, context, closeCallback, fullscreen) {
+        parent._modal = this;
         var that = this;
         this._closeModalCallback = function () {
             if (that._closeModalCallback) {
@@ -202,6 +212,7 @@ var Page = (function (_super) {
         };
     };
     Page.prototype._hideNativeModalView = function (parent) {
+        parent._modal = undefined;
     };
     Page.prototype._raiseShownModallyEvent = function (parent, context, closeCallback) {
         this.notify({

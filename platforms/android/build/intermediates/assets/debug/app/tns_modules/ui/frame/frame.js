@@ -3,6 +3,7 @@ var trace = require("trace");
 var observable = require("data/observable");
 var utils = require("utils/utils");
 var application = require("application");
+var types = require("utils/types");
 global.moduleMerge(frameCommon, exports);
 var TAG = "_fragmentTag";
 var OWNER = "_owner";
@@ -12,102 +13,49 @@ var ANDROID_FRAME = "android_frame";
 var BACKSTACK_TAG = "_backstackTag";
 var NAV_DEPTH = "_navDepth";
 var CLEARING_HISTORY = "_clearingHistory";
+var activityInitialized = false;
 var navDepth = -1;
-var PageFragmentBody = (function (_super) {
-    __extends(PageFragmentBody, _super);
-    function PageFragmentBody(frame, entry) {
-        _super.call(this);
-        this.frame = frame;
-        this.entry = entry;
-        return global.__native(this);
-    }
-    PageFragmentBody.prototype.onAttach = function (activity) {
-        _super.prototype.onAttach.call(this, activity);
-        trace.write(this.toString() + ".onAttach();", trace.categories.NativeLifecycle);
-    };
-    PageFragmentBody.prototype.onCreate = function (savedInstanceState) {
-        _super.prototype.onCreate.call(this, savedInstanceState);
-        trace.write(this.toString() + ".onCreate(); savedInstanceState: " + savedInstanceState, trace.categories.NativeLifecycle);
-        _super.prototype.setHasOptionsMenu.call(this, true);
-    };
-    PageFragmentBody.prototype.onCreateView = function (inflater, container, savedInstanceState) {
-        trace.write(this.toString() + ".onCreateView(); container: " + container + "; savedInstanceState: " + savedInstanceState, trace.categories.NativeLifecycle);
-        if (this[CLEARING_HISTORY]) {
-            trace.write(this.toString() + " wants to create a view, but we are currently clearing history. Returning null.", trace.categories.NativeLifecycle);
-            return null;
-        }
+var PageFragmentBody = android.app.Fragment.extend({
+    onCreate: function (savedInstanceState) {
+        this.super.onCreate(savedInstanceState);
+        this.super.setHasOptionsMenu(true);
+    },
+    onCreateView: function (inflater, container, savedInstanceState) {
         var entry = this.entry;
         var page = entry.resolvedPage;
         if (savedInstanceState && savedInstanceState.getBoolean(HIDDEN, false)) {
-            _super.prototype.getFragmentManager.call(this).beginTransaction().hide(this).commit();
+            this.super.getFragmentManager().beginTransaction().hide(this).commit();
             page._onAttached(this.getActivity());
         }
         else {
             onFragmentShown(this);
         }
-        trace.write(this.toString() + ".onCreateView(); nativeView: " + page._nativeView, trace.categories.NativeLifecycle);
         return page._nativeView;
-    };
-    PageFragmentBody.prototype.onHiddenChanged = function (hidden) {
-        _super.prototype.onHiddenChanged.call(this, hidden);
-        trace.write(this.toString() + ".onHiddenChanged(); hidden: " + hidden, trace.categories.NativeLifecycle);
+    },
+    onHiddenChanged: function (hidden) {
+        this.super.onHiddenChanged(hidden);
         if (hidden) {
             onFragmentHidden(this);
         }
         else {
             onFragmentShown(this);
         }
-    };
-    PageFragmentBody.prototype.onActivityCreated = function (savedInstanceState) {
-        _super.prototype.onActivityCreated.call(this, savedInstanceState);
-        trace.write(this.toString() + ".onActivityCreated(); savedInstanceState: " + savedInstanceState, trace.categories.NativeLifecycle);
-    };
-    PageFragmentBody.prototype.onSaveInstanceState = function (outState) {
-        _super.prototype.onSaveInstanceState.call(this, outState);
-        trace.write(this.toString() + ".onSaveInstanceState();", trace.categories.NativeLifecycle);
+    },
+    onSaveInstanceState: function (outState) {
+        this.super.onSaveInstanceState(outState);
         if (this.isHidden()) {
             outState.putBoolean(HIDDEN, true);
         }
-    };
-    PageFragmentBody.prototype.onViewStateRestored = function (savedInstanceState) {
-        _super.prototype.onViewStateRestored.call(this, savedInstanceState);
-        trace.write(this.toString() + ".onViewStateRestored(); savedInstanceState: " + savedInstanceState, trace.categories.NativeLifecycle);
-    };
-    PageFragmentBody.prototype.onStart = function () {
-        _super.prototype.onStart.call(this);
-        trace.write(this.toString() + ".onStart();", trace.categories.NativeLifecycle);
-    };
-    PageFragmentBody.prototype.onResume = function () {
-        _super.prototype.onResume.call(this);
-        trace.write(this.toString() + ".onResume();", trace.categories.NativeLifecycle);
-    };
-    PageFragmentBody.prototype.onPause = function () {
-        _super.prototype.onPause.call(this);
-        trace.write(this.toString() + ".onPause();", trace.categories.NativeLifecycle);
-    };
-    PageFragmentBody.prototype.onStop = function () {
-        _super.prototype.onStop.call(this);
-        trace.write(this.toString() + ".onStop();", trace.categories.NativeLifecycle);
-    };
-    PageFragmentBody.prototype.onDestroyView = function () {
-        _super.prototype.onDestroyView.call(this);
-        trace.write(this.toString() + ".onDestroyView();", trace.categories.NativeLifecycle);
+    },
+    onDestroyView: function () {
+        this.super.onDestroyView();
         onFragmentHidden(this);
-    };
-    PageFragmentBody.prototype.onDestroy = function () {
-        _super.prototype.onDestroy.call(this);
-        trace.write(this.toString() + ".onDestroy();", trace.categories.NativeLifecycle);
+    },
+    onDestroy: function () {
+        this.super.onDestroy();
         utils.GC();
-    };
-    PageFragmentBody.prototype.onDetach = function () {
-        _super.prototype.onDetach.call(this);
-        trace.write(this.toString() + ".onDetach();", trace.categories.NativeLifecycle);
-    };
-    PageFragmentBody.prototype.toString = function () {
-        return this.getTag() + "[" + this.entry.resolvedPage.id + "]";
-    };
-    return PageFragmentBody;
-})(android.app.Fragment);
+    }
+});
 function onFragmentShown(fragment) {
     if (fragment[CLEARING_HISTORY]) {
         trace.write(fragment.toString() + " has been shown, but we are currently clearing history. Returning.", trace.categories.NativeLifecycle);
@@ -116,9 +64,21 @@ function onFragmentShown(fragment) {
     var frame = fragment.frame;
     var entry = fragment.entry;
     var page = entry.resolvedPage;
+    var currentNavigationContext;
+    var navigationQueue = frame._navigationQueue;
+    for (var i = 0; i < navigationQueue.length; i++) {
+        if (navigationQueue[i].entry === entry) {
+            currentNavigationContext = navigationQueue[i];
+            break;
+        }
+    }
+    var isBack = currentNavigationContext ? currentNavigationContext.isBackNavigation : false;
     frame._currentEntry = entry;
     frame._addView(page);
-    page.onNavigatedTo();
+    if (!frame.isLoaded) {
+        frame.onLoaded();
+    }
+    page.onNavigatedTo(isBack);
     frame._processNavigationQueue(page);
 }
 function onFragmentHidden(fragment) {
@@ -211,7 +171,9 @@ var Frame = (function (_super) {
         navDepth++;
         var fragmentTransaction = manager.beginTransaction();
         var newFragmentTag = "fragment" + navDepth;
-        var newFragment = new PageFragmentBody(this, backstackEntry);
+        var newFragment = new PageFragmentBody();
+        newFragment.frame = this;
+        newFragment.entry = backstackEntry;
         backstackEntry[BACKSTACK_TAG] = newFragmentTag;
         backstackEntry[NAV_DEPTH] = navDepth;
         backstackEntry.resolvedPage[TAG] = newFragmentTag;
@@ -271,7 +233,7 @@ var Frame = (function (_super) {
         this._onAttached(this._android.activity);
         var backstackEntry = this.currentEntry || this._delayedNavigationEntry;
         if (isRestart) {
-            this._onNavigatingTo(backstackEntry);
+            this._onNavigatingTo(backstackEntry, false);
             this._onNavigatedTo(backstackEntry, false);
         }
         else {
@@ -317,7 +279,13 @@ var Frame = (function (_super) {
         }
     };
     Frame.prototype._getNavBarVisible = function (page) {
-        return this._android.showActionBar;
+        if (types.isDefined(page.actionBarHidden)) {
+            return !page.actionBarHidden;
+        }
+        if (this._android && types.isDefined(this._android.showActionBar)) {
+            return this._android.showActionBar;
+        }
+        return true;
     };
     return Frame;
 })(frameCommon.Frame);
@@ -345,13 +313,14 @@ var NativeActivity = {
         if (!this.androidFrame) {
             throw new Error("Could not find AndroidFrame for Activity");
         }
-        this.super.onCreate(savedInstanceState);
+        var isRestart = !!savedInstanceState && activityInitialized;
+        this.super.onCreate(isRestart ? savedInstanceState : null);
         this.androidFrame.setActivity(this);
         var root = new org.nativescript.widgets.ContentLayout(this);
         this.androidFrame.rootViewGroup = root;
         this.androidFrame.rootViewGroup.setId(this.frame.containerViewId);
-        this.setContentView(this.androidFrame.rootViewGroup);
-        var isRestart = !!savedInstanceState;
+        this.setContentView(this.androidFrame.rootViewGroup, new org.nativescript.widgets.CommonLayoutParams());
+        activityInitialized = true;
         this.frame._onActivityCreated(isRestart);
     },
     onActivityResult: function (requestCode, resultCode, data) {
@@ -380,7 +349,9 @@ var NativeActivity = {
     onStart: function () {
         this.super.onStart();
         trace.write("NativeScriptActivity.onStart();", trace.categories.NativeLifecycle);
-        this.frame.onLoaded();
+        if (!this.frame.isLoaded) {
+            this.frame.onLoaded();
+        }
     },
     onStop: function () {
         this.super.onStop();
@@ -445,11 +416,26 @@ var AndroidFrame = (function (_super) {
     function AndroidFrame(owner) {
         _super.call(this);
         this.hasOwnActivity = false;
-        this.showActionBar = false;
+        this._showActionBar = true;
         this._owner = owner;
         this.frameId = framesCounter++;
         framesCache.push(new WeakRef(this));
     }
+    Object.defineProperty(AndroidFrame.prototype, "showActionBar", {
+        get: function () {
+            return this._showActionBar;
+        },
+        set: function (value) {
+            if (this._showActionBar !== value) {
+                this._showActionBar = value;
+                if (this.owner.currentPage) {
+                    this.owner.currentPage.actionBar.update();
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(AndroidFrame.prototype, "activity", {
         get: function () {
             if (this._activity) {

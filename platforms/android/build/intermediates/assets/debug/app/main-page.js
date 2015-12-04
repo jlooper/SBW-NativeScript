@@ -1,5 +1,7 @@
 var vmModule = require("./main-view-model");
 var dialogs = require("ui/dialogs");
+var helpers = require('./helper');
+var appModule = require("application");
 var imageModule = require("ui/image");
 var gesturesModule = require("ui/gestures");
 var view = require("ui/core/view");
@@ -17,8 +19,17 @@ var transportation;
 
 function pageLoaded(args) {
     page = args.object; 
+
+    var toIcon = {
+        toView: function (value) {
+            return helpers.toIcon(value);
+        }
+    }
+    
+    appModule.resources["toIcon"] = toIcon;
+    
     page.bindingContext = vmModule.mainViewModel;    
-    getSettings();               
+    getSettings();                  
 }
 
 function getSettings(){
@@ -53,16 +64,12 @@ function navigatedTo(args){
     
     vmModule.mainViewModel.getLocation();
 
+    
+
     //listen for changed segmentedBar
 
     var sBar = page.getViewById("sBar");
-    var wTabs = page.getViewById("weatherTabs");
     var mode = appSettings.getString("mode");
-    
-    wTabs.addEventListener(observable.Observable.propertyChangeEvent, function (e) {
-        getSettings();
-    });
-
 
     if(mode == 'C'){
         sBar.selectedIndex = 0;
@@ -75,13 +82,14 @@ function navigatedTo(args){
 
         if(e.value == 1){
             appSettings.setString("mode","F");
-            vmModule.mainViewModel.getLocation();
             
         }
         else{
             appSettings.setString("mode","C");
-            vmModule.mainViewModel.getLocation(); 
         } 
+
+        vmModule.mainViewModel.getLocation(); 
+
                    
     });
 

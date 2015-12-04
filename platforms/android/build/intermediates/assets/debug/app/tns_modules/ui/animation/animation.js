@@ -3,9 +3,17 @@ var utils = require("utils/utils");
 var color = require("color");
 var trace = require("trace");
 var types = require("utils/types");
+var enums = require("ui/enums");
 global.moduleMerge(common, exports);
 var floatType = java.lang.Float.class.getField("TYPE").get(null);
 var argbEvaluator = new android.animation.ArgbEvaluator();
+var keyPrefix = "ui.animation.";
+var propertyKeys = {};
+propertyKeys[common.Properties.backgroundColor] = Symbol(keyPrefix + common.Properties.backgroundColor);
+propertyKeys[common.Properties.opacity] = Symbol(keyPrefix + common.Properties.opacity);
+propertyKeys[common.Properties.rotate] = Symbol(keyPrefix + common.Properties.rotate);
+propertyKeys[common.Properties.scale] = Symbol(keyPrefix + common.Properties.scale);
+propertyKeys[common.Properties.translate] = Symbol(keyPrefix + common.Properties.translate);
 var Animation = (function (_super) {
     __extends(Animation, _super);
     function Animation(animationDefinitions, playSequentially) {
@@ -13,15 +21,17 @@ var Animation = (function (_super) {
         var that = this;
         this._animatorListener = new android.animation.Animator.AnimatorListener({
             onAnimationStart: function (animator) {
-                that._onAndroidAnimationStart();
+                trace.write("MainAnimatorListener.onAndroidAnimationStart(" + animator + ")", trace.categories.Animation);
             },
             onAnimationRepeat: function (animator) {
-                that._onAndroidAnimationRepeat();
+                trace.write("MainAnimatorListener.onAnimationRepeat(" + animator + ")", trace.categories.Animation);
             },
             onAnimationEnd: function (animator) {
+                trace.write("MainAnimatorListener.onAnimationEnd(" + animator + ")", trace.categories.Animation);
                 that._onAndroidAnimationEnd();
             },
             onAnimationCancel: function (animator) {
+                trace.write("MainAnimatorListener.onAnimationCancel(" + animator + ")", trace.categories.Animation);
                 that._onAndroidAnimationCancel();
             }
         });
@@ -53,6 +63,7 @@ var Animation = (function (_super) {
             this._animatorSet.playTogether(this._nativeAnimatorsArray);
         }
         trace.write("Starting " + this._nativeAnimatorsArray.length + " animations " + (this._playSequentially ? "sequentially." : "together."), trace.categories.Animation);
+        this._animatorSet.setupStartValues();
         this._animatorSet.start();
         return animationFinishedPromise;
     };
@@ -61,14 +72,7 @@ var Animation = (function (_super) {
         trace.write("Cancelling AnimatorSet.", trace.categories.Animation);
         this._animatorSet.cancel();
     };
-    Animation.prototype._onAndroidAnimationStart = function () {
-        trace.write("AndroidAnimation._onAndroidAnimationStart.", trace.categories.Animation);
-    };
-    Animation.prototype._onAndroidAnimationRepeat = function () {
-        trace.write("AndroidAnimation._onAndroidAnimationRepeat.", trace.categories.Animation);
-    };
     Animation.prototype._onAndroidAnimationEnd = function () {
-        trace.write("AndroidAnimation._onAndroidAnimationEnd.", trace.categories.Animation);
         if (!this.isPlaying) {
             return;
         }
@@ -80,7 +84,6 @@ var Animation = (function (_super) {
         this._resolveAnimationFinishedPromise();
     };
     Animation.prototype._onAndroidAnimationCancel = function () {
-        trace.write("AndroidAnimation._onAndroidAnimationCancel.", trace.categories.Animation);
         var i = 0;
         var length = this._propertyResetCallbacks.length;
         for (; i < length; i++) {
@@ -104,69 +107,96 @@ var Animation = (function (_super) {
         var animators = new Array();
         var propertyUpdateCallbacks = new Array();
         var propertyResetCallbacks = new Array();
-        var animator;
         var originalValue;
         var density = utils.layout.getDisplayDensity();
+        var xyObjectAnimators;
+        var animatorSet;
+        var key = propertyKeys[propertyAnimation.property];
+        if (key) {
+            propertyAnimation.target[key] = propertyAnimation;
+        }
+        function checkAnimation(cb) {
+            return function () {
+                if (propertyAnimation.target[key] === propertyAnimation) {
+                    delete propertyAnimation.target[key];
+                    cb();
+                }
+            };
+        }
         switch (propertyAnimation.property) {
             case common.Properties.opacity:
                 originalValue = nativeView.getAlpha();
                 nativeArray = java.lang.reflect.Array.newInstance(floatType, 1);
                 nativeArray[0] = propertyAnimation.value;
+                propertyUpdateCallbacks.push(checkAnimation(function () { propertyAnimation.target.opacity = propertyAnimation.value; }));
+                propertyResetCallbacks.push(checkAnimation(function () { nativeView.setAlpha(originalValue); }));
                 animators.push(android.animation.ObjectAnimator.ofFloat(nativeView, "alpha", nativeArray));
-                propertyUpdateCallbacks.push(function () { propertyAnimation.target.opacity = propertyAnimation.value; });
-                propertyResetCallbacks.push(function () { nativeView.setAlpha(originalValue); });
                 break;
             case common.Properties.backgroundColor:
                 originalValue = nativeView.getBackground();
                 nativeArray = java.lang.reflect.Array.newInstance(java.lang.Object.class, 2);
                 nativeArray[0] = propertyAnimation.target.backgroundColor ? java.lang.Integer.valueOf(propertyAnimation.target.backgroundColor.argb) : java.lang.Integer.valueOf(-1);
                 nativeArray[1] = java.lang.Integer.valueOf(propertyAnimation.value.argb);
-                animator = android.animation.ValueAnimator.ofObject(argbEvaluator, nativeArray);
+                var animator = android.animation.ValueAnimator.ofObject(argbEvaluator, nativeArray);
                 animator.addUpdateListener(new android.animation.ValueAnimator.AnimatorUpdateListener({
                     onAnimationUpdate: function (animator) {
                         var argb = animator.getAnimatedValue().intValue();
                         propertyAnimation.target.backgroundColor = new color.Color(argb);
                     }
                 }));
+                propertyUpdateCallbacks.push(checkAnimation(function () { propertyAnimation.target.backgroundColor = propertyAnimation.value; }));
+                propertyResetCallbacks.push(checkAnimation(function () { nativeView.setBackground(originalValue); }));
                 animators.push(animator);
-                propertyUpdateCallbacks.push(function () { propertyAnimation.target.backgroundColor = propertyAnimation.value; });
-                propertyResetCallbacks.push(function () { nativeView.setBackground(originalValue); });
                 break;
             case common.Properties.translate:
+                xyObjectAnimators = java.lang.reflect.Array.newInstance(android.animation.Animator.class, 2);
                 originalValue = nativeView.getTranslationX();
                 nativeArray = java.lang.reflect.Array.newInstance(floatType, 1);
                 nativeArray[0] = propertyAnimation.value.x * density;
-                animators.push(android.animation.ObjectAnimator.ofFloat(nativeView, "translationX", nativeArray));
-                propertyUpdateCallbacks.push(function () { propertyAnimation.target.translateX = propertyAnimation.value.x; });
-                propertyResetCallbacks.push(function () { nativeView.setTranslationX(originalValue); });
+                xyObjectAnimators[0] = android.animation.ObjectAnimator.ofFloat(nativeView, "translationX", nativeArray);
+                xyObjectAnimators[0].setRepeatCount(Animation._getAndroidRepeatCount(propertyAnimation.iterations));
+                propertyUpdateCallbacks.push(checkAnimation(function () { propertyAnimation.target.translateX = propertyAnimation.value.x; }));
+                propertyResetCallbacks.push(checkAnimation(function () { nativeView.setTranslationX(originalValue); }));
                 originalValue = nativeView.getTranslationY();
                 nativeArray = java.lang.reflect.Array.newInstance(floatType, 1);
                 nativeArray[0] = propertyAnimation.value.y * density;
-                animators.push(android.animation.ObjectAnimator.ofFloat(nativeView, "translationY", nativeArray));
-                propertyUpdateCallbacks.push(function () { propertyAnimation.target.translateY = propertyAnimation.value.y; });
-                propertyResetCallbacks.push(function () { nativeView.setTranslationY(originalValue); });
+                xyObjectAnimators[1] = android.animation.ObjectAnimator.ofFloat(nativeView, "translationY", nativeArray);
+                xyObjectAnimators[1].setRepeatCount(Animation._getAndroidRepeatCount(propertyAnimation.iterations));
+                propertyUpdateCallbacks.push(checkAnimation(function () { propertyAnimation.target.translateY = propertyAnimation.value.y; }));
+                propertyResetCallbacks.push(checkAnimation(function () { nativeView.setTranslationY(originalValue); }));
+                animatorSet = new android.animation.AnimatorSet();
+                animatorSet.playTogether(xyObjectAnimators);
+                animatorSet.setupStartValues();
+                animators.push(animatorSet);
+                break;
+            case common.Properties.scale:
+                xyObjectAnimators = java.lang.reflect.Array.newInstance(android.animation.Animator.class, 2);
+                originalValue = nativeView.getScaleX();
+                nativeArray = java.lang.reflect.Array.newInstance(floatType, 1);
+                nativeArray[0] = propertyAnimation.value.x;
+                xyObjectAnimators[0] = android.animation.ObjectAnimator.ofFloat(nativeView, "scaleX", nativeArray);
+                xyObjectAnimators[0].setRepeatCount(Animation._getAndroidRepeatCount(propertyAnimation.iterations));
+                propertyUpdateCallbacks.push(checkAnimation(function () { propertyAnimation.target.scaleX = propertyAnimation.value.x; }));
+                propertyResetCallbacks.push(checkAnimation(function () { nativeView.setScaleX(originalValue); }));
+                originalValue = nativeView.getScaleY();
+                nativeArray = java.lang.reflect.Array.newInstance(floatType, 1);
+                nativeArray[0] = propertyAnimation.value.y;
+                xyObjectAnimators[1] = android.animation.ObjectAnimator.ofFloat(nativeView, "scaleY", nativeArray);
+                xyObjectAnimators[1].setRepeatCount(Animation._getAndroidRepeatCount(propertyAnimation.iterations));
+                propertyUpdateCallbacks.push(checkAnimation(function () { propertyAnimation.target.scaleY = propertyAnimation.value.y; }));
+                propertyResetCallbacks.push(checkAnimation(function () { nativeView.setScaleY(originalValue); }));
+                animatorSet = new android.animation.AnimatorSet();
+                animatorSet.playTogether(xyObjectAnimators);
+                animatorSet.setupStartValues();
+                animators.push(animatorSet);
                 break;
             case common.Properties.rotate:
                 originalValue = nativeView.getRotation();
                 nativeArray = java.lang.reflect.Array.newInstance(floatType, 1);
                 nativeArray[0] = propertyAnimation.value;
+                propertyUpdateCallbacks.push(checkAnimation(function () { propertyAnimation.target.rotate = propertyAnimation.value; }));
+                propertyResetCallbacks.push(checkAnimation(function () { nativeView.setRotation(originalValue); }));
                 animators.push(android.animation.ObjectAnimator.ofFloat(nativeView, "rotation", nativeArray));
-                propertyUpdateCallbacks.push(function () { propertyAnimation.target.rotate = propertyAnimation.value; });
-                propertyResetCallbacks.push(function () { nativeView.setRotation(originalValue); });
-                break;
-            case common.Properties.scale:
-                originalValue = nativeView.getScaleX();
-                nativeArray = java.lang.reflect.Array.newInstance(floatType, 1);
-                nativeArray[0] = propertyAnimation.value.x;
-                animators.push(android.animation.ObjectAnimator.ofFloat(nativeView, "scaleX", nativeArray));
-                propertyUpdateCallbacks.push(function () { propertyAnimation.target.scaleX = propertyAnimation.value.x; });
-                propertyResetCallbacks.push(function () { nativeView.setScaleX(originalValue); });
-                originalValue = nativeView.getScaleY();
-                nativeArray = java.lang.reflect.Array.newInstance(floatType, 1);
-                nativeArray[0] = propertyAnimation.value.y;
-                animators.push(android.animation.ObjectAnimator.ofFloat(nativeView, "scaleY", nativeArray));
-                propertyUpdateCallbacks.push(function () { propertyAnimation.target.scaleY = propertyAnimation.value.y; });
-                propertyResetCallbacks.push(function () { nativeView.setScaleY(originalValue); });
                 break;
             default:
                 throw new Error("Cannot animate " + propertyAnimation.property);
@@ -181,22 +211,39 @@ var Animation = (function (_super) {
             if (propertyAnimation.delay !== undefined) {
                 animators[i].setStartDelay(propertyAnimation.delay);
             }
-            if (propertyAnimation.iterations !== undefined) {
-                if (propertyAnimation.iterations === Number.POSITIVE_INFINITY) {
-                    animators[i].setRepeatCount(android.view.animation.Animation.INFINITE);
-                }
-                else {
-                    animators[i].setRepeatCount(propertyAnimation.iterations - 1);
-                }
+            if (propertyAnimation.iterations !== undefined && animators[i] instanceof android.animation.ValueAnimator) {
+                animators[i].setRepeatCount(Animation._getAndroidRepeatCount(propertyAnimation.iterations));
             }
             if (propertyAnimation.curve !== undefined) {
                 animators[i].setInterpolator(propertyAnimation.curve);
             }
-            trace.write("ObjectAnimator created: " + animators[i], trace.categories.Animation);
+            trace.write("Animator created: " + animators[i], trace.categories.Animation);
         }
         this._animators = this._animators.concat(animators);
         this._propertyUpdateCallbacks = this._propertyUpdateCallbacks.concat(propertyUpdateCallbacks);
         this._propertyResetCallbacks = this._propertyResetCallbacks.concat(propertyResetCallbacks);
+    };
+    Animation.prototype._resolveAnimationCurve = function (curve) {
+        switch (curve) {
+            case enums.AnimationCurve.easeIn:
+                trace.write("Animation curve resolved to android.view.animation.AccelerateInterpolator(1).", trace.categories.Animation);
+                return new android.view.animation.AccelerateInterpolator(1);
+            case enums.AnimationCurve.easeOut:
+                trace.write("Animation curve resolved to android.view.animation.DecelerateInterpolator(1).", trace.categories.Animation);
+                return new android.view.animation.DecelerateInterpolator(1);
+            case enums.AnimationCurve.easeInOut:
+                trace.write("Animation curve resolved to android.view.animation.AccelerateDecelerateInterpolator().", trace.categories.Animation);
+                return new android.view.animation.AccelerateDecelerateInterpolator();
+            case enums.AnimationCurve.linear:
+                trace.write("Animation curve resolved to android.view.animation.LinearInterpolator().", trace.categories.Animation);
+                return new android.view.animation.LinearInterpolator();
+            default:
+                trace.write("Animation curve resolved to original: " + curve, trace.categories.Animation);
+                return curve;
+        }
+    };
+    Animation._getAndroidRepeatCount = function (iterations) {
+        return (iterations === Number.POSITIVE_INFINITY) ? android.view.animation.Animation.INFINITE : iterations - 1;
     };
     return Animation;
 })(common.Animation);

@@ -229,15 +229,20 @@ var File = (function (_super) {
     };
     File.prototype.writeTextSync = function (content, onError, encoding) {
         this.checkAccess();
-        this[fileLockedProperty] = true;
-        var that = this;
-        var localError = function (error) {
-            that[fileLockedProperty] = false;
-            if (onError) {
-                onError(error);
-            }
-        };
-        getFileAccess().writeText(this.path, content, localError, encoding);
+        try {
+            this[fileLockedProperty] = true;
+            var that = this;
+            var localError = function (error) {
+                that[fileLockedProperty] = false;
+                if (onError) {
+                    onError(error);
+                }
+            };
+            getFileAccess().writeText(this.path, content, localError, encoding);
+        }
+        finally {
+            this[fileLockedProperty] = false;
+        }
     };
     File.prototype.checkAccess = function () {
         if (this.isLocked) {

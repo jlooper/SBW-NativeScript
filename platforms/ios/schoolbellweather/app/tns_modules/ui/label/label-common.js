@@ -1,6 +1,7 @@
 var dependencyObservable = require("ui/core/dependency-observable");
 var proxy = require("ui/core/proxy");
 var textBase = require("ui/text-base");
+var enums = require("ui/enums");
 var Label = (function (_super) {
     __extends(Label, _super);
     function Label(options) {
@@ -20,3 +21,8 @@ var Label = (function (_super) {
     return Label;
 })(textBase.TextBase);
 exports.Label = Label;
+function onTextWrapPropertyChanged(data) {
+    var v = data.object;
+    v.style.whiteSpace = data.newValue ? enums.WhiteSpace.normal : enums.WhiteSpace.nowrap;
+}
+Label.textWrapProperty.metadata.onSetNativeValue = onTextWrapPropertyChanged;

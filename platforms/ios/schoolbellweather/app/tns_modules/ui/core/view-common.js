@@ -139,8 +139,8 @@ var View = (function (_super) {
             else {
                 var events = arg.split(",");
                 if (events.length > 0) {
-                    for (var i_1 = 0; i_1 < events.length; i_1++) {
-                        var evt = events[i_1].trim();
+                    for (var i = 0; i < events.length; i++) {
+                        var evt = events[i].trim();
                         var gst = gestures.fromString(evt);
                         if (gst && !this._isEvent(arg)) {
                             this.observe(gst, callback, thisArg);
@@ -168,8 +168,8 @@ var View = (function (_super) {
             else {
                 var events = arg.split(",");
                 if (events.length > 0) {
-                    for (var i_2 = 0; i_2 < events.length; i_2++) {
-                        var evt = events[i_2].trim();
+                    for (var i = 0; i < events.length; i++) {
+                        var evt = events[i].trim();
                         var gst = gestures.fromString(evt);
                         if (gst && !this._isEvent(arg)) {
                             this._disconnectGestureObservers(gst);
@@ -193,8 +193,10 @@ var View = (function (_super) {
     };
     View.prototype._disconnectGestureObservers = function (type) {
         var observers = this.getGestureObservers(type);
-        for (var i_3 = 0; i_3 < observers.length; i_3++) {
-            observers[i_3].disconnect();
+        if (observers) {
+            for (var i = 0; i < observers.length; i++) {
+                observers[i].disconnect();
+            }
         }
     };
     View.prototype.getViewById = function (id) {
@@ -681,7 +683,7 @@ var View = (function (_super) {
             case enums.VerticalAlignment.top:
                 childTop = top + child.marginTop * density;
                 break;
-            case enums.VerticalAlignment.center:
+            case enums.VerticalAlignment.center || enums.VerticalAlignment.middle:
                 childTop = top + (bottom - top - childHeight + (child.marginTop - child.marginBottom) * density) / 2;
                 break;
             case enums.VerticalAlignment.bottom:
@@ -865,9 +867,7 @@ var View = (function (_super) {
             }
             if (property.metadata && property.metadata.inheritable) {
                 var baseValue = parentView._getValue(property);
-                if (baseValue) {
-                    that._setValue(property, baseValue, dependencyObservable.ValueSource.Inherited);
-                }
+                that._setValue(property, baseValue, dependencyObservable.ValueSource.Inherited);
             }
             return true;
         };
@@ -949,6 +949,9 @@ var View = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    View.prototype._shouldApplyStyleHandlers = function () {
+        return !!this._nativeView;
+    };
     View.prototype.focus = function () {
         return undefined;
     };
@@ -959,6 +962,14 @@ var View = (function (_super) {
         var that = this;
         animation.target = that;
         return new animationModule.Animation([animation]);
+    };
+    View.prototype.toString = function () {
+        if (this.id) {
+            return this.typeName + ("<" + this.id + ">");
+        }
+        return this.typeName;
+    };
+    View.prototype._setNativeViewFrame = function (nativeView, frame) {
     };
     View.loadedEvent = "loaded";
     View.unloadedEvent = "unloaded";

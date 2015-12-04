@@ -6,10 +6,8 @@ var ListPicker = (function (_super) {
     function ListPicker() {
         _super.call(this);
         this._ios = new UIPickerView();
-        var dataSource = ListPickerDataSource.new().initWithOwner(this);
-        this._dataSource = dataSource;
-        this._ios.dataSource = this._dataSource;
-        this._delegate = ListPickerDelegateImpl.new().initWithOwner(this);
+        this._ios.dataSource = this._dataSource = ListPickerDataSource.initWithOwner(new WeakRef(this));
+        this._delegate = ListPickerDelegateImpl.initWithOwner(new WeakRef(this));
     }
     ListPicker.prototype.onLoaded = function () {
         _super.prototype.onLoaded.call(this);
@@ -46,18 +44,17 @@ var ListPickerDataSource = (function (_super) {
     function ListPickerDataSource() {
         _super.apply(this, arguments);
     }
-    ListPickerDataSource.new = function () {
-        return _super.new.call(this);
-    };
-    ListPickerDataSource.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        return this;
+    ListPickerDataSource.initWithOwner = function (owner) {
+        var dataSource = ListPickerDataSource.new();
+        dataSource._owner = owner;
+        return dataSource;
     };
     ListPickerDataSource.prototype.numberOfComponentsInPickerView = function (pickerView) {
         return 1;
     };
     ListPickerDataSource.prototype.pickerViewNumberOfRowsInComponent = function (pickerView, component) {
-        return this._owner.items ? this._owner.items.length : 0;
+        var owner = this._owner.get();
+        return (owner && owner.items) ? owner.items.length : 0;
     };
     ListPickerDataSource.ObjCProtocols = [UIPickerViewDataSource];
     return ListPickerDataSource;
@@ -67,22 +64,22 @@ var ListPickerDelegateImpl = (function (_super) {
     function ListPickerDelegateImpl() {
         _super.apply(this, arguments);
     }
-    ListPickerDelegateImpl.new = function () {
-        return _super.new.call(this);
-    };
-    ListPickerDelegateImpl.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        return this;
+    ListPickerDelegateImpl.initWithOwner = function (owner) {
+        var delegate = ListPickerDelegateImpl.new();
+        delegate._owner = owner;
+        return delegate;
     };
     ListPickerDelegateImpl.prototype.pickerViewTitleForRowForComponent = function (pickerView, row, component) {
-        if (this._owner) {
-            return this._owner._getItemAsString(row);
+        var owner = this._owner.get();
+        if (owner) {
+            return owner._getItemAsString(row);
         }
         return row.toString();
     };
     ListPickerDelegateImpl.prototype.pickerViewDidSelectRowInComponent = function (pickerView, row, component) {
-        if (this._owner) {
-            this._owner._onPropertyChangedFromNative(common.ListPicker.selectedIndexProperty, row);
+        var owner = this._owner.get();
+        if (owner) {
+            owner._onPropertyChangedFromNative(common.ListPicker.selectedIndexProperty, row);
         }
     };
     ListPickerDelegateImpl.ObjCProtocols = [UIPickerViewDelegate];

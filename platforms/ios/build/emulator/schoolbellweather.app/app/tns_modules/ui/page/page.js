@@ -11,28 +11,24 @@ var UIViewControllerImpl = (function (_super) {
     function UIViewControllerImpl() {
         _super.apply(this, arguments);
     }
-    UIViewControllerImpl.new = function () {
-        return _super.new.call(this);
-    };
-    UIViewControllerImpl.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        this.automaticallyAdjustsScrollViewInsets = false;
-        return this;
-    };
-    UIViewControllerImpl.prototype.didRotateFromInterfaceOrientation = function (fromInterfaceOrientation) {
-        trace.write(this._owner + " didRotateFromInterfaceOrientation(" + fromInterfaceOrientation + ")", trace.categories.ViewHierarchy);
-    };
-    UIViewControllerImpl.prototype.viewDidLoad = function () {
-        trace.write(this._owner + " viewDidLoad", trace.categories.ViewHierarchy);
+    UIViewControllerImpl.initWithOwner = function (owner) {
+        var controller = UIViewControllerImpl.new();
+        controller._owner = owner;
+        controller.automaticallyAdjustsScrollViewInsets = false;
+        return controller;
     };
     UIViewControllerImpl.prototype.viewDidLayoutSubviews = function () {
-        trace.write(this._owner + " viewDidLayoutSubviews, isLoaded = " + this._owner.isLoaded, trace.categories.ViewHierarchy);
-        if (!this._owner.isLoaded) {
+        var owner = this._owner.get();
+        if (!owner) {
             return;
         }
-        if (this._owner._isModal) {
+        trace.write(owner + " viewDidLayoutSubviews, isLoaded = " + owner.isLoaded, trace.categories.ViewHierarchy);
+        if (!owner.isLoaded) {
+            return;
+        }
+        if (owner._isModal) {
             var isTablet = platform_1.device.deviceType === enums_1.DeviceType.Tablet;
-            var isFullScreen = !this._owner._UIModalPresentationFormSheet || !isTablet;
+            var isFullScreen = !owner._UIModalPresentationFormSheet || !isTablet;
             var frame = isFullScreen ? UIScreen.mainScreen().bounds : this.view.frame;
             var origin = frame.origin;
             var size = frame.size;
@@ -51,15 +47,15 @@ var UIViewControllerImpl = (function (_super) {
             var bottom = height;
             var statusBarHeight = uiUtils.ios.getStatusBarHeight();
             var statusBarVisible = !UIApplication.sharedApplication().statusBarHidden;
-            var backgroundSpanUnderStatusBar = this._owner.backgroundSpanUnderStatusBar;
+            var backgroundSpanUnderStatusBar = owner.backgroundSpanUnderStatusBar;
             if (statusBarVisible && !backgroundSpanUnderStatusBar) {
                 height -= statusBarHeight;
             }
             var widthSpec = utils.layout.makeMeasureSpec(width, mode);
             var heightSpec = utils.layout.makeMeasureSpec(height, mode);
-            view_1.View.measureChild(null, this._owner, widthSpec, heightSpec);
+            view_1.View.measureChild(null, owner, widthSpec, heightSpec);
             var top_1 = ((backgroundSpanUnderStatusBar && isFullScreen) || utils.ios.MajorVersion < 8 || !isFullScreen) ? 0 : statusBarHeight;
-            view_1.View.layoutChild(null, this._owner, 0, top_1, width, bottom);
+            view_1.View.layoutChild(null, owner, 0, top_1, width, bottom);
             if (utils.ios.MajorVersion < 8) {
                 if (!backgroundSpanUnderStatusBar && (!isTablet || isFullScreen)) {
                     if (utils.ios.isLandscape() && !superViewRotationRadians) {
@@ -70,23 +66,37 @@ var UIViewControllerImpl = (function (_super) {
                     }
                 }
             }
-            trace.write(this._owner + ", native frame = " + NSStringFromCGRect(this.view.frame), trace.categories.Layout);
+            trace.write(owner + ", native frame = " + NSStringFromCGRect(this.view.frame), trace.categories.Layout);
         }
         else {
-            this._owner._updateLayout();
+            owner._updateLayout();
         }
     };
     UIViewControllerImpl.prototype.viewWillAppear = function () {
-        trace.write(this._owner + " viewWillAppear", trace.categories.Navigation);
-        this._owner._enableLoadedEvents = true;
-        this._owner.onLoaded();
-        this._owner._enableLoadedEvents = false;
+        var owner = this._owner.get();
+        if (!owner) {
+            return;
+        }
+        trace.write(owner + " viewWillAppear", trace.categories.Navigation);
+        owner._enableLoadedEvents = true;
+        if (!owner._isModal) {
+            owner._delayLoadedEvent = true;
+        }
+        owner.onLoaded();
+        owner._enableLoadedEvents = false;
     };
     UIViewControllerImpl.prototype.viewDidDisappear = function () {
-        trace.write(this._owner + " viewDidDisappear", trace.categories.Navigation);
-        this._owner._enableLoadedEvents = true;
-        this._owner.onUnloaded();
-        this._owner._enableLoadedEvents = false;
+        var owner = this._owner.get();
+        if (!owner) {
+            return;
+        }
+        trace.write(owner + " viewDidDisappear", trace.categories.Navigation);
+        if (owner.modal) {
+            return;
+        }
+        owner._enableLoadedEvents = true;
+        owner.onUnloaded();
+        owner._enableLoadedEvents = false;
     };
     return UIViewControllerImpl;
 })(UIViewController);
@@ -96,7 +106,7 @@ var Page = (function (_super) {
         _super.call(this, options);
         this._isModal = false;
         this._UIModalPresentationFormSheet = false;
-        this._ios = UIViewControllerImpl.new().initWithOwner(this);
+        this._ios = UIViewControllerImpl.initWithOwner(new WeakRef(this));
     }
     Page.prototype.requestLayout = function () {
         _super.prototype.requestLayout.call(this);
@@ -113,6 +123,13 @@ var Page = (function (_super) {
         if (this._enableLoadedEvents) {
             _super.prototype.onLoaded.call(this);
         }
+        this._updateActionBar(false);
+    };
+    Page.prototype.notify = function (data) {
+        if (data.eventName === view_1.View.loadedEvent && this._delayLoadedEvent) {
+            return;
+        }
+        _super.prototype.notify.call(this, data);
     };
     Page.prototype.onUnloaded = function () {
         if (this._enableLoadedEvents) {
@@ -180,6 +197,7 @@ var Page = (function (_super) {
         this._UIModalPresentationFormSheet = false;
         parent.requestLayout();
         parent._ios.dismissModalViewControllerAnimated(false);
+        _super.prototype._hideNativeModalView.call(this, parent);
     };
     Page.prototype._updateActionBar = function (hidden) {
         var frame = this.frame;

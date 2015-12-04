@@ -8,31 +8,30 @@ var UIGestureRecognizerImpl = (function (_super) {
     function UIGestureRecognizerImpl() {
         _super.apply(this, arguments);
     }
-    UIGestureRecognizerImpl.new = function () {
-        return _super.new.call(this);
-    };
-    UIGestureRecognizerImpl.prototype.initWithOwnerTypeCallback = function (owner, type, callback, thisArg) {
-        this._owner = owner;
-        this._type = type;
+    UIGestureRecognizerImpl.initWithOwnerTypeCallback = function (owner, type, callback, thisArg) {
+        var handler = UIGestureRecognizerImpl.new();
+        handler._owner = owner;
+        handler._type = type;
         if (callback) {
-            this._callback = callback;
+            handler._callback = callback;
         }
         if (thisArg) {
-            this._context = thisArg;
+            handler._context = thisArg;
         }
-        return this;
+        return handler;
     };
     UIGestureRecognizerImpl.prototype.recognize = function (recognizer) {
-        var callback = this._callback ? this._callback : this._owner.callback;
-        var type = this._type;
-        var target = this._owner.target;
+        var owner = this._owner.get();
+        var callback = this._callback ? this._callback : (owner ? owner.callback : null);
+        var typeParam = this._type;
+        var target = owner ? owner.target : undefined;
         var args = {
-            type: type,
+            type: typeParam,
             view: target,
             ios: recognizer,
             android: undefined,
-            object: view,
-            eventName: definition.toString(type),
+            object: target,
+            eventName: definition.toString(typeParam),
         };
         if (callback) {
             callback.call(this._context, args);
@@ -169,7 +168,7 @@ var GesturesObserver = (function (_super) {
 })(common.GesturesObserver);
 exports.GesturesObserver = GesturesObserver;
 function _createUIGestureRecognizerTarget(owner, type, callback, thisArg) {
-    return UIGestureRecognizerImpl.new().initWithOwnerTypeCallback(owner, type, callback, thisArg);
+    return UIGestureRecognizerImpl.initWithOwnerTypeCallback(new WeakRef(owner), type, callback, thisArg);
 }
 function _getUIGestureRecognizerType(type) {
     var nativeType = null;
@@ -196,6 +195,20 @@ function _getUIGestureRecognizerType(type) {
     }
     return nativeType;
 }
+function getState(recognizer) {
+    if (recognizer.state === UIGestureRecognizerState.UIGestureRecognizerStateBegan) {
+        return common.GestureStateTypes.began;
+    }
+    else if (recognizer.state === UIGestureRecognizerState.UIGestureRecognizerStateCancelled) {
+        return common.GestureStateTypes.cancelled;
+    }
+    else if (recognizer.state === UIGestureRecognizerState.UIGestureRecognizerStateChanged) {
+        return common.GestureStateTypes.changed;
+    }
+    else if (recognizer.state === UIGestureRecognizerState.UIGestureRecognizerStateEnded) {
+        return common.GestureStateTypes.ended;
+    }
+}
 function _getSwipeDirection(direction) {
     if (direction === UISwipeGestureRecognizerDirection.UISwipeGestureRecognizerDirectionDown) {
         return definition.SwipeDirection.down;
@@ -219,7 +232,8 @@ function _getPinchData(args) {
         android: undefined,
         scale: recognizer.scale,
         object: args.view,
-        eventName: definition.toString(args.type)
+        eventName: definition.toString(args.type),
+        state: getState(recognizer)
     };
 }
 function _getSwipeData(args) {
@@ -231,7 +245,8 @@ function _getSwipeData(args) {
         android: undefined,
         direction: _getSwipeDirection(recognizer.direction),
         object: args.view,
-        eventName: definition.toString(args.type)
+        eventName: definition.toString(args.type),
+        state: getState(recognizer)
     };
 }
 function _getPanData(args, view) {
@@ -244,7 +259,8 @@ function _getPanData(args, view) {
         deltaX: recognizer.translationInView(view).x,
         deltaY: recognizer.translationInView(view).y,
         object: args.view,
-        eventName: definition.toString(args.type)
+        eventName: definition.toString(args.type),
+        state: getState(recognizer)
     };
 }
 function _getRotationData(args) {
@@ -256,6 +272,7 @@ function _getRotationData(args) {
         android: undefined,
         rotation: recognizer.rotation * (180.0 / Math.PI),
         object: args.view,
-        eventName: definition.toString(args.type)
+        eventName: definition.toString(args.type),
+        state: getState(recognizer)
     };
 }

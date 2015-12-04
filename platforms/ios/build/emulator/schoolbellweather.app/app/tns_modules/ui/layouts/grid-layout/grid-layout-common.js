@@ -245,11 +245,11 @@ var GridLayout = (function (_super) {
     };
     GridLayout.prototype._applyXmlAttribute = function (attributeName, attributeValue) {
         if (attributeName === "columns") {
-            this.setColumns(attributeValue);
+            this._setColumns(attributeValue);
             return true;
         }
         else if (attributeName === "rows") {
-            this.setRows(attributeValue);
+            this._setRows(attributeValue);
             return true;
         }
         return _super.prototype._applyXmlAttribute.call(this, attributeName, attributeValue);
@@ -319,11 +319,11 @@ var GridLayout = (function (_super) {
         }
         throw new Error("Element is not View or its descendant.");
     };
-    GridLayout.prototype.setColumns = function (value) {
+    GridLayout.prototype._setColumns = function (value) {
         this._cols = GridLayout.parseItemSpecs(value);
         this.invalidate();
     };
-    GridLayout.prototype.setRows = function (value) {
+    GridLayout.prototype._setRows = function (value) {
         this._rows = GridLayout.parseItemSpecs(value);
         this.invalidate();
     };

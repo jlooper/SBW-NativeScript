@@ -5,15 +5,16 @@ var TapHandlerImpl = (function (_super) {
     function TapHandlerImpl() {
         _super.apply(this, arguments);
     }
-    TapHandlerImpl.new = function () {
-        return _super.new.call(this);
-    };
-    TapHandlerImpl.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        return this;
+    TapHandlerImpl.initWithOwner = function (owner) {
+        var handler = TapHandlerImpl.new();
+        handler._owner = owner;
+        return handler;
     };
     TapHandlerImpl.prototype.tap = function (args) {
-        this._owner._emit(common.Button.tapEvent);
+        var owner = this._owner.get();
+        if (owner) {
+            owner._emit(common.Button.tapEvent);
+        }
     };
     TapHandlerImpl.ObjCExposedMethods = {
         "tap": { returns: interop.types.void, params: [interop.types.id] }
@@ -27,7 +28,7 @@ var Button = (function (_super) {
         var _this = this;
         _super.call(this);
         this._ios = UIButton.buttonWithType(UIButtonType.UIButtonTypeSystem);
-        this._tapHandler = TapHandlerImpl.new().initWithOwner(this);
+        this._tapHandler = TapHandlerImpl.initWithOwner(new WeakRef(this));
         this._ios.addTargetActionForControlEvents(this._tapHandler, "tap", UIControlEvents.UIControlEventTouchUpInside);
         this._stateChangedHandler = new stateChanged.ControlStateChangeListener(this._ios, function (s) {
             _this._goToVisualState(s);

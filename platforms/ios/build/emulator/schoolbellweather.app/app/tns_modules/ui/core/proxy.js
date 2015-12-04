@@ -2,6 +2,7 @@ var observable = require("data/observable");
 var bindable = require("ui/core/bindable");
 var dependencyObservable = require("ui/core/dependency-observable");
 var types = require("utils/types");
+var platform = require("platform");
 var PropertyMetadata = (function (_super) {
     __extends(PropertyMetadata, _super);
     function PropertyMetadata(defaultValue, options, onChanged, onValidateValue, onSetNativeValue) {
@@ -65,7 +66,7 @@ var ProxyObject = (function (_super) {
         if (this._updatingJSPropertiesDict[property.name]) {
             return;
         }
-        if (global.android && !this.android) {
+        if (platform.device.os === platform.platformNames.android && !this.android) {
             return;
         }
         var metadata = property.metadata;

@@ -33,7 +33,14 @@ function onRequestComplete(requestId, result) {
     callbacks.resolveCallback({
         content: {
             raw: result.raw,
-            toString: function () { return result.responseAsString; },
+            toString: function () {
+                if (types.isString(result.responseAsString)) {
+                    return result.responseAsString;
+                }
+                else {
+                    throw new Error("Response content may not be converted to string");
+                }
+            },
             toJSON: function () { return utils.parseJSON(result.responseAsString); },
             toImage: function () {
                 return new Promise(function (resolveImage, rejectImage) {

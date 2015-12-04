@@ -16,7 +16,6 @@ function _getReachabilityFlags(host) {
     var reachability = _createReachability(host);
     var flagsRef = new interop.Reference();
     var gotFlags = SCNetworkReachabilityGetFlags(reachability, flagsRef);
-    CFRelease(reachability);
     if (!gotFlags) {
         return null;
     }
@@ -66,7 +65,6 @@ exports.startMonitoring = startMonitoring;
 function stopMonitoring() {
     if (_monitorReachabilityRef) {
         SCNetworkReachabilityUnscheduleFromRunLoop(_monitorReachabilityRef, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-        CFRelease(_monitorReachabilityRef);
         _monitorReachabilityRef = undefined;
         _connectionTypeChangedCallback = undefined;
         ;

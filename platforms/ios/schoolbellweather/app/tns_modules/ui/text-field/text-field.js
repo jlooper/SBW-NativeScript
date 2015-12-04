@@ -12,41 +12,58 @@ var UITextFieldDelegateImpl = (function (_super) {
     function UITextFieldDelegateImpl() {
         _super.apply(this, arguments);
     }
-    UITextFieldDelegateImpl.new = function () {
-        return _super.new.call(this);
-    };
-    UITextFieldDelegateImpl.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        return this;
+    UITextFieldDelegateImpl.initWithOwner = function (owner) {
+        var delegate = UITextFieldDelegateImpl.new();
+        delegate._owner = owner;
+        return delegate;
     };
     UITextFieldDelegateImpl.prototype.textFieldShouldBeginEditing = function (textField) {
         this.firstEdit = true;
-        return this._owner.editable;
+        var owner = this._owner.get();
+        if (owner) {
+            return owner.editable;
+        }
+        return true;
     };
     UITextFieldDelegateImpl.prototype.textFieldDidEndEditing = function (textField) {
-        if (this._owner.updateTextTrigger === enums.UpdateTextTrigger.focusLost) {
-            this._owner._onPropertyChangedFromNative(textBase.TextBase.textProperty, textField.text);
+        var owner = this._owner.get();
+        if (owner) {
+            if (owner.updateTextTrigger === enums.UpdateTextTrigger.focusLost) {
+                owner._onPropertyChangedFromNative(textBase.TextBase.textProperty, textField.text);
+            }
+            owner.dismissSoftInput();
         }
-        this._owner.dismissSoftInput();
     };
     UITextFieldDelegateImpl.prototype.textFieldShouldClear = function (textField) {
         this.firstEdit = false;
-        this._owner._onPropertyChangedFromNative(textBase.TextBase.textProperty, "");
+        var owner = this._owner.get();
+        if (owner) {
+            owner._onPropertyChangedFromNative(textBase.TextBase.textProperty, "");
+        }
         return true;
     };
     UITextFieldDelegateImpl.prototype.textFieldShouldReturn = function (textField) {
-        this._owner.dismissSoftInput();
-        this._owner.notify({ eventName: TextField.returnPressEvent, object: this._owner });
+        var owner = this._owner.get();
+        if (owner) {
+            owner.dismissSoftInput();
+            owner.notify({ eventName: TextField.returnPressEvent, object: owner });
+        }
         return true;
     };
     UITextFieldDelegateImpl.prototype.textFieldShouldChangeCharactersInRangeReplacementString = function (textField, range, replacementString) {
-        if (this._owner.updateTextTrigger === enums.UpdateTextTrigger.textChanged) {
-            if (textField.secureTextEntry && this.firstEdit) {
-                this._owner._onPropertyChangedFromNative(textBase.TextBase.textProperty, replacementString);
-            }
-            else {
-                var newText = NSString.alloc().initWithString(textField.text).stringByReplacingCharactersInRangeWithString(range, replacementString);
-                this._owner._onPropertyChangedFromNative(textBase.TextBase.textProperty, newText);
+        var owner = this._owner.get();
+        if (owner) {
+            var r = textField.selectedTextRange;
+            owner.style._updateTextDecoration();
+            textField.selectedTextRange = r;
+            if (owner.updateTextTrigger === enums.UpdateTextTrigger.textChanged) {
+                if (textField.secureTextEntry && this.firstEdit) {
+                    owner._onPropertyChangedFromNative(textBase.TextBase.textProperty, replacementString);
+                }
+                else {
+                    var newText = NSString.alloc().initWithString(textField.text).stringByReplacingCharactersInRangeWithString(range, replacementString);
+                    owner._onPropertyChangedFromNative(textBase.TextBase.textProperty, newText);
+                }
             }
         }
         this.firstEdit = false;
@@ -60,18 +77,18 @@ var UITextFieldImpl = (function (_super) {
     function UITextFieldImpl() {
         _super.apply(this, arguments);
     }
-    UITextFieldImpl.new = function () {
-        return _super.new.call(this);
-    };
-    UITextFieldImpl.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        return this;
+    UITextFieldImpl.initWithOwner = function (owner) {
+        var handler = UITextFieldImpl.new();
+        handler._owner = owner;
+        return handler;
     };
     UITextFieldImpl.prototype._getTextRectForBounds = function (bounds) {
-        if (!this._owner) {
+        var owner = this._owner ? this._owner.get() : null;
+        if (!owner) {
             return bounds;
         }
-        return CGRectMake(this._owner.borderWidth + this._owner.style.paddingLeft, this._owner.borderWidth + this._owner.style.paddingTop, bounds.size.width - (this._owner.borderWidth + this._owner.style.paddingLeft + this._owner.style.paddingRight + this._owner.borderWidth), bounds.size.height - (this._owner.borderWidth + this._owner.style.paddingTop + this._owner.style.paddingBottom + this._owner.borderWidth));
+        var size = bounds.size;
+        return CGRectMake(owner.borderWidth + owner.style.paddingLeft, owner.borderWidth + owner.style.paddingTop, size.width - (owner.borderWidth + owner.style.paddingLeft + owner.style.paddingRight + owner.borderWidth), size.height - (owner.borderWidth + owner.style.paddingTop + owner.style.paddingBottom + owner.borderWidth));
     };
     UITextFieldImpl.prototype.textRectForBounds = function (bounds) {
         return this._getTextRectForBounds(bounds);
@@ -85,8 +102,8 @@ var TextField = (function (_super) {
     __extends(TextField, _super);
     function TextField() {
         _super.call(this);
-        this._ios = UITextFieldImpl.new().initWithOwner(this);
-        this._delegate = UITextFieldDelegateImpl.new().initWithOwner(this);
+        this._ios = UITextFieldImpl.initWithOwner(new WeakRef(this));
+        this._delegate = UITextFieldDelegateImpl.initWithOwner(new WeakRef(this));
     }
     TextField.prototype.onLoaded = function () {
         _super.prototype.onLoaded.call(this);

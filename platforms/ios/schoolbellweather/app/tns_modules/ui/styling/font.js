@@ -1,6 +1,7 @@
 var enums = require("ui/enums");
 var common = require("./font-common");
 var fs = require("file-system");
+var trace = require("trace");
 var DEFAULT_SERIF = "Times New Roman";
 var DEFAULT_SANS_SERIF = "Helvetica";
 var DEFAULT_MONOSPACE = "Courier New";
@@ -130,9 +131,27 @@ var ios;
         }
         var error = new interop.Reference();
         if (!CTFontManagerRegisterGraphicsFont(font, error)) {
-            throw new Error(CFErrorCopyDescription(error.value));
+            trace.write("Error occur while registering font: " + CFErrorCopyDescription(error.value), trace.categories.Error, trace.messageType.error);
         }
         areSystemFontSetsValid = false;
     }
     ios.registerFont = registerFont;
 })(ios = exports.ios || (exports.ios = {}));
+function registerCustomFonts() {
+    var fontsFolderPath = fs.path.join(__dirname.substring(0, __dirname.indexOf("/tns_modules")), "fonts");
+    if (fs.Folder.exists(fontsFolderPath)) {
+        var fontsFolder = fs.Folder.fromPath(fontsFolderPath);
+        var onEachEntityFunc = function (fileEntity) {
+            if (fs.Folder.exists(fs.path.join(fontsFolderPath, fileEntity.name))) {
+                return true;
+            }
+            if (fileEntity instanceof fs.File &&
+                (fileEntity.extension === ".ttf" || fileEntity.extension === ".otf")) {
+                ios.registerFont(fileEntity.name);
+            }
+            return true;
+        };
+        fontsFolder.eachEntity(onEachEntityFunc);
+    }
+}
+registerCustomFonts();

@@ -1,38 +1,37 @@
 var common = require("./label-common");
 var utils = require("utils/utils");
 var viewModule = require("ui/core/view");
-function onTextWrapPropertyChanged(data) {
-    var label = data.object;
-    if (data.newValue) {
-        label.ios.lineBreakMode = NSLineBreakMode.NSLineBreakByWordWrapping;
-        label.ios.numberOfLines = 0;
-    }
-    else {
-        label.ios.lineBreakMode = NSLineBreakMode.NSLineBreakByTruncatingTail;
-        label.ios.numberOfLines = 1;
-    }
-}
-common.Label.textWrapProperty.metadata.onSetNativeValue = onTextWrapPropertyChanged;
+var enums = require("ui/enums");
 global.moduleMerge(common, exports);
 var UILabelImpl = (function (_super) {
     __extends(UILabelImpl, _super);
     function UILabelImpl() {
         _super.apply(this, arguments);
     }
-    UILabelImpl.new = function () {
-        return _super.new.call(this);
-    };
-    UILabelImpl.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        return this;
+    UILabelImpl.initWithOwner = function (owner) {
+        var labelImpl = UILabelImpl.new();
+        labelImpl._owner = owner;
+        return labelImpl;
     };
     UILabelImpl.prototype.textRectForBoundsLimitedToNumberOfLines = function (bounds, numberOfLines) {
         var rect = _super.prototype.textRectForBoundsLimitedToNumberOfLines.call(this, bounds, numberOfLines);
-        var textRect = CGRectMake(-(this._owner.borderWidth + this._owner.style.paddingLeft), -(this._owner.borderWidth + this._owner.style.paddingTop), rect.size.width + (this._owner.borderWidth + this._owner.style.paddingLeft + this._owner.style.paddingRight + this._owner.borderWidth), rect.size.height + (this._owner.borderWidth + this._owner.style.paddingTop + this._owner.style.paddingBottom + this._owner.borderWidth));
-        return textRect;
+        var owner = this._owner.get();
+        if (owner) {
+            var size = rect.size;
+            rect = CGRectMake(-(owner.borderWidth + owner.style.paddingLeft), -(owner.borderWidth + owner.style.paddingTop), size.width + (owner.borderWidth + owner.style.paddingLeft + owner.style.paddingRight + owner.borderWidth), size.height + (owner.borderWidth + owner.style.paddingTop + owner.style.paddingBottom + owner.borderWidth));
+        }
+        return rect;
     };
     UILabelImpl.prototype.drawTextInRect = function (rect) {
-        var textRect = CGRectMake((this._owner.borderWidth + this._owner.style.paddingLeft), (this._owner.borderWidth + this._owner.style.paddingTop), rect.size.width - (this._owner.borderWidth + this._owner.style.paddingLeft + this._owner.style.paddingRight + this._owner.borderWidth), rect.size.height - (this._owner.borderWidth + this._owner.style.paddingTop + this._owner.style.paddingBottom + this._owner.borderWidth));
+        var owner = this._owner.get();
+        var textRect;
+        var size = rect.size;
+        if (owner) {
+            textRect = CGRectMake((owner.borderWidth + owner.style.paddingLeft), (owner.borderWidth + owner.style.paddingTop), size.width - (owner.borderWidth + owner.style.paddingLeft + owner.style.paddingRight + owner.borderWidth), size.height - (owner.borderWidth + owner.style.paddingTop + owner.style.paddingBottom + owner.borderWidth));
+        }
+        else {
+            textRect = CGRectMake(0, 0, size.width, size.height);
+        }
         _super.prototype.drawTextInRect.call(this, textRect);
     };
     return UILabelImpl;
@@ -41,7 +40,7 @@ var Label = (function (_super) {
     __extends(Label, _super);
     function Label(options) {
         _super.call(this, options);
-        this._ios = UILabelImpl.new().initWithOwner(this);
+        this._ios = UILabelImpl.initWithOwner(new WeakRef(this));
         this._ios.userInteractionEnabled = true;
     }
     Object.defineProperty(Label.prototype, "ios", {
@@ -73,7 +72,7 @@ var Label = (function (_super) {
             }
             var nativeSize = nativeView.sizeThatFits(CGSizeMake(width, height));
             var labelWidth = nativeSize.width;
-            if (!this.textWrap) {
+            if (!this.textWrap && this.style.whiteSpace !== enums.WhiteSpace.nowrap) {
                 labelWidth = Math.min(labelWidth, width);
             }
             var measureWidth = Math.max(labelWidth, this.minWidth);

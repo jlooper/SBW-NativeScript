@@ -10,13 +10,10 @@ var definition = require("ui/gestures");
 })(exports.GestureTypes || (exports.GestureTypes = {}));
 var GestureTypes = exports.GestureTypes;
 (function (GestureStateTypes) {
-    GestureStateTypes[GestureStateTypes["possible"] = 1] = "possible";
-    GestureStateTypes[GestureStateTypes["recognized"] = 2] = "recognized";
-    GestureStateTypes[GestureStateTypes["failed"] = 4] = "failed";
-    GestureStateTypes[GestureStateTypes["cancelled"] = 8] = "cancelled";
-    GestureStateTypes[GestureStateTypes["began"] = 16] = "began";
-    GestureStateTypes[GestureStateTypes["changed"] = 32] = "changed";
-    GestureStateTypes[GestureStateTypes["ended"] = 64] = "ended";
+    GestureStateTypes[GestureStateTypes["cancelled"] = 0] = "cancelled";
+    GestureStateTypes[GestureStateTypes["began"] = 1] = "began";
+    GestureStateTypes[GestureStateTypes["changed"] = 2] = "changed";
+    GestureStateTypes[GestureStateTypes["ended"] = 3] = "ended";
 })(exports.GestureStateTypes || (exports.GestureStateTypes = {}));
 var GestureStateTypes = exports.GestureStateTypes;
 (function (SwipeDirection) {
@@ -119,8 +116,8 @@ var GesturesObserver = (function () {
         if (this.target) {
             var list = this.target.getGestureObservers(this.type);
             if (list && list.length > 0) {
-                for (var i_1 = 0; i_1 < list.length; i_1++) {
-                    if (list[i_1].callback === this.callback) {
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i].callback === this.callback) {
                         break;
                     }
                 }

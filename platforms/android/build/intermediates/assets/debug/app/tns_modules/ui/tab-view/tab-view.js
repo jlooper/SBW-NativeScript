@@ -3,6 +3,7 @@ var trace = require("trace");
 var types = require("utils/types");
 var utils = require("utils/utils");
 var imageSource = require("image-source");
+var color = require("color");
 var VIEWS_STATES = "_viewStates";
 var ACCENT_COLOR = "colorAccent";
 var PRIMARY_COLOR = "colorPrimary";
@@ -113,6 +114,20 @@ var PageChangedListener = (function (_super) {
     };
     return PageChangedListener;
 })(android.support.v4.view.ViewPager.SimpleOnPageChangeListener);
+function selectedColorPropertyChanged(data) {
+    var tabLayout = data.object._getAndroidTabView();
+    if (tabLayout && data.newValue instanceof color.Color) {
+        tabLayout.setSelectedIndicatorColors([data.newValue.android]);
+    }
+}
+common.TabView.selectedColorProperty.metadata.onSetNativeValue = selectedColorPropertyChanged;
+function tabsBackgroundColorPropertyChanged(data) {
+    var tabLayout = data.object._getAndroidTabView();
+    if (tabLayout && data.newValue instanceof color.Color) {
+        tabLayout.setBackgroundColor(data.newValue.android);
+    }
+}
+common.TabView.tabsBackgroundColorProperty.metadata.onSetNativeValue = tabsBackgroundColorPropertyChanged;
 var TabView = (function (_super) {
     __extends(TabView, _super);
     function TabView() {
@@ -224,6 +239,9 @@ var TabView = (function (_super) {
             }
         }
         return result;
+    };
+    TabView.prototype._getAndroidTabView = function () {
+        return this._tabLayout;
     };
     return TabView;
 })(common.TabView);

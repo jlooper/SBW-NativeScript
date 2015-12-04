@@ -10,6 +10,8 @@ var locationManager = require("location").LocationManager;
 var appSettings = require("application-settings");
 var frameModule = require("ui/frame");
 
+//console.log(helpers)
+
 var WeatherModel = new observable.Observable();
 
 if (platformModule.device.os == 'iOS'){
@@ -81,15 +83,17 @@ WeatherModel.getLocation = function(){
     console.log("locationManager is enabled? ",isEnabled)
         if(isEnabled){
 
-        locationModule.getLocation({ maximumAge: 30000, timeout: 1000 }).then(function (location) {                     
-                appSettings.setNumber("lat", location.latitude);
-                appSettings.setNumber("long", location.longitude);                
-                lat = parseFloat(appSettings.getNumber("lat"));
-                long = parseFloat(appSettings.getNumber("long"));
-                WeatherModel.getTodaysWeather(lat,long);
+        locationModule.getLocation({ maximumAge: 30000, timeout: 20000 }).then(function (location) {                     
+                appSettings.setNumber("latitude", location.latitude);
+                appSettings.setNumber("longitude", location.longitude);                
+                latitude = parseFloat(appSettings.getNumber("latitude"));
+                longitude = parseFloat(appSettings.getNumber("longitude"));
+                console.log("latitude, longitude", latitude,longitude)
+                WeatherModel.getTodaysWeather(latitude,longitude);
                 WeatherModel.getDepartureWeather();
             }, function (error) {
                 console.log("there was an error ",error)
+                WeatherModel.set("isLoading",false);
                 var message = 'There was an error finding your location. Please check your settings and refresh this page!';
                 dialogs.alert({title: "Sorry!", message: message, okButtonText: "OK!",});
             });
@@ -114,26 +118,6 @@ WeatherModel.getLocation = function(){
             });
         }
 }
-
-/*WeatherModel.setLocation = function(){
-    
-    locationManager.startLocationMonitoring(function (location) {
-        
-        appSettings.setNumber("lat", location.latitude);
-        appSettings.setNumber("long", location.longitude);
-        
-        lat = parseFloat(appSettings.getNumber("lat"));
-        long = parseFloat(appSettings.getNumber("long"));
-                
-        WeatherModel.getTodaysWeather(lat,long);
-        WeatherModel.getDepartureWeather();
-        
-
-            }, function (error) {
-                var message = error;
-                dialogs.alert({title: "Sorry!", message: message, okButtonText: "OK!",});                
-            });
-}*/
 
 WeatherModel.setTransportation = function(trans){
     appSettings.setString("transportation",'res://'+trans+'')
@@ -173,12 +157,18 @@ WeatherModel.getFahrenheitImage = function(temp,icon){
     }
     else if(temp < 32){
         //snow
-        WeatherModel.set("catImg", 'res://snowbg');
+        if(icon == 'snow'){
+            //rain
+            WeatherModel.set("catImg", 'res://snowbg'); 
+        }
+        else{
+            WeatherModel.set("catImg", 'res://coldbg');
+        }
     }
 }
 WeatherModel.getCelsiusImage = function(temp,icon){
     if(temp >= 21){
-        if(icon == 'iconrain'){
+        if(icon == 'rain'){
             //rain
             WeatherModel.set("catImg", 'res://rainbg');
         }
@@ -188,7 +178,7 @@ WeatherModel.getCelsiusImage = function(temp,icon){
         } 
     }
     else if(temp >= 10 && temp < 21){
-        if(icon == 'iconrain'){
+        if(icon == 'rain'){
             //rain
             WeatherModel.set("catImg", 'res://rainbg');
         }
@@ -198,7 +188,7 @@ WeatherModel.getCelsiusImage = function(temp,icon){
         } 
     }
     else if(temp >= 0 && temp < 10){
-        if(icon == 'iconrain'){
+        if(icon == 'rain'){
             //rain
             WeatherModel.set("catImg", 'res://rainbg'); 
         }
@@ -209,14 +199,22 @@ WeatherModel.getCelsiusImage = function(temp,icon){
     }
     else if(temp < 0){
         //snow
-        WeatherModel.set("catImg", 'res://snowbg');
+        if(icon == 'snow'){
+            //rain
+            WeatherModel.set("catImg", 'res://snowbg'); 
+        }
+        else{
+            WeatherModel.set("catImg", 'res://coldbg');
+        }
     }
 }
-WeatherModel.getTodaysWeather = function(lat,long) {
+WeatherModel.getTodaysWeather = function(latitude,longitude) {
+
+
 
     //check whether we need celsius or fahrenheit
     
-    var url = 'https://api.forecast.io/forecast/' + forecast_key + '/' + lat + ',' + long + '';
+    var url = 'https://api.forecast.io/forecast/' + forecast_key + '/' + latitude + ',' + longitude + '';
 
     mode = appSettings.getString("mode"); 
     
@@ -234,15 +232,9 @@ WeatherModel.getTodaysWeather = function(lat,long) {
             
             var obj = response.content.toJSON();
             var tmpCurrTemp = JSON.stringify(obj.currently.temperature).toString().split('.');
-            var tmp_split = tmpCurrTemp[0]
-            var tmpIcon = eval(JSON.stringify(obj.currently.icon))
-
-            //get the zone offset
-            var zone = obj.timezone;
+            var tmp_split = tmpCurrTemp[0];
+            var nowIcon = eval(JSON.stringify(obj.currently.icon));
             
-            //replace all occurrences of '-'
-            var tmpNowIcon = tmpIcon.split("-").join("");
-
             var five_day_summary = JSON.stringify(obj.daily.summary);
             WeatherModel.set("weeklySummary",JSON.parse(five_day_summary));            
             
@@ -250,8 +242,6 @@ WeatherModel.getTodaysWeather = function(lat,long) {
                 WeatherModel.set("day"+i+"time",moment.utc(obj.daily.data[i].time, 'X').format('dddd'));
                 WeatherModel.set("day"+i+"summary",obj.daily.data[i].summary);
                 var ni = obj.daily.data[i].icon;
-                var nowIcon = ni.split("-").join("");
-                WeatherModel.set("day"+i+"icon",'res://'+nowIcon+'');
                 var tmin = JSON.stringify(obj.daily.data[i].temperatureMin).toString().split('.');
                 var tmax = JSON.stringify(obj.daily.data[i].temperatureMax).toString().split('.');
                 var min = tmin[0];
@@ -264,16 +254,17 @@ WeatherModel.getTodaysWeather = function(lat,long) {
             for (j = 0; j < obj.hourly.data.length; j++) { 
                 var d = moment.unix(obj.hourly.data[j].time).format('h:ss a');
                 WeatherModel.set("hour"+j+"time",d);
-                var hi = obj.hourly.data[j].icon;
-                var hourIcon = hi.split("-").join("");
-                WeatherModel.set("hour"+j+"icon",'res://'+hourIcon+'');
+                var hourIcon = obj.hourly.data[j].icon;
+                WeatherModel.set("hour"+j+"icon",hourIcon);
                 var thour = JSON.stringify(obj.hourly.data[j].temperature).toString().split('.');
                 var temp = thour[0];
                 WeatherModel.set("hour"+j+"temp",temp);
                 WeatherModel.set("hour"+j+"summary",obj.hourly.data[j].summary);
             }
             WeatherModel.set("currentTemp", tmp_split + ' ' + mode);
-            WeatherModel.set("nowIcon", 'res://'+tmpNowIcon+'');
+            WeatherModel.set("nowIcon", nowIcon);
+            
+            
             //dialogs.alert('We got your weather! You may need to refresh the page.');
             WeatherModel.set("isLoading",false);           
         }, function (e) {
@@ -285,8 +276,8 @@ WeatherModel.getDepartureWeather = function(){
 
 
     //timed departure
-    lat = appSettings.getNumber("lat");
-    long = appSettings.getNumber("long");
+    latitude = appSettings.getNumber("latitude");
+    longitude = appSettings.getNumber("longitude");
     mode = appSettings.getString("mode");
     hour = appSettings.getString("hour");
     minute = appSettings.getString("minute");
@@ -298,7 +289,7 @@ WeatherModel.getDepartureWeather = function(){
     
     console.log("ending departure time is" + departure_time)
     
-    var url = 'https://api.forecast.io/forecast/' + forecast_key + '/' + lat + ',' + long + ',' + departure_time + '';
+    var url = 'https://api.forecast.io/forecast/' + forecast_key + '/' + latitude + ',' + longitude + ',' + departure_time + '';
     if(mode=="C"){
         url = url + "?units=si";
     }
@@ -312,18 +303,17 @@ WeatherModel.getDepartureWeather = function(){
             
             var tmpDepTemp = JSON.stringify(obj.currently.temperature).toString().split('.');
             var tmp_split = tmpDepTemp[0];
-            var di = obj.currently.icon;
-            var tmpDepIcon = di.split("-").join("");
+            var depIcon = eval(JSON.stringify(obj.currently.icon))
             WeatherModel.set("departureTemp", tmp_split + ' ' + mode);
-            WeatherModel.set("departureIcon", 'res://'+tmpDepIcon+'');
+            WeatherModel.set("departureIcon", depIcon);
 
            
             //get the departure background
             if(mode == "F"){
-                WeatherModel.getFahrenheitImage(tmp_split,tmpDepIcon);
+                WeatherModel.getFahrenheitImage(tmp_split,depIcon);
             }
             else{
-                WeatherModel.getCelsiusImage(tmp_split,tmpDepIcon);
+                WeatherModel.getCelsiusImage(tmp_split,depIcon);
             }         
             WeatherModel.set("isLoading",false);           
         }, function (e) {

@@ -10,6 +10,8 @@ var locationManager = require("location").LocationManager;
 var appSettings = require("application-settings");
 var frameModule = require("ui/frame");
 
+//console.log(helpers)
+
 var WeatherModel = new observable.Observable();
 
 if (platformModule.device.os == 'iOS'){
@@ -155,12 +157,18 @@ WeatherModel.getFahrenheitImage = function(temp,icon){
     }
     else if(temp < 32){
         //snow
-        WeatherModel.set("catImg", 'res://snowbg');
+        if(icon == 'snow'){
+            //rain
+            WeatherModel.set("catImg", 'res://snowbg'); 
+        }
+        else{
+            WeatherModel.set("catImg", 'res://coldbg');
+        }
     }
 }
 WeatherModel.getCelsiusImage = function(temp,icon){
     if(temp >= 21){
-        if(icon == 'iconrain'){
+        if(icon == 'rain'){
             //rain
             WeatherModel.set("catImg", 'res://rainbg');
         }
@@ -170,7 +178,7 @@ WeatherModel.getCelsiusImage = function(temp,icon){
         } 
     }
     else if(temp >= 10 && temp < 21){
-        if(icon == 'iconrain'){
+        if(icon == 'rain'){
             //rain
             WeatherModel.set("catImg", 'res://rainbg');
         }
@@ -180,7 +188,7 @@ WeatherModel.getCelsiusImage = function(temp,icon){
         } 
     }
     else if(temp >= 0 && temp < 10){
-        if(icon == 'iconrain'){
+        if(icon == 'rain'){
             //rain
             WeatherModel.set("catImg", 'res://rainbg'); 
         }
@@ -191,10 +199,18 @@ WeatherModel.getCelsiusImage = function(temp,icon){
     }
     else if(temp < 0){
         //snow
-        WeatherModel.set("catImg", 'res://snowbg');
+        if(icon == 'snow'){
+            //rain
+            WeatherModel.set("catImg", 'res://snowbg'); 
+        }
+        else{
+            WeatherModel.set("catImg", 'res://coldbg');
+        }
     }
 }
 WeatherModel.getTodaysWeather = function(latitude,longitude) {
+
+
 
     //check whether we need celsius or fahrenheit
     
@@ -216,15 +232,9 @@ WeatherModel.getTodaysWeather = function(latitude,longitude) {
             
             var obj = response.content.toJSON();
             var tmpCurrTemp = JSON.stringify(obj.currently.temperature).toString().split('.');
-            var tmp_split = tmpCurrTemp[0]
-            var tmpIcon = eval(JSON.stringify(obj.currently.icon))
-
-            //get the zone offset
-            var zone = obj.timezone;
+            var tmp_split = tmpCurrTemp[0];
+            var nowIcon = eval(JSON.stringify(obj.currently.icon));
             
-            //replace all occurrences of '-'
-            var tmpNowIcon = tmpIcon.split("-").join("");
-
             var five_day_summary = JSON.stringify(obj.daily.summary);
             WeatherModel.set("weeklySummary",JSON.parse(five_day_summary));            
             
@@ -232,8 +242,6 @@ WeatherModel.getTodaysWeather = function(latitude,longitude) {
                 WeatherModel.set("day"+i+"time",moment.utc(obj.daily.data[i].time, 'X').format('dddd'));
                 WeatherModel.set("day"+i+"summary",obj.daily.data[i].summary);
                 var ni = obj.daily.data[i].icon;
-                var nowIcon = ni.split("-").join("");
-                WeatherModel.set("day"+i+"icon",'res://'+nowIcon+'');
                 var tmin = JSON.stringify(obj.daily.data[i].temperatureMin).toString().split('.');
                 var tmax = JSON.stringify(obj.daily.data[i].temperatureMax).toString().split('.');
                 var min = tmin[0];
@@ -246,16 +254,17 @@ WeatherModel.getTodaysWeather = function(latitude,longitude) {
             for (j = 0; j < obj.hourly.data.length; j++) { 
                 var d = moment.unix(obj.hourly.data[j].time).format('h:ss a');
                 WeatherModel.set("hour"+j+"time",d);
-                var hi = obj.hourly.data[j].icon;
-                var hourIcon = hi.split("-").join("");
-                WeatherModel.set("hour"+j+"icon",'res://'+hourIcon+'');
+                var hourIcon = obj.hourly.data[j].icon;
+                WeatherModel.set("hour"+j+"icon",hourIcon);
                 var thour = JSON.stringify(obj.hourly.data[j].temperature).toString().split('.');
                 var temp = thour[0];
                 WeatherModel.set("hour"+j+"temp",temp);
                 WeatherModel.set("hour"+j+"summary",obj.hourly.data[j].summary);
             }
             WeatherModel.set("currentTemp", tmp_split + ' ' + mode);
-            WeatherModel.set("nowIcon", 'res://'+tmpNowIcon+'');
+            WeatherModel.set("nowIcon", nowIcon);
+            
+            
             //dialogs.alert('We got your weather! You may need to refresh the page.');
             WeatherModel.set("isLoading",false);           
         }, function (e) {
@@ -294,18 +303,17 @@ WeatherModel.getDepartureWeather = function(){
             
             var tmpDepTemp = JSON.stringify(obj.currently.temperature).toString().split('.');
             var tmp_split = tmpDepTemp[0];
-            var di = obj.currently.icon;
-            var tmpDepIcon = di.split("-").join("");
+            var depIcon = eval(JSON.stringify(obj.currently.icon))
             WeatherModel.set("departureTemp", tmp_split + ' ' + mode);
-            WeatherModel.set("departureIcon", 'res://'+tmpDepIcon+'');
+            WeatherModel.set("departureIcon", depIcon);
 
            
             //get the departure background
             if(mode == "F"){
-                WeatherModel.getFahrenheitImage(tmp_split,tmpDepIcon);
+                WeatherModel.getFahrenheitImage(tmp_split,depIcon);
             }
             else{
-                WeatherModel.getCelsiusImage(tmp_split,tmpDepIcon);
+                WeatherModel.getCelsiusImage(tmp_split,depIcon);
             }         
             WeatherModel.set("isLoading",false);           
         }, function (e) {

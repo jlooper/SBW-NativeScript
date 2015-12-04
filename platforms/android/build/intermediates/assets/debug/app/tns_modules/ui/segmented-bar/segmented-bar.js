@@ -1,5 +1,8 @@
 var common = require("./segmented-bar-common");
 var types = require("utils/types");
+var R_ID_TABS = 0x01020013;
+var R_ID_TABCONTENT = 0x01020011;
+var R_ATTR_STATE_SELECTED = 0x010100a1;
 global.moduleMerge(common, exports);
 function onSelectedIndexPropertyChanged(data) {
     var view = data.object;
@@ -59,7 +62,7 @@ function onItemsPropertyChanged(data) {
                 var vg = tabHost.getTabWidget().getChildTabViewAt(tabIndex);
                 var stateDrawable = new android.graphics.drawable.StateListDrawable();
                 var arr = java.lang.reflect.Array.newInstance(java.lang.Integer.class.getField("TYPE").get(null), 1);
-                arr[0] = android.R.attr.state_selected;
+                arr[0] = R_ATTR_STATE_SELECTED;
                 var colorDrawable = new SegmentedBarColorDrawable(view.selectedBackgroundColor.android);
                 stateDrawable.addState(arr, colorDrawable);
                 stateDrawable.setBounds(0, 15, vg.getRight(), vg.getBottom());
@@ -128,10 +131,10 @@ var SegmentedBar = (function (_super) {
         var tabHostLayout = new android.widget.LinearLayout(this._context);
         tabHostLayout.setOrientation(android.widget.LinearLayout.VERTICAL);
         var tabWidget = new android.widget.TabWidget(this._context);
-        tabWidget.setId(android.R.id.tabs);
+        tabWidget.setId(R_ID_TABS);
         tabHostLayout.addView(tabWidget);
         var frame = new android.widget.FrameLayout(this._context);
-        frame.setId(android.R.id.tabcontent);
+        frame.setId(R_ID_TABCONTENT);
         frame.setVisibility(android.view.View.GONE);
         tabHostLayout.addView(frame);
         this._android.addView(tabHostLayout);
