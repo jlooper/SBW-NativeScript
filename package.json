@@ -8,9 +8,9 @@
 	"author": "Jen Looper <jen.looper@gmail.com> (http://www.ladeezfirstmedia.com)",
 	"license": "MIT",
 	"nativescript": {
-		"id": "com.ladeezfirstmedia.sbw",
+		"id": "com.ladeezfirstmedia.schoolbellweather",
 		"tns-android": {
-			"version": "1.5.0"
+			"version": "1.5.1"
 		},
 		"tns-ios": {
 			"version": "1.5.0"

@@ -1,4 +1,3 @@
-
 var observable = require("data/observable");
 var http = require("http");
 var moment = require("moment");
@@ -16,7 +15,7 @@ var WeatherModel = new observable.Observable();
 
 if (platformModule.device.os == 'iOS'){
 
-    frameModule.topmost().ios.navBarVisibility = "never";
+    //frameModule.topmost().ios.navBarVisibility = "never";
 
     var ll;
 

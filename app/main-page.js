@@ -120,8 +120,6 @@ function navigatedTo(args){
         appSettings.setString("minute", minute);
         
         vmModule.mainViewModel.getDepartureWeather();
-        //var message = 'You have set your departure time.';
-        //dialogs.alert({title: "Departure time set!", message: message, okButtonText: "OK!"});
     });
     
     var busContainer = page.getViewById("busContainer");
