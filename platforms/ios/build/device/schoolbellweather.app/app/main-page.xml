@@ -226,7 +226,7 @@
                   <StackLayout orientation="vertical" class="blue2-container" rows="auto">
                     <Label text="{{ day1time || 'Tomorrow\'s Weather' }}" horizontalAlignment="center" fontAttributes="bold"/>                   
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Image src="{{ day1icon }}" horizontalAlignment="center" class="icon"/>
+                        <Label text="{{ day1icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                     <Label text="{{ day1summary || '' }}" textWrap="true" horizontalAlignment="center"/>
                     <Label text="{{ day1minmax || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
@@ -273,7 +273,7 @@
                   <StackLayout orientation="vertical" class="blue2-container" rows="auto">
                     <Label text="{{ day1time || '' }}" horizontalAlignment="center" fontAttributes="bold"/>                   
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Image src="{{ day1icon }}" horizontalAlignment="center" class="icon"/>
+                        <Label text="{{ day1icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                     <Label text="{{ day1summary || '' }}" textWrap="true" horizontalAlignment="center"/>
                     <Label text="{{ day1minmax || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
@@ -281,7 +281,7 @@
                   <StackLayout orientation="vertical" class="blue2-container">
                     <Label text="{{ day2time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Image src="{{ day2icon }}" horizontalAlignment="center" class="icon"/>
+                        <Label text="{{ day2icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                     <Label text="{{ day2summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
                     <Label text="{{ day2minmax || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
@@ -289,7 +289,7 @@
                   <StackLayout orientation="vertical" class="blue2-container">
                     <Label text="{{ day3time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Image src="{{ day3icon }}" horizontalAlignment="center" class="icon"/>
+                        <Label text="{{ day3icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                     <Label text="{{ day3summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
                     <Label text="{{ day3minmax || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
@@ -297,7 +297,7 @@
                   <StackLayout orientation="vertical" class="blue2-container">
                     <Label text="{{ day4time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Image src="{{ day4icon }}" horizontalAlignment="center" class="icon"/>
+                        <Label text="{{ day4icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                     <Label text="{{ day4summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
                     <Label text="{{ day4minmax || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
@@ -305,7 +305,7 @@
                   <StackLayout orientation="vertical" class="blue2-container">
                     <Label text="{{ day5time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Image src="{{ day5icon }}" horizontalAlignment="center" class="icon"/>
+                        <Label text="{{ day5icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                     <Label text="{{ day5summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
                     <Label text="{{ day5minmax || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 

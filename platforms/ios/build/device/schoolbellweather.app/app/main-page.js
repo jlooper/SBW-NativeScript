@@ -18,8 +18,13 @@ var transportation;
 
 function pageLoaded(args) {
     page = args.object;   
-    page.bindingContext = vmModule.mainViewModel;    
-    getSettings();                  
+    page.bindingContext = vmModule.mainViewModel;
+
+    if (page.ios) {
+        frameModule.topmost().ios.navBarVisibility = "never";
+    }
+    getSettings(); 
+
 }
 
 function getSettings(){

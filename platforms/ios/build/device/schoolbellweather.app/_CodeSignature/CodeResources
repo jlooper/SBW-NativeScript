@@ -4,6 +4,70 @@
 <dict>
 	<key>files</key>
 	<dict>
+		<key>AppIcon29x29@2x.png</key>
+		<data>
+		bAjGSrNke57NHVWieVye2GJkIBc=
+		</data>
+		<key>AppIcon29x29@2x~ipad.png</key>
+		<data>
+		bAjGSrNke57NHVWieVye2GJkIBc=
+		</data>
+		<key>AppIcon29x29@3x.png</key>
+		<data>
+		Gvm6pwhZQnab6p3iau8xynRJLGc=
+		</data>
+		<key>AppIcon29x29~ipad.png</key>
+		<data>
+		Jsag1+p7NPd11D7017hdmytuFQ8=
+		</data>
+		<key>AppIcon40x40@2x.png</key>
+		<data>
+		L2oLoBqDnoO3OLl2cfzRyictIPs=
+		</data>
+		<key>AppIcon40x40@2x~ipad.png</key>
+		<data>
+		L2oLoBqDnoO3OLl2cfzRyictIPs=
+		</data>
+		<key>AppIcon40x40@3x.png</key>
+		<data>
+		nU7INQjTwfhuG299eV+4oGDlgyE=
+		</data>
+		<key>AppIcon40x40~ipad.png</key>
+		<data>
+		jBtahaNXu1yd7tt5Sk7YwjAQ06A=
+		</data>
+		<key>AppIcon60x60@2x.png</key>
+		<data>
+		nU7INQjTwfhuG299eV+4oGDlgyE=
+		</data>
+		<key>AppIcon60x60@3x.png</key>
+		<data>
+		slwbcHnYArdaNJdn1S/pbC0p6LM=
+		</data>
+		<key>AppIcon76x76@2x~ipad.png</key>
+		<data>
+		hYqTeZ+S/saXsm+cH3gerWJmZME=
+		</data>
+		<key>AppIcon76x76~ipad.png</key>
+		<data>
+		4PlsTB1jzx7mM+kR4+x8svdSrxA=
+		</data>
+		<key>Brand Assets-700-Landscape@2x~ipad.png</key>
+		<data>
+		u3qgdWahNOiIfg+dQdQgd+zkw0Q=
+		</data>
+		<key>Brand Assets-700-Landscape~ipad.png</key>
+		<data>
+		Hb9Juis8aZ7Q7utU8bSBB18qGQ0=
+		</data>
+		<key>Brand Assets-700-Portrait@2x~ipad.png</key>
+		<data>
+		oQjYJ3bERqyxokOWaUuudwWJX/c=
+		</data>
+		<key>Brand Assets-700-Portrait~ipad.png</key>
+		<data>
+		zdaprRao0BSwZaPKs35y6iiq1xM=
+		</data>
 		<key>Default-568h@2x.png</key>
 		<data>
 		gAQri/1LNBLUf9IRPXAy5sTujwM=
@@ -66,7 +130,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		T4YotohfeS3/q0zRm3vgt7wy5QA=
+		1bnpEaG1FfB/n9KM3TeVdTtWvW0=
 		</data>
 		<key>PkgInfo</key>
 		<data>
@@ -94,15 +158,15 @@
 		</data>
 		<key>app/main-page.js</key>
 		<data>
-		tciptd38WRLQy9Pa/ZD3UC4hJoo=
+		M+e1IsTR0gT3F+zcZNfslj/JdGM=
 		</data>
 		<key>app/main-page.xml</key>
 		<data>
-		qsuddJc7IMzIBQ+/VPWJfpvfWig=
+		47Mz+csq8Vwhx+sWxwGT8Vf1nnE=
 		</data>
 		<key>app/main-view-model.js</key>
 		<data>
-		ofuLOgqren111XBW6JAYigwXz7A=
+		4HrzW+fumS9VETBLgaLB97dbhs0=
 		</data>
 		<key>app/package.json</key>
 		<data>
@@ -1486,7 +1550,7 @@
 		</data>
 		<key>embedded.mobileprovision</key>
 		<data>
-		8Sv9bZDgoo9zsdK4XCcPgxaTuQA=
+		O1UrwEPiGkeFRsa7Gn/i1L5yRu0=
 		</data>
 		<key>en.lproj/InfoPlist.strings</key>
 		<dict>
@@ -1788,6 +1852,70 @@
 	</dict>
 	<key>files2</key>
 	<dict>
+		<key>AppIcon29x29@2x.png</key>
+		<data>
+		bAjGSrNke57NHVWieVye2GJkIBc=
+		</data>
+		<key>AppIcon29x29@2x~ipad.png</key>
+		<data>
+		bAjGSrNke57NHVWieVye2GJkIBc=
+		</data>
+		<key>AppIcon29x29@3x.png</key>
+		<data>
+		Gvm6pwhZQnab6p3iau8xynRJLGc=
+		</data>
+		<key>AppIcon29x29~ipad.png</key>
+		<data>
+		Jsag1+p7NPd11D7017hdmytuFQ8=
+		</data>
+		<key>AppIcon40x40@2x.png</key>
+		<data>
+		L2oLoBqDnoO3OLl2cfzRyictIPs=
+		</data>
+		<key>AppIcon40x40@2x~ipad.png</key>
+		<data>
+		L2oLoBqDnoO3OLl2cfzRyictIPs=
+		</data>
+		<key>AppIcon40x40@3x.png</key>
+		<data>
+		nU7INQjTwfhuG299eV+4oGDlgyE=
+		</data>
+		<key>AppIcon40x40~ipad.png</key>
+		<data>
+		jBtahaNXu1yd7tt5Sk7YwjAQ06A=
+		</data>
+		<key>AppIcon60x60@2x.png</key>
+		<data>
+		nU7INQjTwfhuG299eV+4oGDlgyE=
+		</data>
+		<key>AppIcon60x60@3x.png</key>
+		<data>
+		slwbcHnYArdaNJdn1S/pbC0p6LM=
+		</data>
+		<key>AppIcon76x76@2x~ipad.png</key>
+		<data>
+		hYqTeZ+S/saXsm+cH3gerWJmZME=
+		</data>
+		<key>AppIcon76x76~ipad.png</key>
+		<data>
+		4PlsTB1jzx7mM+kR4+x8svdSrxA=
+		</data>
+		<key>Brand Assets-700-Landscape@2x~ipad.png</key>
+		<data>
+		u3qgdWahNOiIfg+dQdQgd+zkw0Q=
+		</data>
+		<key>Brand Assets-700-Landscape~ipad.png</key>
+		<data>
+		Hb9Juis8aZ7Q7utU8bSBB18qGQ0=
+		</data>
+		<key>Brand Assets-700-Portrait@2x~ipad.png</key>
+		<data>
+		oQjYJ3bERqyxokOWaUuudwWJX/c=
+		</data>
+		<key>Brand Assets-700-Portrait~ipad.png</key>
+		<data>
+		zdaprRao0BSwZaPKs35y6iiq1xM=
+		</data>
 		<key>Default-568h@2x.png</key>
 		<data>
 		gAQri/1LNBLUf9IRPXAy5sTujwM=
@@ -1870,15 +1998,15 @@
 		</data>
 		<key>app/main-page.js</key>
 		<data>
-		tciptd38WRLQy9Pa/ZD3UC4hJoo=
+		M+e1IsTR0gT3F+zcZNfslj/JdGM=
 		</data>
 		<key>app/main-page.xml</key>
 		<data>
-		qsuddJc7IMzIBQ+/VPWJfpvfWig=
+		47Mz+csq8Vwhx+sWxwGT8Vf1nnE=
 		</data>
 		<key>app/main-view-model.js</key>
 		<data>
-		ofuLOgqren111XBW6JAYigwXz7A=
+		4HrzW+fumS9VETBLgaLB97dbhs0=
 		</data>
 		<key>app/package.json</key>
 		<data>
@@ -3262,7 +3390,7 @@
 		</data>
 		<key>embedded.mobileprovision</key>
 		<data>
-		8Sv9bZDgoo9zsdK4XCcPgxaTuQA=
+		O1UrwEPiGkeFRsa7Gn/i1L5yRu0=
 		</data>
 		<key>en.lproj/InfoPlist.strings</key>
 		<dict>
