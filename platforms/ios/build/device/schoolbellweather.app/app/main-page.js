@@ -1,6 +1,5 @@
 var vmModule = require("./main-view-model");
 var dialogs = require("ui/dialogs");
-//var helpers = require('./helper');
 var appModule = require("application");
 var imageModule = require("ui/image");
 var gesturesModule = require("ui/gestures");
@@ -18,16 +17,7 @@ var mode;
 var transportation;
 
 function pageLoaded(args) {
-    page = args.object; 
-
-    /*var toIcon = {
-        toView: function (value) {
-            return helpers.toIcon(value);
-        }
-    }
-    
-    appModule.resources["toIcon"] = toIcon;*/
-    
+    page = args.object;   
     page.bindingContext = vmModule.mainViewModel;    
     getSettings();                  
 }
@@ -120,8 +110,6 @@ function navigatedTo(args){
         appSettings.setString("minute", minute);
         
         vmModule.mainViewModel.getDepartureWeather();
-        //var message = 'You have set your departure time.';
-        //dialogs.alert({title: "Departure time set!", message: message, okButtonText: "OK!"});
     });
     
     var busContainer = page.getViewById("busContainer");

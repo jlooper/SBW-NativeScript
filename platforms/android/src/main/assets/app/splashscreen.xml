@@ -1,0 +1,9 @@
+<Page xmlns="http://www.nativescript.org/tns.xsd"
+	loaded="load">
+
+		<GridLayout rows="*" id="grid">
+
+			
+		</GridLayout>
+
+</Page>

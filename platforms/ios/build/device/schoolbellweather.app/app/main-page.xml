@@ -20,14 +20,14 @@
               
               <StackLayout class="blue1-container" colSpan="2" row="1">
                 <Label text="Now" row="2" colSpan="2" horizontalAlignment="center" verticalAlignment="center" class="large-text top"/>
-                <Label row="3" horizontalAlignment="center" colSpan="2" text="{{ nowIcon, nowIcon | toIcon() }}" class="weather-icon large-icon"/>
+                <Label row="3" horizontalAlignment="center" colSpan="2" text="{{ nowIcon }}" class="weather-icon large-icon"/>
 
                 <Label text="{{currentTemp || '--°' }}" row="4" colSpan="2" horizontalAlignment="center" class="large-text" />                
               </StackLayout>
               
               <StackLayout class="blue3-container" colSpan="2" row="1" col="2">
                 <Image stretch="none" row="2" col="2" colSpan="2" src="{{ transportation || 'res://bus' }} " horizontalAlignment="center" class="top" verticalAlignment="center" />
-                <Label row="3" horizontalAlignment="center" colSpan="2" text="{{ departureIcon, departureIcon | toIcon() }}" class="weather-icon large-icon"/>
+                <Label row="3" horizontalAlignment="center" colSpan="2" text="{{ departureIcon }}" class="weather-icon large-icon"/>
                 <Label text="{{departureTemp || '--°'}}" row="4" col="2" colSpan="2" horizontalAlignment="center" class="large-text" />
               </StackLayout>
 
@@ -69,7 +69,7 @@
                   <StackLayout orientation="vertical" class="blue2-container">
                     <Label text="{{ hour0time || '' }}" horizontalAlignment="center" fontAttributes="bold"/>
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Label text="{{ hour0icon, hour0icon | toIcon() }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                        <Label text="{{ hour0icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                                      
                     <Label text="{{ hour0temp || '' }}" textWrap="true" horizontalAlignment="center"/>
@@ -79,7 +79,7 @@
                   <StackLayout orientation="vertical" class="blue2-container">
                     <Label text="{{ hour1time || '' }}" horizontalAlignment="center" fontAttributes="bold"/>
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Label text="{{ hour1icon, hour1icon | toIcon() }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                        <Label text="{{ hour1icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>               
                     <Label text="{{ hour1temp || '' }}" textWrap="true" horizontalAlignment="center"/>
                     <Label text="{{ hour1summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
@@ -88,7 +88,7 @@
                   <StackLayout orientation="vertical" class="blue2-container">
                     <Label text="{{ hour2time || '' }}" horizontalAlignment="center" fontAttributes="bold"/>
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Label text="{{ hour2icon, hour2icon | toIcon() }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                        <Label text="{{ hour2icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                     <Label text="{{ hour2temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
                     <Label text="{{ hour2summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
@@ -97,7 +97,7 @@
                   <StackLayout orientation="vertical" class="blue2-container">
                     <Label text="{{ hour3time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Label text="{{ hour3icon, hour3icon | toIcon() }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                        <Label text="{{ hour3icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                     <Label text="{{ hour3temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
                     <Label text="{{ hour3summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
@@ -106,7 +106,7 @@
                   <StackLayout orientation="vertical" class="blue2-container">
                     <Label text="{{ hour4time || '' }}" horizontalAlignment="center" fontAttributes="bold"/>
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Label text="{{ hour4icon, hour4icon | toIcon() }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                        <Label text="{{ hour4icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                     <Label text="{{ hour4temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
                     <Label text="{{ hour4summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
@@ -115,7 +115,7 @@
                   <StackLayout orientation="vertical" class="blue2-container">
                     <Label text="{{ hour5time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Label text="{{ hour5icon, hour5icon | toIcon() }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                        <Label text="{{ hour5icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                     <Label text="{{ hour5temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
                     <Label text="{{ hour5summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
@@ -124,7 +124,7 @@
                   <StackLayout orientation="vertical" class="blue2-container">
                     <Label text="{{ hour6time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Label text="{{ hour6icon, hour6icon | toIcon() }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                        <Label text="{{ hour6icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                     <Label text="{{ hour6temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
                     <Label text="{{ hour6summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
@@ -133,7 +133,7 @@
                   <StackLayout orientation="vertical" class="blue2-container">
                     <Label text="{{ hour7time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Label text="{{ hour7icon, hour7icon | toIcon() }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                        <Label text="{{ hour7icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                     <Label text="{{ hour7temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
                     <Label text="{{ hour7summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
@@ -142,7 +142,7 @@
                   <StackLayout orientation="vertical" class="blue2-container">
                     <Label text="{{ hour8time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Label text="{{ hour8icon, hour8icon | toIcon() }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                        <Label text="{{ hour8icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                     <Label text="{{ hour8temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
                     <Label text="{{ hour8summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
@@ -151,7 +151,7 @@
                   <StackLayout orientation="vertical" class="blue2-container">
                     <Label text="{{ hour9time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Label text="{{ hour9icon, hour9icon | toIcon() }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                        <Label text="{{ hour9icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                     <Label text="{{ hour9temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
                     <Label text="{{ hour9summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
@@ -160,7 +160,7 @@
                   <StackLayout orientation="vertical" class="blue2-container">
                     <Label text="{{ hour10time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Label text="{{ hour10icon, hour10icon | toIcon() }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                        <Label text="{{ hour10icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                     <Label text="{{ hour10temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
                     <Label text="{{ hour10summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
@@ -169,7 +169,7 @@
                   <StackLayout orientation="vertical" class="blue2-container">
                     <Label text="{{ hour11time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Label text="{{ hour11icon, hour11icon | toIcon() }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                        <Label text="{{ hour11icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                     <Label text="{{ hour11temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
                     <Label text="{{ hour11summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
@@ -178,7 +178,7 @@
                   <StackLayout orientation="vertical" class="blue2-container">
                     <Label text="{{ hour12time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
                     <GridLayout row="1" horizontalAlignment="center" columns="auto">
-                        <Label text="{{ hour12icon, hour12icon | toIcon() }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                        <Label text="{{ hour12icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
                     </GridLayout>
                     <Label text="{{ hour12temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
                     <Label text="{{ hour12summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 

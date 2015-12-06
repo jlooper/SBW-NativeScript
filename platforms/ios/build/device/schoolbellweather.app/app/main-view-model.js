@@ -7,15 +7,10 @@ var platformModule = require("platform");
 var locationModule = require("location");
 var locationManager = require("location").LocationManager;
 var appSettings = require("application-settings");
-var frameModule = require("ui/frame");
-
-//console.log(helpers)
 
 var WeatherModel = new observable.Observable();
 
 if (platformModule.device.os == 'iOS'){
-
-    //frameModule.topmost().ios.navBarVisibility = "never";
 
     var ll;
 
@@ -207,6 +202,44 @@ WeatherModel.getCelsiusImage = function(temp,icon){
         }
     }
 }
+
+WeatherModel.getIcon = function(icon){
+    switch(icon) {
+      case "partly-cloudy-day":
+        return String.fromCharCode(parseInt('e621', 16));
+        break;
+      case "partly-cloudy-night":
+        return String.fromCharCode(parseInt('e620', 16));        
+        break;
+      case "clear-day":
+        return String.fromCharCode(parseInt('e627', 16));        
+        break;
+      case "sleet":
+        return String.fromCharCode(parseInt('e612', 16));        
+        break;
+      case "snow":
+        return String.fromCharCode(parseInt('e613', 16));        
+        break;
+      case "wind":
+        return String.fromCharCode(parseInt('e617', 16));        
+        break;
+      case "rain":
+        return String.fromCharCode(parseInt('e618', 16));        
+        break;
+      case "lightning":
+        return String.fromCharCode(parseInt('e61a', 16));        
+        break;
+      case "cloudy":
+        return String.fromCharCode(parseInt('e61c', 16));        
+        break;
+      case "fog":
+        return String.fromCharCode(parseInt('e624', 16));        
+        break;
+      case "clear-night":
+        return String.fromCharCode(parseInt('e626', 16));        
+        break;
+    }
+}
 WeatherModel.getTodaysWeather = function(latitude,longitude) {
 
 
@@ -232,7 +265,7 @@ WeatherModel.getTodaysWeather = function(latitude,longitude) {
             var obj = response.content.toJSON();
             var tmpCurrTemp = JSON.stringify(obj.currently.temperature).toString().split('.');
             var tmp_split = tmpCurrTemp[0];
-            var nowIcon = eval(JSON.stringify(obj.currently.icon));
+            var nowIcon = WeatherModel.getIcon(eval(JSON.stringify(obj.currently.icon)));
             
             var five_day_summary = JSON.stringify(obj.daily.summary);
             WeatherModel.set("weeklySummary",JSON.parse(five_day_summary));            
@@ -240,12 +273,12 @@ WeatherModel.getTodaysWeather = function(latitude,longitude) {
             for (i = 0; i < obj.daily.data.length; i++) { 
                 WeatherModel.set("day"+i+"time",moment.utc(obj.daily.data[i].time, 'X').format('dddd'));
                 WeatherModel.set("day"+i+"summary",obj.daily.data[i].summary);
-                var ni = obj.daily.data[i].icon;
                 var tmin = JSON.stringify(obj.daily.data[i].temperatureMin).toString().split('.');
                 var tmax = JSON.stringify(obj.daily.data[i].temperatureMax).toString().split('.');
                 var min = tmin[0];
                 var max = tmax[0];
-                WeatherModel.set("day"+i+"minmax",'Temperatures between ' +min+ ' and '  +max+  ' ' + mode);                             
+                WeatherModel.set("day"+i+"minmax",'Temperatures between ' +min+ ' and '  +max+  ' ' + mode);
+                WeatherModel.set("day"+i+"Icon",WeatherModel.getIcon(obj.daily.data[i].icon))                             
             }
             //hourly forecast
             var ten_hour_summary = JSON.stringify(obj.hourly.summary);
@@ -253,8 +286,7 @@ WeatherModel.getTodaysWeather = function(latitude,longitude) {
             for (j = 0; j < obj.hourly.data.length; j++) { 
                 var d = moment.unix(obj.hourly.data[j].time).format('h:ss a');
                 WeatherModel.set("hour"+j+"time",d);
-                var hourIcon = obj.hourly.data[j].icon;
-                WeatherModel.set("hour"+j+"icon",hourIcon);
+                WeatherModel.set("hour"+j+"icon",WeatherModel.getIcon(obj.hourly.data[j].icon));
                 var thour = JSON.stringify(obj.hourly.data[j].temperature).toString().split('.');
                 var temp = thour[0];
                 WeatherModel.set("hour"+j+"temp",temp);
@@ -302,7 +334,8 @@ WeatherModel.getDepartureWeather = function(){
             
             var tmpDepTemp = JSON.stringify(obj.currently.temperature).toString().split('.');
             var tmp_split = tmpDepTemp[0];
-            var depIcon = eval(JSON.stringify(obj.currently.icon))
+            var depIcon = WeatherModel.getIcon(eval(JSON.stringify(obj.currently.icon)))
+
             WeatherModel.set("departureTemp", tmp_split + ' ' + mode);
             WeatherModel.set("departureIcon", depIcon);
 
@@ -318,8 +351,6 @@ WeatherModel.getDepartureWeather = function(){
         }, function (e) {
             // if there is a problem
                 WeatherModel.set("isLoading",false);
-                //var message = "There was a problem finding your departure weather forecast. Please make sure you are online and have enabled location services.";
-                //dialogs.alert({title: "Sorry!", message: message, okButtonText: "OK!",});
             
             done(e);
         });
