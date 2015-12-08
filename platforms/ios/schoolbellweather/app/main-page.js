@@ -160,7 +160,7 @@ function navigatedTo(args){
 }
 function openInfo(){
 
-    var message = "You can tell what the weather will be and what you should wear to get to school. Set your preferences in 'Settings' in the tab below. Choose how you get to school and use the time picker to set the time that you leave for school. Tap 'My Weather' to view the weather now (on the left) and the weather at your departure time (on the right). View hourly forecasts, tomorrow's weather and a five-day forecast as well. The weather cat shows you what to wear when you leave."; 
+    var message = "You can tell what the weather will be and what you should wear to get to school. Set your preferences in 'Settings' tab. Choose how you get to school and use the time picker to set the time that you leave for school. Tap 'My Weather' to view the weather now (on the left) and the weather at your departure time (on the right). View hourly forecasts, tomorrow's weather and a five-day forecast as well. The weather cat shows you what to wear when you leave."; 
     dialogs.alert({title: "Welcome to School Bell Weather!", message: message, okButtonText: "OK!",});
 }
 function refresh(){

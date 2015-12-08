@@ -1,4 +1,6 @@
-﻿Page{
+﻿@import { url('~/platform.css') };
+
+Page{
 	background-color: #3C9DFE;
 	/*color: #FFFFFF;*/
 }
@@ -72,8 +74,6 @@ button{
 /*tomorrow and fiveday*/
 .blue2-container{
 	background-color: #145699;
-	margin:10;
-	padding:5;
 	color:white;
 }
 .blue3-container{
@@ -88,9 +88,6 @@ button{
 .weather-icon {
    font-family: 'icomoon';
    color:white;
-}
-.large-icon{
-	font-size:100;
 }
 .small-icon {
    font-size:30;

@@ -14,7 +14,6 @@ if (platformModule.device.os == 'iOS'){
 
     var ll;
 
-
     ll = (function (_super) {
         __extends(ll, _super);
         function ll() {

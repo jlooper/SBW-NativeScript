@@ -20,15 +20,15 @@
               
               <StackLayout class="blue1-container" colSpan="2" row="1">
                 <Label text="Now" row="2" colSpan="2" horizontalAlignment="center" verticalAlignment="center" class="large-text top"/>
-                <Label row="3" horizontalAlignment="center" colSpan="2" text="{{ nowIcon }}" class="weather-icon large-icon"/>
+                <Label row="3" horizontalAlignment="center" colSpan="2" text="&#xe620;" class="weather-icon large-icon"/>
 
-                <Label text="{{currentTemp || '--°' }}" row="4" colSpan="2" horizontalAlignment="center" class="large-text" />                
+                <Label text="{{currentTemp || '90°' }}" row="4" colSpan="2" horizontalAlignment="center" class="large-text" />                
               </StackLayout>
               
               <StackLayout class="blue3-container" colSpan="2" row="1" col="2">
                 <Image stretch="none" row="2" col="2" colSpan="2" src="{{ transportation || 'res://bus' }} " horizontalAlignment="center" class="top" verticalAlignment="center" />
-                <Label row="3" horizontalAlignment="center" colSpan="2" text="{{ departureIcon }}" class="weather-icon large-icon"/>
-                <Label text="{{departureTemp || '--°'}}" row="4" col="2" colSpan="2" horizontalAlignment="center" class="large-text" />
+                <Label row="3" horizontalAlignment="center" colSpan="2" text="&#xe620;" class="weather-icon large-icon"/>
+                <Label text="{{departureTemp || '90°'}}" row="4" col="2" colSpan="2" horizontalAlignment="center" class="large-text" />
               </StackLayout>
 
               <!--The bottom area where we show what to wear based on the weather forecast for the student's chosen departure time-->              

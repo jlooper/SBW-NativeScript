@@ -14,7 +14,6 @@ if (platformModule.device.os == 'iOS'){
 
     var ll;
 
-
     ll = (function (_super) {
         __extends(ll, _super);
         function ll() {
@@ -26,7 +25,7 @@ if (platformModule.device.os == 'iOS'){
      
         ll.prototype.locationManagerDidChangeAuthorizationStatus = function (manager, status) {
             var s = WeatherModel.getStatus(status);
-            console.log(s)
+            
             if(s == "AuthorizationStatusAuthorizedWhenInUse" || s == "AuthorizationStatusAuthorized" || s == "AuthorizationStatusRestricted"){
                 //get the stuff!
                 WeatherModel.getLocation();
@@ -95,22 +94,18 @@ WeatherModel.getLocation = function(){
         }
         else {
             
-            dialogs.alert("To get your weather forecast, we need your location!").then(function() {
-                
-                if (platformModule.device.os == 'iOS'){
+            if (platformModule.device.os == 'iOS'){
 
-                    var iosLocationManager = CLLocationManager.alloc().init(); 
-                    iosLocationManager.delegate = locationDelegate;         
-                    iosLocationManager.requestWhenInUseAuthorization();
-                    
-               }
-
-               if (platformModule.device.os == 'Android') {
-                 //(<android.app.Activity>appModule.android.currentContext).startActivityForResult(new android.content.Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
-               }
+                dialogs.alert("To get your weather forecast, we need your location!").then(function() {
+                var iosLocationManager = CLLocationManager.alloc().init(); 
+                iosLocationManager.delegate = locationDelegate;         
+                iosLocationManager.requestWhenInUseAuthorization();
 
             });
+            
         }
+
+    }
 }
 
 WeatherModel.setTransportation = function(trans){
@@ -279,7 +274,7 @@ WeatherModel.getTodaysWeather = function(latitude,longitude) {
                 var max = tmax[0];
                 WeatherModel.set("day"+i+"minmax",'Temperatures between ' +min+ ' and '  +max+  ' ' + mode);
                 WeatherModel.set("day"+i+"icon",WeatherModel.getIcon(obj.daily.data[i].icon)) 
-                console.log(obj.daily.data[i].icon)                            
+                                          
             }
             //hourly forecast
             var ten_hour_summary = JSON.stringify(obj.hourly.summary);

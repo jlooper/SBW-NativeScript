@@ -1,0 +1,418 @@
+<Page xmlns="http://www.nativescript.org/tns.xsd"
+  loaded="pageLoaded"
+  navigatedTo="navigatedTo">
+  <TabView id="weatherTabs">
+   <TabView.items>
+     <TabViewItem title="My Weather" iconSource="res://home">
+       <TabViewItem.view>
+            
+            <GridLayout columns="*,*,*,*" rows="auto, *, *">
+
+              <!--This area is the blue top header bar-->
+              <GridLayout class="header-container" colSpan="5" columns="*,*,*,*,*">
+                <Label text="&#xf021;" horizontalAlignment="left" verticalAlignment="center" tap="refresh" class="top-icon weather-icon small-icon"/>
+                <Label text="My Weather" colSpan="5" horizontalAlignment="center" verticalAlignment="center" class="large-text"/>             
+                <ActivityIndicator col="3" busy="{{ isLoading }}" horizontalAlignment="right" />
+                <Label text="&#xf129;" col="4" horizontalAlignment="right" verticalAlignment="center" class="top-icon weather-icon small-icon" tap="openInfo"/>
+              </GridLayout>
+
+              <!--The weather information container, two grid-based columns with a stacked layout in each one-->
+              
+              <StackLayout class="blue1-container" colSpan="2" row="1">
+                <Label text="Now" row="2" colSpan="2" horizontalAlignment="center" verticalAlignment="center" class="large-text top"/>
+                <Label row="3" horizontalAlignment="center" colSpan="2" text="{{ nowIcon }}" class="weather-icon large-icon"/>
+
+                <Label text="{{currentTemp || '--°' }}" row="4" colSpan="2" horizontalAlignment="center" class="large-text" />                
+              </StackLayout>
+              
+              <StackLayout class="blue3-container" colSpan="2" row="1" col="2">
+                <Image stretch="none" row="2" col="2" colSpan="2" src="{{ transportation || 'res://bus' }} " horizontalAlignment="center" class="top" verticalAlignment="center" />
+                <Label row="3" horizontalAlignment="center" colSpan="2" text="{{ departureIcon }}" class="weather-icon large-icon"/>
+                <Label text="{{departureTemp || '--°'}}" row="4" col="2" colSpan="2" horizontalAlignment="center" class="large-text" />
+              </StackLayout>
+
+              <!--The bottom area where we show what to wear based on the weather forecast for the student's chosen departure time-->              
+                  <Image stretch="aspectFit" row="2" colSpan="4" src="{{catImg || 'res://warmbg'}}" verticalAlignment="bottom" />         
+          </GridLayout>
+       
+       </TabViewItem.view>
+     </TabViewItem>
+
+     <!--today-->
+
+      <TabViewItem title="Hourly" iconSource="res://time">
+       <TabViewItem.view>
+          
+            <DockLayout stretchLastChild="true">
+                          
+              <GridLayout dock="top" rows="auto">                
+                
+                  <GridLayout class="header-container" colSpan="5" columns="*,*,*,*,*">
+                    <Label text="&#xf021;" horizontalAlignment="left" verticalAlignment="center" tap="refresh" class="top-icon weather-icon small-icon"/>
+                    <Label text="12-Hour Forecast" colSpan="5" horizontalAlignment="center" verticalAlignment="center" class="large-text"/>             
+                    <ActivityIndicator col="3" busy="{{ isLoading }}" horizontalAlignment="center" />
+                    <Label text="&#xf129;" col="4" horizontalAlignment="right" verticalAlignment="center" class="top-icon weather-icon small-icon" tap="openInfo"/>
+                  </GridLayout>               
+
+               </GridLayout> 
+                                           
+              <GridLayout dock="top"> 
+
+              <ScrollView id="scrollView">
+
+                <StackLayout orientation="vertical" row="0" horizontalAlignment="center" minWidth="200">
+
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ hourlySummary || 'Hourly Summary' }}" textWrap="true" horizontalAlignment="center"/>
+                  </StackLayout>
+                  
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ hour0time || '' }}" horizontalAlignment="center" fontAttributes="bold"/>
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ hour0icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                                     
+                    <Label text="{{ hour0temp || '' }}" textWrap="true" horizontalAlignment="center"/>
+                    <Label text="{{ hour0summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ hour1time || '' }}" horizontalAlignment="center" fontAttributes="bold"/>
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ hour1icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>               
+                    <Label text="{{ hour1temp || '' }}" textWrap="true" horizontalAlignment="center"/>
+                    <Label text="{{ hour1summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+                  
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ hour2time || '' }}" horizontalAlignment="center" fontAttributes="bold"/>
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ hour2icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                    <Label text="{{ hour2temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
+                    <Label text="{{ hour2summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+                  
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ hour3time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ hour3icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                    <Label text="{{ hour3temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
+                    <Label text="{{ hour3summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+                  
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ hour4time || '' }}" horizontalAlignment="center" fontAttributes="bold"/>
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ hour4icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                    <Label text="{{ hour4temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
+                    <Label text="{{ hour4summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+                  
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ hour5time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ hour5icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                    <Label text="{{ hour5temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
+                    <Label text="{{ hour5summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ hour6time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ hour6icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                    <Label text="{{ hour6temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
+                    <Label text="{{ hour6summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ hour7time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ hour7icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                    <Label text="{{ hour7temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
+                    <Label text="{{ hour7summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ hour8time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ hour8icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                    <Label text="{{ hour8temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
+                    <Label text="{{ hour8summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ hour9time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ hour9icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                    <Label text="{{ hour9temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
+                    <Label text="{{ hour9summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ hour10time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ hour10icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                    <Label text="{{ hour10temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
+                    <Label text="{{ hour10summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ hour11time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ hour11icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                    <Label text="{{ hour11temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
+                    <Label text="{{ hour11summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ hour12time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ hour12icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                    <Label text="{{ hour12temp || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
+                    <Label text="{{ hour12summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+                
+                </StackLayout>
+                
+                
+              
+              </ScrollView>
+
+             </GridLayout>           
+            </DockLayout>
+         
+       </TabViewItem.view>
+     </TabViewItem>
+     
+     <!--tomorrow-->
+
+     <TabViewItem title="Tomorrow" iconSource="res://day">
+       <TabViewItem.view>
+          
+            <DockLayout stretchLastChild="true">
+
+            
+                          
+              <GridLayout dock="top" rows="auto">
+                
+                <GridLayout class="header-container" colSpan="5" columns="*,*,*,*,*">
+                    <Label text="&#xf021;" horizontalAlignment="left" verticalAlignment="center" tap="refresh" class="top-icon weather-icon small-icon"/>
+                    <Label text="Tomorrow" colSpan="5" horizontalAlignment="center" verticalAlignment="center" class="large-text"/>             
+                    <ActivityIndicator col="3" busy="{{ isLoading }}" horizontalAlignment="center" />
+                    <Label text="&#xf129;" col="4" horizontalAlignment="right" verticalAlignment="center" class="top-icon weather-icon small-icon" tap="openInfo"/>
+                </GridLayout>   
+               
+               </GridLayout> 
+                                           
+              <GridLayout dock="top"> 
+
+              <ScrollView id="scrollView">
+
+                <StackLayout orientation="vertical" horizontalAlignment="center"  minWidth="200">
+
+                  
+                  <StackLayout orientation="vertical" class="blue2-container" rows="auto">
+                    <Label text="{{ day1time || 'Tomorrow\'s Weather' }}" horizontalAlignment="center" fontAttributes="bold"/>                   
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ day1icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                    <Label text="{{ day1summary || '' }}" textWrap="true" horizontalAlignment="center"/>
+                    <Label text="{{ day1minmax || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+
+                </StackLayout>
+
+                
+              
+              </ScrollView>
+
+             </GridLayout>           
+            </DockLayout>
+         
+       </TabViewItem.view>
+     </TabViewItem>
+   <!--fiveday-->  
+     <TabViewItem title="5-Day Forecast" iconSource="res://week">
+       <TabViewItem.view>
+          
+              <DockLayout stretchLastChild="true">            
+                          
+              <GridLayout dock="top" rows="auto">
+                
+                <GridLayout class="header-container" colSpan="5" columns="*,*,*,*,*">
+                    <Label text="&#xf021;" horizontalAlignment="left" verticalAlignment="center" tap="refresh" class="top-icon weather-icon small-icon"/>
+                    <Label text="Five-Day" colSpan="5" horizontalAlignment="center" verticalAlignment="center" class="large-text"/>             
+                    <ActivityIndicator col="3" busy="{{ isLoading }}" horizontalAlignment="center" />
+                    <Label text="&#xf129;" col="4" horizontalAlignment="right" verticalAlignment="center" class="top-icon weather-icon small-icon" tap="openInfo"/>
+                  </GridLayout>   
+               
+              </GridLayout> 
+                                           
+              <GridLayout dock="top"> 
+
+              <ScrollView id="scrollView">
+
+                <StackLayout orientation="vertical" row="0" horizontalAlignment="center"  minWidth="200">
+
+                  
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ weeklySummary || 'Weekly Summary' }}" textWrap="true" horizontalAlignment="center"/>
+                  </StackLayout>
+                  <StackLayout orientation="vertical" class="blue2-container" rows="auto">
+                    <Label text="{{ day1time || '' }}" horizontalAlignment="center" fontAttributes="bold"/>                   
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ day1icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                    <Label text="{{ day1summary || '' }}" textWrap="true" horizontalAlignment="center"/>
+                    <Label text="{{ day1minmax || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ day2time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ day2icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                    <Label text="{{ day2summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
+                    <Label text="{{ day2minmax || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ day3time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ day3icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                    <Label text="{{ day3summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
+                    <Label text="{{ day3minmax || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ day4time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ day4icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                    <Label text="{{ day4summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
+                    <Label text="{{ day4minmax || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+                  <StackLayout orientation="vertical" class="blue2-container">
+                    <Label text="{{ day5time || '' }}" horizontalAlignment="center" fontAttributes="bold"/> 
+                    <GridLayout row="1" horizontalAlignment="center" columns="auto">
+                        <Label text="{{ day5icon }}" horizontalAlignment="center" class="weather-icon large-icon"/>
+                    </GridLayout>
+                    <Label text="{{ day5summary || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/>
+                    <Label text="{{ day5minmax || '' }}" textWrap="true" horizontalAlignment="center" class="panel"/> 
+                  </StackLayout>
+                </StackLayout>
+                
+                 </ScrollView>
+
+             </GridLayout>           
+            </DockLayout>
+         
+       </TabViewItem.view>
+     </TabViewItem>
+     <!--settings-->
+     <TabViewItem title="Settings" id="settings" iconSource="res://settings">
+
+       <TabViewItem.view>
+          
+            <DockLayout stretchLastChild="true">            
+                          
+              <GridLayout dock="top" rows="auto">
+                
+                <GridLayout class="header-container" colSpan="5" columns="*,*,*,*,*">
+                    <Label text="&#xf021;" horizontalAlignment="left" verticalAlignment="center" tap="refresh" class="top-icon weather-icon small-icon"/>
+                    <Label text="Settings" colSpan="5" horizontalAlignment="center" verticalAlignment="center" class="large-text"/>             
+                    <ActivityIndicator col="3" busy="{{ isLoading }}" horizontalAlignment="center" />
+                    <Label text="&#xf129;" col="4" horizontalAlignment="right" verticalAlignment="center" class="top-icon weather-icon small-icon" tap="openInfo"/>
+                  </GridLayout>  
+               
+               </GridLayout> 
+                                           
+              <GridLayout dock="top"> 
+
+              <ScrollView id="scrollView">
+
+                <StackLayout orientation="vertical" row="0" horizontalAlignment="center" rows="auto">
+
+                  
+                   <GridLayout dock="top"  class="blue4-container">
+                    <GridLayout row="1" columns="*"> 
+                      <Label text="How do you like your weather?" class="medium-text" textWrap="true"/>
+                    </GridLayout>
+                  </GridLayout>  
+
+                  <GridLayout dock="top">
+                    <GridLayout row="1" padding="5"> 
+                      <SegmentedBar id="sBar" selectedIndex = "{{ selectedIndex }}" style="color: white" selectedBackgroundColor="white">
+                        <SegmentedBar.items>
+                          <SegmentedBarItem title="Celsius" />
+                          <SegmentedBarItem title="Fahrenheit" />
+                        </SegmentedBar.items>
+                      </SegmentedBar>
+                    </GridLayout>
+                  </GridLayout>
+
+                  <GridLayout dock="top"  class="blue4-container">
+                    <GridLayout row="1" columns="*"> 
+                      <Label text="What time do you leave for school?" class="medium-text" textWrap="true"/>
+                    </GridLayout>
+                  </GridLayout>  
+                  
+                  <GridLayout dock="top">
+                    <GridLayout row="1"> 
+                      <TimePicker id="time"/>                
+                    </GridLayout>
+                  </GridLayout>  
+
+                  
+                  <GridLayout row="1" columns="*" colSpan="3" class="blue4-container"> 
+                    <Label text="How do you travel to school?" class="medium-text" textWrap="true"/>
+                  </GridLayout>
+              
+                  <GridLayout row="1" columns="*,*">                      
+                    <StackLayout orientation="vertical" col="0" class="blue1-container">     
+                      <GridLayout padding="10" row="1" id="busContainer" horizontalAlignment="center" columns="auto">
+                          </GridLayout> 
+                      </StackLayout>
+                      <StackLayout orientation="vertical" col="1" class="blue3-container">
+                        <GridLayout padding="10" row="1" id="footContainer" horizontalAlignment="center" columns="auto">
+                        </GridLayout>                          
+                      </StackLayout>                   
+                 </GridLayout>
+              
+                  <GridLayout dock="top">
+                       <GridLayout row="2" columns="*,*">                    
+                            <StackLayout orientation="vertical" col="0" class="blue3-container">                          
+                            <GridLayout padding="10" row="1" id="carContainer" horizontalAlignment="center" columns="auto">
+                            </GridLayout> 
+                          </StackLayout>
+                          <StackLayout orientation="vertical" col="1" class="blue1-container">
+                            <GridLayout padding="10" row="1" id="bikeContainer" horizontalAlignment="center" columns="auto">
+                            </GridLayout>                          
+                          </StackLayout>
+                       </GridLayout>
+                  </GridLayout>
+
+                </StackLayout>
+              
+              </ScrollView>
+
+             </GridLayout>           
+            </DockLayout>
+         
+       </TabViewItem.view>
+
+     </TabViewItem>
+   
+   </TabView.items>   
+ </TabView>
+</Page>

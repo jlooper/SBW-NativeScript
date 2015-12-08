@@ -130,7 +130,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		1bnpEaG1FfB/n9KM3TeVdTtWvW0=
+		sWqJCVcgfYQX5oH0DsZ9sfNGrq0=
 		</data>
 		<key>PkgInfo</key>
 		<data>
@@ -152,10 +152,6 @@
 		<data>
 		ygtETb/6HFZoDSw8glPlmPLoYe8=
 		</data>
-		<key>app/helper.js</key>
-		<data>
-		v2Bdb8LNe4PQ2CunTNwcmhYIioQ=
-		</data>
 		<key>app/main-page.js</key>
 		<data>
 		M+e1IsTR0gT3F+zcZNfslj/JdGM=
@@ -166,7 +162,7 @@
 		</data>
 		<key>app/main-view-model.js</key>
 		<data>
-		4HrzW+fumS9VETBLgaLB97dbhs0=
+		DxIrBkazM8s4UIjZdijFLQ2szDY=
 		</data>
 		<key>app/package.json</key>
 		<data>
@@ -1488,42 +1484,6 @@
 		<data>
 		ViFcIySNqKiqOfY+IldTJXTj7dU=
 		</data>
-		<key>clearday.png</key>
-		<data>
-		cbiSiGh24H4VkrtjRH8m4/CnZvk=
-		</data>
-		<key>clearday@2x.png</key>
-		<data>
-		uAIn/kMVv68cBK3CHv/wAnNBrz8=
-		</data>
-		<key>clearday@3x.png</key>
-		<data>
-		rkkg1ez8U7fBczACZhZ1KKyUJsM=
-		</data>
-		<key>clearnight.png</key>
-		<data>
-		RYM7boxY9dh4ENIL3GTrkSuMhwk=
-		</data>
-		<key>clearnight@2x.png</key>
-		<data>
-		VFBhBq2uVJnwoh+jmrus/VhaNUA=
-		</data>
-		<key>clearnight@3x.png</key>
-		<data>
-		ANBqmfzHxIIZWcdwQtYMUsp5biQ=
-		</data>
-		<key>cloudy.png</key>
-		<data>
-		/ZGbNiUkGdJAkXKX+KFiYqZjzM8=
-		</data>
-		<key>cloudy@2x.png</key>
-		<data>
-		4fitTuqAydMIMHnjqQ5dMxnOmrs=
-		</data>
-		<key>cloudy@3x.png</key>
-		<data>
-		I5IbgH9qkBuridjoj83SbJrwJ4s=
-		</data>
 		<key>coldbg.png</key>
 		<data>
 		YPYtlK79otHJLtv4p1bAQziIhao=
@@ -1561,18 +1521,6 @@
 			<key>optional</key>
 			<true/>
 		</dict>
-		<key>fog.png</key>
-		<data>
-		QlVG9O1mFlRM2Uho/IpFnDgUoHE=
-		</data>
-		<key>fog@2x.png</key>
-		<data>
-		Xfk5zEeWBsugMumZmcKwLHJl+eM=
-		</data>
-		<key>fog@3x.png</key>
-		<data>
-		H0QcG3Xx+XJn/vUHrtuceFRNd0g=
-		</data>
 		<key>foot.png</key>
 		<data>
 		Jl18jebGng3yeDjOBquD2yQ5lhQ=
@@ -1657,66 +1605,6 @@
 		<data>
 		ids6Gu/FzcgRx3HbA8D3whN6rBw=
 		</data>
-		<key>info.png</key>
-		<data>
-		fiizTK0r7RHGTuo8g+iSyV8KS9M=
-		</data>
-		<key>info@2x.png</key>
-		<data>
-		KYr2AketRyVhXqasqFbt2+2P3Xo=
-		</data>
-		<key>info@3x.png</key>
-		<data>
-		Kw1+kD5TWlNtEQ8U8SzItfaf6OA=
-		</data>
-		<key>lightning.png</key>
-		<data>
-		03hLM7agNZoI4M1bZO2w6RNCaWo=
-		</data>
-		<key>lightning@2x.png</key>
-		<data>
-		eUomVmkDOSH1gkOw1KLGX8kfQuo=
-		</data>
-		<key>lightning@3x.png</key>
-		<data>
-		U+b1ZGG/l8xHIKKj/44ihx5H7Aw=
-		</data>
-		<key>partlycloudyday.png</key>
-		<data>
-		f0SVTR9ufUD/vKNrN6n2xyAMfgU=
-		</data>
-		<key>partlycloudyday@2x.png</key>
-		<data>
-		DXrF0v6jRcQQDaaDFMQuiRFo1Do=
-		</data>
-		<key>partlycloudyday@3x.png</key>
-		<data>
-		crz3J1qShKim83EzZjdNeaMEQxA=
-		</data>
-		<key>partlycloudynight.png</key>
-		<data>
-		zYnzkApdnffuth7qg35H1rK9QwU=
-		</data>
-		<key>partlycloudynight@2x.png</key>
-		<data>
-		PaHbapyUNdA97xJ8W6jm0iLJSvs=
-		</data>
-		<key>partlycloudynight@3x.png</key>
-		<data>
-		D5i8XrPsu9+6mQ3Wmm/z9Jst00Q=
-		</data>
-		<key>rain.png</key>
-		<data>
-		oUkwTgNhYpcwRRP4O9GQEpHXF2k=
-		</data>
-		<key>rain@2x.png</key>
-		<data>
-		PKbKInMlB2kgjeLQBg6Nr6ZTRWU=
-		</data>
-		<key>rain@3x.png</key>
-		<data>
-		HnP9bEnK+GmssbIZr8BuRedTyzA=
-		</data>
 		<key>rainbg.png</key>
 		<data>
 		mkN1JxhJxoYVu5aaARezvHvTfBE=
@@ -1729,18 +1617,6 @@
 		<data>
 		3UdUAa3EMfMXDYCHP48fPwqgntY=
 		</data>
-		<key>refresh.png</key>
-		<data>
-		LiTdgf75cMTZgyWKi2qfDgMKy1M=
-		</data>
-		<key>refresh@2x.png</key>
-		<data>
-		yyl2VmTMtnQjjTrDfdEEetcSY38=
-		</data>
-		<key>refresh@3x.png</key>
-		<data>
-		25DxTxratL5iZHeV6S/HfwboiN0=
-		</data>
 		<key>settings.png</key>
 		<data>
 		2yRMlsLM4NlIwe4iI8BW8AUnNE4=
@@ -1752,30 +1628,6 @@
 		<key>settings@3x.png</key>
 		<data>
 		XYiyZDne5bYPkaUDmyj1ygReNps=
-		</data>
-		<key>sleet.png</key>
-		<data>
-		TQCH+4lrl6d1PRVqkP7lBMLr6KQ=
-		</data>
-		<key>sleet@2x.png</key>
-		<data>
-		1eMA1FGQtAnBg+Q1VLkfIw2Ik0M=
-		</data>
-		<key>sleet@3x.png</key>
-		<data>
-		UKqt3RomCICNahXyh4x58GM6Frg=
-		</data>
-		<key>snow.png</key>
-		<data>
-		bNeNSaylTi0z8GvgYHQcb50fplk=
-		</data>
-		<key>snow@2x.png</key>
-		<data>
-		s2XTOSXvW1GxlNhdcDwLJUCukxg=
-		</data>
-		<key>snow@3x.png</key>
-		<data>
-		Tv0R1dFjWblSwBtys4jN8CyInck=
 		</data>
 		<key>snowbg.png</key>
 		<data>
@@ -1836,18 +1688,6 @@
 		<key>week@3x.png</key>
 		<data>
 		3Spi3MjeKmzzgyhPeRFMPlAQbJQ=
-		</data>
-		<key>wind.png</key>
-		<data>
-		VVbPAW3TLrjLar4moUEy7eCTPNA=
-		</data>
-		<key>wind@2x.png</key>
-		<data>
-		lzT7A/Lo7xhNZaEk4p13kRx/aJc=
-		</data>
-		<key>wind@3x.png</key>
-		<data>
-		zhxDFoQnpaSCn7poO09j5BLNOrM=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -1992,10 +1832,6 @@
 		<data>
 		ygtETb/6HFZoDSw8glPlmPLoYe8=
 		</data>
-		<key>app/helper.js</key>
-		<data>
-		v2Bdb8LNe4PQ2CunTNwcmhYIioQ=
-		</data>
 		<key>app/main-page.js</key>
 		<data>
 		M+e1IsTR0gT3F+zcZNfslj/JdGM=
@@ -2006,7 +1842,7 @@
 		</data>
 		<key>app/main-view-model.js</key>
 		<data>
-		4HrzW+fumS9VETBLgaLB97dbhs0=
+		DxIrBkazM8s4UIjZdijFLQ2szDY=
 		</data>
 		<key>app/package.json</key>
 		<data>
@@ -3328,42 +3164,6 @@
 		<data>
 		ViFcIySNqKiqOfY+IldTJXTj7dU=
 		</data>
-		<key>clearday.png</key>
-		<data>
-		cbiSiGh24H4VkrtjRH8m4/CnZvk=
-		</data>
-		<key>clearday@2x.png</key>
-		<data>
-		uAIn/kMVv68cBK3CHv/wAnNBrz8=
-		</data>
-		<key>clearday@3x.png</key>
-		<data>
-		rkkg1ez8U7fBczACZhZ1KKyUJsM=
-		</data>
-		<key>clearnight.png</key>
-		<data>
-		RYM7boxY9dh4ENIL3GTrkSuMhwk=
-		</data>
-		<key>clearnight@2x.png</key>
-		<data>
-		VFBhBq2uVJnwoh+jmrus/VhaNUA=
-		</data>
-		<key>clearnight@3x.png</key>
-		<data>
-		ANBqmfzHxIIZWcdwQtYMUsp5biQ=
-		</data>
-		<key>cloudy.png</key>
-		<data>
-		/ZGbNiUkGdJAkXKX+KFiYqZjzM8=
-		</data>
-		<key>cloudy@2x.png</key>
-		<data>
-		4fitTuqAydMIMHnjqQ5dMxnOmrs=
-		</data>
-		<key>cloudy@3x.png</key>
-		<data>
-		I5IbgH9qkBuridjoj83SbJrwJ4s=
-		</data>
 		<key>coldbg.png</key>
 		<data>
 		YPYtlK79otHJLtv4p1bAQziIhao=
@@ -3401,18 +3201,6 @@
 			<key>optional</key>
 			<true/>
 		</dict>
-		<key>fog.png</key>
-		<data>
-		QlVG9O1mFlRM2Uho/IpFnDgUoHE=
-		</data>
-		<key>fog@2x.png</key>
-		<data>
-		Xfk5zEeWBsugMumZmcKwLHJl+eM=
-		</data>
-		<key>fog@3x.png</key>
-		<data>
-		H0QcG3Xx+XJn/vUHrtuceFRNd0g=
-		</data>
 		<key>foot.png</key>
 		<data>
 		Jl18jebGng3yeDjOBquD2yQ5lhQ=
@@ -3497,66 +3285,6 @@
 		<data>
 		ids6Gu/FzcgRx3HbA8D3whN6rBw=
 		</data>
-		<key>info.png</key>
-		<data>
-		fiizTK0r7RHGTuo8g+iSyV8KS9M=
-		</data>
-		<key>info@2x.png</key>
-		<data>
-		KYr2AketRyVhXqasqFbt2+2P3Xo=
-		</data>
-		<key>info@3x.png</key>
-		<data>
-		Kw1+kD5TWlNtEQ8U8SzItfaf6OA=
-		</data>
-		<key>lightning.png</key>
-		<data>
-		03hLM7agNZoI4M1bZO2w6RNCaWo=
-		</data>
-		<key>lightning@2x.png</key>
-		<data>
-		eUomVmkDOSH1gkOw1KLGX8kfQuo=
-		</data>
-		<key>lightning@3x.png</key>
-		<data>
-		U+b1ZGG/l8xHIKKj/44ihx5H7Aw=
-		</data>
-		<key>partlycloudyday.png</key>
-		<data>
-		f0SVTR9ufUD/vKNrN6n2xyAMfgU=
-		</data>
-		<key>partlycloudyday@2x.png</key>
-		<data>
-		DXrF0v6jRcQQDaaDFMQuiRFo1Do=
-		</data>
-		<key>partlycloudyday@3x.png</key>
-		<data>
-		crz3J1qShKim83EzZjdNeaMEQxA=
-		</data>
-		<key>partlycloudynight.png</key>
-		<data>
-		zYnzkApdnffuth7qg35H1rK9QwU=
-		</data>
-		<key>partlycloudynight@2x.png</key>
-		<data>
-		PaHbapyUNdA97xJ8W6jm0iLJSvs=
-		</data>
-		<key>partlycloudynight@3x.png</key>
-		<data>
-		D5i8XrPsu9+6mQ3Wmm/z9Jst00Q=
-		</data>
-		<key>rain.png</key>
-		<data>
-		oUkwTgNhYpcwRRP4O9GQEpHXF2k=
-		</data>
-		<key>rain@2x.png</key>
-		<data>
-		PKbKInMlB2kgjeLQBg6Nr6ZTRWU=
-		</data>
-		<key>rain@3x.png</key>
-		<data>
-		HnP9bEnK+GmssbIZr8BuRedTyzA=
-		</data>
 		<key>rainbg.png</key>
 		<data>
 		mkN1JxhJxoYVu5aaARezvHvTfBE=
@@ -3569,18 +3297,6 @@
 		<data>
 		3UdUAa3EMfMXDYCHP48fPwqgntY=
 		</data>
-		<key>refresh.png</key>
-		<data>
-		LiTdgf75cMTZgyWKi2qfDgMKy1M=
-		</data>
-		<key>refresh@2x.png</key>
-		<data>
-		yyl2VmTMtnQjjTrDfdEEetcSY38=
-		</data>
-		<key>refresh@3x.png</key>
-		<data>
-		25DxTxratL5iZHeV6S/HfwboiN0=
-		</data>
 		<key>settings.png</key>
 		<data>
 		2yRMlsLM4NlIwe4iI8BW8AUnNE4=
@@ -3592,30 +3308,6 @@
 		<key>settings@3x.png</key>
 		<data>
 		XYiyZDne5bYPkaUDmyj1ygReNps=
-		</data>
-		<key>sleet.png</key>
-		<data>
-		TQCH+4lrl6d1PRVqkP7lBMLr6KQ=
-		</data>
-		<key>sleet@2x.png</key>
-		<data>
-		1eMA1FGQtAnBg+Q1VLkfIw2Ik0M=
-		</data>
-		<key>sleet@3x.png</key>
-		<data>
-		UKqt3RomCICNahXyh4x58GM6Frg=
-		</data>
-		<key>snow.png</key>
-		<data>
-		bNeNSaylTi0z8GvgYHQcb50fplk=
-		</data>
-		<key>snow@2x.png</key>
-		<data>
-		s2XTOSXvW1GxlNhdcDwLJUCukxg=
-		</data>
-		<key>snow@3x.png</key>
-		<data>
-		Tv0R1dFjWblSwBtys4jN8CyInck=
 		</data>
 		<key>snowbg.png</key>
 		<data>
@@ -3676,18 +3368,6 @@
 		<key>week@3x.png</key>
 		<data>
 		3Spi3MjeKmzzgyhPeRFMPlAQbJQ=
-		</data>
-		<key>wind.png</key>
-		<data>
-		VVbPAW3TLrjLar4moUEy7eCTPNA=
-		</data>
-		<key>wind@2x.png</key>
-		<data>
-		lzT7A/Lo7xhNZaEk4p13kRx/aJc=
-		</data>
-		<key>wind@3x.png</key>
-		<data>
-		zhxDFoQnpaSCn7poO09j5BLNOrM=
 		</data>
 	</dict>
 	<key>rules</key>

@@ -9,6 +9,7 @@
 		07EF5884EF884E76A8EBD1BB /* home@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96E522DB32AD440E9598A47F /* home@2x.png */; };
 		16A14C5264EC4C8FAE406404 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7C674962348242A3A03531F4 /* Default-568h@2x.png */; };
 		17432CB91C13DEC200FE6C58 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17432CB81C13DEC200FE6C58 /* Images.xcassets */; };
+		17432CBB1C14D20E00FE6C58 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 17432CBA1C14D20E00FE6C58 /* Default-568h@2x.png */; };
 		1AB7AFE037C14CE4A0B1F202 /* icon-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8312D79CBF934141A17A6EBF /* icon-40@2x.png */; };
 		2337351D30B84A2CA2ACCE50 /* hotbg@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 49440EA34614489F9AE36DCE /* hotbg@3x.png */; };
 		238F8970F5CE4FC8AC7749EE /* bus@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DF77A28787A44809EDFCA1C /* bus@3x.png */; };
@@ -102,6 +103,7 @@
 		06D092C68D97408F921F9974 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = schoolbellweather/Resources/icon.png; sourceTree = "<group>"; };
 		0CBA4549FCB24DFFA09B077D /* Default-Portrait-1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait-1024.png"; path = "schoolbellweather/Resources/Default-Portrait-1024.png"; sourceTree = "<group>"; };
 		17432CB81C13DEC200FE6C58 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		17432CBA1C14D20E00FE6C58 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		1D3030B1507540FAB96ED13F /* hotbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = hotbg.png; path = schoolbellweather/Resources/hotbg.png; sourceTree = "<group>"; };
 		1E4B0D5C9B1F4FBDBCD7E89D /* rainbg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "rainbg@2x.png"; path = "schoolbellweather/Resources/rainbg@2x.png"; sourceTree = "<group>"; };
 		1F3F4F684FFC495E901382FE /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small-50.png"; path = "schoolbellweather/Resources/Icon-Small-50.png"; sourceTree = "<group>"; };
@@ -198,6 +200,7 @@
 		858B832518CA111C00AB12DE = {
 			isa = PBXGroup;
 			children = (
+				17432CBA1C14D20E00FE6C58 /* Default-568h@2x.png */,
 				E070579D1B39A9D000214BF1 /* Resources */,
 				858B833718CA111C00AB12DE /* schoolbellweather */,
 				858B833018CA111C00AB12DE /* Frameworks */,
@@ -450,6 +453,7 @@
 				ACF998F78CBF4A46B9CC7226 /* time.png in Resources */,
 				579FBB5EA7294967A61252DF /* time@2x.png in Resources */,
 				5D52849F42AB4ADFB189A861 /* time@3x.png in Resources */,
+				17432CBB1C14D20E00FE6C58 /* Default-568h@2x.png in Resources */,
 				BBD680E308984B9EA03020FB /* warmbg.png in Resources */,
 				C54BC103820242F5B9C1FD52 /* warmbg@2x.png in Resources */,
 				C34F207396B4425B8397AFA5 /* warmbg@3x.png in Resources */,
@@ -633,6 +637,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ladeezfirstmedia.schoolbellweather;
 				PRODUCT_NAME = schoolbellweather;
+				PROVISIONING_PROFILE = "e45ce56a-f4ee-4960-a718-3fe8f9608ba7";
 				VALID_ARCHS = "armv7 arm64";
 				WRAPPER_EXTENSION = app;
 			};
@@ -654,6 +659,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ladeezfirstmedia.schoolbellweather;
 				PRODUCT_NAME = schoolbellweather;
+				PROVISIONING_PROFILE = "e45ce56a-f4ee-4960-a718-3fe8f9608ba7";
 				VALID_ARCHS = "armv7 arm64";
 				WRAPPER_EXTENSION = app;
 			};
